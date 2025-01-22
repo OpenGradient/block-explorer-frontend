@@ -1,11 +1,13 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 
+import { type Log } from 'types/api/log';
 import type { RoutedTab } from 'ui/shared/Tabs/types';
 
 import config from 'configs/app';
 import { useAppContext } from 'lib/contexts/app';
 import throwOnResourceLoadError from 'lib/errors/throwOnResourceLoadError';
+import { getInferenceEvent } from 'lib/inferences/utils';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import { publicClient } from 'lib/web3/client';
 import TextAd from 'ui/shared/ad/TextAd';
@@ -20,6 +22,7 @@ import TxBlobs from 'ui/tx/TxBlobs';
 import TxDetails from 'ui/tx/TxDetails';
 import TxDetailsDegraded from 'ui/tx/TxDetailsDegraded';
 import TxDetailsWrapped from 'ui/tx/TxDetailsWrapped';
+import TxInferences from 'ui/tx/TxInferences';
 import TxInternals from 'ui/tx/TxInternals';
 import TxLogs from 'ui/tx/TxLogs';
 import TxRawTrace from 'ui/tx/TxRawTrace';
@@ -41,6 +44,11 @@ const TransactionPageContent = () => {
 
   const showDegradedView = publicClient && ((isError && error.status !== 422) || isPlaceholderData) && errorUpdateCount > 0;
 
+  const filterLogsByMethodCall = React.useCallback((log: Log): boolean => {
+    const methodCall = log.decoded?.method_call;
+    return Boolean(methodCall && getInferenceEvent(methodCall));
+  }, []);
+
   const tabs: Array<RoutedTab> = (() => {
     const detailsComponent = showDegradedView ?
       <TxDetailsDegraded hash={ hash } txQuery={ txQuery }/> :
@@ -52,6 +60,7 @@ const TransactionPageContent = () => {
         title: config.features.suave.isEnabled && data?.wrapped ? 'Confidential compute tx details' : 'Details',
         component: detailsComponent,
       },
+      { id: 'inferences', title: 'Inferences', component: <TxInferences txQuery={ txQuery } logsFilter={ filterLogsByMethodCall }/> },
       txInterpretation.isEnabled && txInterpretation.provider === 'noves' ?
         { id: 'asset_flows', title: 'Asset Flows', component: <TxAssetFlows hash={ hash }/> } :
         undefined,
