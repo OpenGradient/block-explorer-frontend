@@ -1,24 +1,14 @@
 import {
-  InferenceEvent,
-  type JsonScalarArray,
+  type TensorLibJsonScalarArray,
   type ModelOutput,
-  type MultiDimensionalNumberTensorArray,
-  type NumberTensorArray,
-  type StringTensorArray,
+  type TensorLibMultiDimensionalNumberTensorArray,
+  type TensorLibNumberArray,
+  type TensorLibStringTensorArray,
   type TensorLibNumber,
-} from 'types/client/inference';
+} from 'types/client/inference/traditional';
 
-export const INFERENCE_EVENTS = Object.values(InferenceEvent);
+const isNumber = (value: unknown): value is number => !isNaN(Number(value));
 
-export const getInferenceEvent = (value: string | undefined): InferenceEvent | undefined => (
-  INFERENCE_EVENTS.find(event => value?.startsWith(event))
-);
-
-export const isNumber = (value: unknown): value is number => !isNaN(Number(value));
-
-// -----------------
-// Vanilla Inference
-// -----------------
 export const convertArrayToModelOutput = (value: unknown): false | ModelOutput => {
   const modelOutput: ModelOutput = {
     numbers: [],
@@ -87,7 +77,7 @@ export const convertArrayToModelOutput = (value: unknown): false | ModelOutput =
   return modelOutput;
 };
 
-const isValidNumberTensorArray = (tensor: unknown): tensor is NumberTensorArray => {
+const isValidNumberTensorArray = (tensor: unknown): tensor is TensorLibNumberArray => {
   if (!Array.isArray(tensor) || tensor.length !== 2) {
     return false;
   }
@@ -96,7 +86,7 @@ const isValidNumberTensorArray = (tensor: unknown): tensor is NumberTensorArray 
   return typeof value === 'string' && typeof decimals === 'string' && isNumber(value) && isNumber(decimals);
 };
 
-const isValidMultiDimensionalNumberTensorArray = (tensor: unknown): tensor is MultiDimensionalNumberTensorArray => {
+const isValidMultiDimensionalNumberTensorArray = (tensor: unknown): tensor is TensorLibMultiDimensionalNumberTensorArray => {
   if (!Array.isArray(tensor) || tensor.length !== 3) {
     return false;
   }
@@ -119,7 +109,7 @@ const isValidMultiDimensionalNumberTensorArray = (tensor: unknown): tensor is Mu
     shape.every(s => typeof s === 'string' && isNumber(s));
 };
 
-const isValidStringTensorArray = (tensor: unknown): tensor is StringTensorArray => {
+const isValidStringTensorArray = (tensor: unknown): tensor is TensorLibStringTensorArray => {
   if (!Array.isArray(tensor) || tensor.length !== 2) {
     return false;
   }
@@ -130,7 +120,7 @@ const isValidStringTensorArray = (tensor: unknown): tensor is StringTensorArray 
     values.every(v => typeof v === 'string');
 };
 
-const isValidJsonScalarArray = (scalar: unknown): scalar is JsonScalarArray => {
+const isValidJsonScalarArray = (scalar: unknown): scalar is TensorLibJsonScalarArray => {
   if (!Array.isArray(scalar) || scalar.length !== 2) {
     return false;
   }

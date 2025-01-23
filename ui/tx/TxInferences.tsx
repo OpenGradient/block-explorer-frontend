@@ -65,7 +65,6 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
           { ...item }
           type="transaction"
           isLoading={ isPlaceholderData }
-          defaultDataType={ txQuery.data?.zilliqa?.is_scilla ? 'UTF-8' : undefined }
         />
       )) }
     </Box>

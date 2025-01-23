@@ -7,7 +7,7 @@ import type { RoutedTab } from 'ui/shared/Tabs/types';
 import config from 'configs/app';
 import { useAppContext } from 'lib/contexts/app';
 import throwOnResourceLoadError from 'lib/errors/throwOnResourceLoadError';
-import { getInferenceEvent } from 'lib/inferences/utils';
+import { getInferenceEvent } from 'lib/inferences/event';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import { publicClient } from 'lib/web3/client';
 import TextAd from 'ui/shared/ad/TextAd';

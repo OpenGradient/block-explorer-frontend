@@ -2,13 +2,13 @@ import { Grid, GridItem, useColorModeValue, Alert, Link } from '@chakra-ui/react
 import React from 'react';
 
 import type { Log } from 'types/api/log';
-import { InferenceEvent } from 'types/client/inference';
+import { InferenceEvent } from 'types/client/inference/event';
 
 import { route } from 'nextjs-routes';
 
 // import searchIcon from 'icons/search.svg';
 import { space } from 'lib/html-entities';
-import { getInferenceEvent } from 'lib/inferences/utils';
+import { getInferenceEvent } from 'lib/inferences/event';
 import Skeleton from 'ui/shared/chakra/Skeleton';
 import Tag from 'ui/shared/chakra/Tag';
 
@@ -33,8 +33,10 @@ const InferenceItem = ({ address, decoded, type, isLoading }: Props) => {
     const event = getInferenceEvent(decoded?.method_call);
     if (event === InferenceEvent.InferenceResult) {
       return 'ML Inference';
-    } else if (event === InferenceEvent.LLMChatResult || InferenceEvent.LLMCompletionResult) {
-      return 'LLM Inference';
+    } else if (event === InferenceEvent.LLMChatResult) {
+      return 'LLM Chat Inference';
+    } else if (event === InferenceEvent.LLMCompletionResult) {
+      return 'LLM Completion Inference';
     }
 
     return 'ML Inference';

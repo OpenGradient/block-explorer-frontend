@@ -1,9 +1,3 @@
-export enum InferenceEvent {
-  InferenceResult = 'InferenceResult',
-  LLMChatResult = 'LLMChatResult',
-  LLMCompletionResult = 'LLMCompletionResult',
-};
-
 export interface TensorLibJsonScalar {
   name: string;
   value: string;
@@ -32,32 +26,30 @@ export interface ModelOutput {
   isSimulationResult: boolean;
 }
 
-export type InferenceResultParam = [Array<TensorLibMultiDimensionalNumberTensor>, Array<TensorLibStringTensor>, Array<TensorLibJsonScalar>, string];
-
 /**
  * ```ts
  * [string, string]
  * ```
  */
-export type NumberTensorArray = [string, string];
+export type TensorLibNumberArray = [string, string];
 
 /**
  * ```ts
  * [string, Array<[string, string]>, Array<number>]
  * ```
  */
-export type MultiDimensionalNumberTensorArray = [string, Array<NumberTensorArray>, Array<number>];
+export type TensorLibMultiDimensionalNumberTensorArray = [string, Array<TensorLibNumberArray>, Array<number>];
 
 /**
  * ```ts
  * [string, Array<string>]
  * ```
  */
-export type StringTensorArray = [string, Array<string>];
+export type TensorLibStringTensorArray = [string, Array<string>];
 
 /**
  * ```ts
  * [string, string]
  * ```
  */
-export type JsonScalarArray = [string, string];
+export type TensorLibJsonScalarArray = [string, string];
