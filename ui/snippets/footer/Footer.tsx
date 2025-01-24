@@ -1,5 +1,5 @@
 import type { GridProps, HTMLChakraProps } from '@chakra-ui/react';
-import { Box, Grid, Flex, Text, Link, VStack, useColorModeValue } from '@chakra-ui/react';
+import { Box, Grid, Flex, Text, Link, VStack, useColorModeValue, Image } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
@@ -9,10 +9,10 @@ import config from 'configs/app';
 import type { ResourceError } from 'lib/api/resources';
 import useFetch from 'lib/hooks/useFetch';
 import Skeleton from 'ui/shared/chakra/Skeleton';
-import IconSvg from 'ui/shared/IconSvg';
 import { CONTENT_MAX_WIDTH } from 'ui/shared/layout/utils';
 import NetworkAddToWallet from 'ui/shared/NetworkAddToWallet';
 
+import { LogoFallback } from '../networkMenu/NetworkLogo';
 import FooterLinkItem, { type FooterLinkItemProps } from './FooterLinkItem';
 import IntTxsIndexingStatus from './IntTxsIndexingStatus';
 
@@ -20,6 +20,9 @@ const MAX_LINKS_COLUMNS = 4;
 
 const Footer = () => {
   const logoColor = useColorModeValue('blue.600', 'white');
+  const logoSrc = useColorModeValue(config.UI.navigation.logo.default, config.UI.navigation.logo.dark || config.UI.navigation.logo.default);
+  const darkModeFilter = { filter: 'brightness(0) invert(1)' };
+  const logoStyle = useColorModeValue({}, !config.UI.navigation.logo.dark ? darkModeFilter : {});
 
   const BLOCKSCOUT_LINKS: Array<FooterLinkItemProps> = [
     {
@@ -94,10 +97,14 @@ const Footer = () => {
         <Flex columnGap={ 2 } fontSize="xs" lineHeight={ 5 } alignItems="center" color="text">
           <span>Powered by</span>
           <Link href="https://www.opengradient.ai" isExternal display="inline-flex" color={ logoColor } _hover={{ color: logoColor }}>
-            <IconSvg
-              name="networks/logo-placeholder"
-              width="80px"
-              height={ 4 }
+            { /* Using NetworkLogo does not work because it's already a link - nested links are not possible */ }
+            <Image
+              w="80px"
+              h={ 4 }
+              src={ logoSrc }
+              alt={ `${ config.chain.name } network logo` }
+              fallback={ <LogoFallback isCollapsed={ false }/> }
+              style={ logoStyle }
             />
           </Link>
         </Flex>
@@ -122,7 +129,7 @@ const Footer = () => {
         </Box> */ }
       </Box>
     );
-  }, [ logoColor ]);
+  }, [ logoColor, logoSrc, logoStyle ]);
 
   const containerProps: HTMLChakraProps<'div'> = {
     as: 'footer',
