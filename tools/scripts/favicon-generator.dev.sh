@@ -1,3 +1,5 @@
+#!/bin/bash
+
 favicon_folder="./public/assets/favicon/"
 master_url="https://raw.githubusercontent.com/OpenGradient/block-explorer-frontend/refs/heads/main/public/static/opengradient/opengradient-icon.svg"
 
