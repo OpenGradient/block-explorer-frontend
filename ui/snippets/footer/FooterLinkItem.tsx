@@ -5,7 +5,7 @@ import Skeleton from 'ui/shared/chakra/Skeleton';
 import type { IconName } from 'ui/shared/IconSvg';
 import IconSvg from 'ui/shared/IconSvg';
 
-type Props = {
+export interface FooterLinkItemProps {
   icon?: IconName;
   iconSize?: string;
   text: string;
@@ -13,7 +13,7 @@ type Props = {
   isLoading?: boolean;
 };
 
-const FooterLinkItem = ({ icon, iconSize, text, url, isLoading }: Props) => {
+const FooterLinkItem = ({ icon, iconSize, text, url, isLoading }: FooterLinkItemProps) => {
   if (isLoading) {
     return <Skeleton my="3px">{ text }</Skeleton>;
   }
