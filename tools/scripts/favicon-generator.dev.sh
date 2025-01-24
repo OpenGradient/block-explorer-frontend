@@ -1,5 +1,5 @@
 favicon_folder="./public/assets/favicon/"
-master_url="https://raw.githubusercontent.com/blockscout/frontend/main/tools/scripts/favicon.svg"
+master_url="https://raw.githubusercontent.com/OpenGradient/block-explorer-frontend/refs/heads/main/public/static/opengradient/opengradient-icon.svg"
 
 dotenv \
   -v MASTER_URL=$master_url \
