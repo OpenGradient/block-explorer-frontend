@@ -15,6 +15,7 @@ import React from 'react';
 import type { DecodedInputParams } from 'types/api/decodedInput';
 
 import { convertArrayToLLMChatResponse } from 'lib/inferences/llmChat';
+import { convertArrayToLLMCompletionResponse } from 'lib/inferences/llmCompletion';
 import { convertArrayToModelOutput } from 'lib/inferences/traditional';
 import Skeleton from 'ui/shared/chakra/Skeleton';
 
@@ -177,6 +178,16 @@ const InferenceOutput = ({ value, isLoading }: InferenceOutputProps) => {
           </Item>
         </Container>
       );
+    }
+
+    const llmCompletionResponse = convertArrayToLLMCompletionResponse(value);
+    if (llmCompletionResponse) {
+      const { answer } = llmCompletionResponse;
+      return answer.length > 0 ? (
+        <Item isCode whiteSpace="pre-wrap">
+          { llmCompletionResponse.answer }
+        </Item>
+      ) : 'None';
     }
   } catch {}
 
