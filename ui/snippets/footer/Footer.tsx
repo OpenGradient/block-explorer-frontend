@@ -204,7 +204,7 @@ const Footer = () => {
   }
 
   return (
-    <Box { ...containerProps } paddingBottom={{ lg: 20 }}>
+    <Box { ...containerProps }>
       <Grid
         { ...contentProps }
         gridTemplateAreas={{
