@@ -1,7 +1,4 @@
-import type { SkeletonProps,
-  FlexProps,
-  StackProps } from '@chakra-ui/react';
-import { Divider, Flex, useColorModeValue, VStack, Accordion,
+import { Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
@@ -17,66 +14,9 @@ import type { DecodedInputParams } from 'types/api/decodedInput';
 import { convertArrayToLLMChatResponse } from 'lib/inferences/llmChat';
 import { convertArrayToLLMCompletionResponse } from 'lib/inferences/llmCompletion';
 import { convertArrayToModelOutput } from 'lib/inferences/traditional';
-import Skeleton from 'ui/shared/chakra/Skeleton';
 
-interface ItemProps extends FlexProps {
-  label?: React.ReactNode;
-  labelProps?: SkeletonProps;
-  children: React.ReactNode;
-  isLoading?: boolean;
-  isCode?: boolean;
-}
-
-const Item = ({ label, labelProps = {}, children, isLoading, isCode = false, ...rest }: ItemProps) => {
-  const dataBgColor = useColorModeValue('blackAlpha.50', 'whiteAlpha.50');
-
-  return (
-    <Flex
-      w="100%"
-      columnGap={ 5 }
-      rowGap={ 2 }
-      flexDir={{ base: 'column', lg: 'row' }}
-      alignItems={{ base: 'flex-start', lg: 'center' }}
-      { ...rest }
-    >
-      { label && (
-        <Skeleton fontWeight={ 600 } w={{ base: 'auto', lg: '120px' }} flexShrink={ 0 } isLoaded={ !isLoading } { ...labelProps }>
-          { label }
-        </Skeleton >
-      ) }
-      { isCode ? (
-        <Skeleton
-          flex={ 1 }
-          wordBreak="break-word"
-          whiteSpace="pre-wrap"
-          isLoaded={ !isLoading }
-          p={ 4 }
-          fontSize="sm"
-          borderRadius="md"
-          bgColor={ isLoading ? undefined : dataBgColor }
-        >
-          { children }
-        </Skeleton>
-      ) : <Skeleton flex={ 1 } isLoaded={ !isLoading }>{ children }</Skeleton> }
-    </Flex>
-  );
-};
-
-const Container = ({ children, ...rest }: { children: React.ReactNode } & StackProps) => (
-  <VStack
-    align="flex-start"
-    divider={ <Divider/> }
-    fontSize="sm"
-    lineHeight={ 5 }
-    flexGrow={ 1 }
-    w="100%"
-    marginBottom={ 2 }
-    gap={ 1 }
-    { ...rest }
-  >
-    { children }
-  </VStack>
-);
+import Item from './layout/Item';
+import VStackContainer from './layout/VStackContainer';
 
 interface InferenceOutputProps {
   value: DecodedInputParams['value'];
@@ -119,7 +59,7 @@ const InferenceOutput = ({ value, isLoading }: InferenceOutputProps) => {
       }
 
       if (elements.length > 0) {
-        return <Container>{ elements }</Container>;
+        return <VStackContainer>{ elements }</VStackContainer>;
       }
     }
 
@@ -127,12 +67,12 @@ const InferenceOutput = ({ value, isLoading }: InferenceOutputProps) => {
     if (llmChatResponse) {
       const { finishReason, message } = llmChatResponse;
       return (
-        <Container>
+        <VStackContainer>
           <Item label="Finish Reason" isLoading={ isLoading }>
             { finishReason }
           </Item>
           <Item isLoading={ isLoading }>
-            <Container direction="column" rowGap={ 2 }>
+            <VStackContainer direction="column" rowGap={ 2 }>
               <Item label="Role">
                 { message.role }
               </Item>
@@ -174,9 +114,9 @@ const InferenceOutput = ({ value, isLoading }: InferenceOutputProps) => {
                   </Accordion>
                 ) }
               </Item>
-            </Container>
+            </VStackContainer>
           </Item>
-        </Container>
+        </VStackContainer>
       );
     }
 
@@ -194,11 +134,11 @@ const InferenceOutput = ({ value, isLoading }: InferenceOutputProps) => {
   return (
     value &&
     (
-      <Container>
+      <VStackContainer>
         <Item isLoading={ isLoading }>
           { JSON.stringify(value, null, 4) }
         </Item>
-      </Container>
+      </VStackContainer>
     )
   );
 };

@@ -1,14 +1,13 @@
-import { Grid, GridItem, useColorModeValue, Alert, Link } from '@chakra-ui/react';
+import { Grid, GridItem, useColorModeValue,
+} from '@chakra-ui/react';
 import React from 'react';
 
 import type { Log } from 'types/api/log';
-import { InferenceEvent } from 'types/client/inference/event';
+import { InferenceEvents } from 'types/client/inference/event';
 
-import { route } from 'nextjs-routes';
-
-// import searchIcon from 'icons/search.svg';
-import { space } from 'lib/html-entities';
+import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
 import { getInferenceEvent } from 'lib/inferences/event';
+import { decodePrecompileData } from 'lib/inferences/precompile';
 import Skeleton from 'ui/shared/chakra/Skeleton';
 import Tag from 'ui/shared/chakra/Tag';
 
@@ -25,17 +24,75 @@ const RowHeader = ({ children, isLoading }: { children: React.ReactNode; isLoadi
   </GridItem>
 );
 
-const InferenceItem = ({ address, decoded, type, isLoading }: Props) => {
+const InferenceItem = ({ address, data, decoded, isLoading }: Props) => {
 
   const borderColor = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
 
+  const renderGridItems = () => {
+    if (address.hash === SUPPORTED_INFERENCE_ADDRESSES.Precompile) {
+      const precompileDecoded = decodePrecompileData(data);
+      const { data: { inferenceID, mode, modelCID } } = precompileDecoded;
+      return (
+        <>
+          <RowHeader isLoading={ isLoading }>Event</RowHeader>
+          <GridItem>
+            <Tag isLoading={ isLoading }>{ precompileDecoded.event }</Tag>
+          </GridItem>
+
+          <RowHeader isLoading={ isLoading }>Inference ID</RowHeader>
+          <GridItem>
+            <Tag isLoading={ isLoading }>{ inferenceID }</Tag>
+          </GridItem>
+
+          <RowHeader isLoading={ isLoading }>Mode</RowHeader>
+          <GridItem>
+            <Skeleton isLoaded={ !isLoading }> { mode.toString() } </Skeleton>
+          </GridItem>
+
+          <RowHeader isLoading={ isLoading }>Model CID</RowHeader>
+          <GridItem>
+            <Tag isLoading={ isLoading }>{ modelCID }</Tag>
+          </GridItem>
+        </>
+      );
+    } else if (address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub) {
+      return (
+        <>
+          <RowHeader isLoading={ isLoading }>Type</RowHeader>
+          <GridItem display="flex" alignItems="center">
+            <Tag isLoading={ isLoading } fontSize="md">{ renderInferenceType() }</Tag>
+          </GridItem>
+
+          <RowHeader isLoading={ isLoading }>
+            Output
+            { /* <Flex alignItems="center" justifyContent="space-between">
+          Output
+          <Skeleton isLoaded={ !isLoading } ml="auto" borderRadius="base">
+            <Tooltip label="Parameter count">
+              <Button variant="outline" colorScheme="gray" data-selected="true" size="sm" fontWeight={ 400 }>
+                { decoded.parameters.length }
+              </Button>
+            </Tooltip>
+          </Skeleton>
+        </Flex> */ }
+          </RowHeader>
+          <GridItem>
+            { decoded?.parameters.map((param) => (
+              <InferenceOutput key={ param.name } value={ param.value } isLoading={ isLoading }/>
+            )) }
+          </GridItem>
+        </>
+      );
+    }
+  };
+
   const renderInferenceType = () => {
     const event = getInferenceEvent(decoded?.method_call);
-    if (event === InferenceEvent.InferenceResult) {
+    if (event === InferenceEvents.InferenceResult) {
       return 'ML Inference';
-    } else if (event === InferenceEvent.LLMChatResult) {
+    } else if (event === InferenceEvents.LLMChatResult) {
       return 'LLM Chat Inference';
-    } else if (event === InferenceEvent.LLMCompletionResult) {
+    } else if (event === InferenceEvents.LLMCompletionResult) {
       return 'LLM Completion Inference';
     }
 
@@ -43,53 +100,20 @@ const InferenceItem = ({ address, decoded, type, isLoading }: Props) => {
   };
 
   return (
-    decoded &&
-    (
-      <Grid
-        gridTemplateColumns={{ base: 'minmax(0, 1fr)', lg: '200px minmax(0, 1fr)' }}
-        gap={{ base: 2, lg: 8 }}
-        py={ 8 }
-        _notFirst={{
-          borderTopWidth: '1px',
-          borderTopColor: borderColor,
-        }}
-        _first={{
-          pt: 0,
-        }}
-      >
-        { !decoded && !address.is_verified && type === 'transaction' && (
-          <GridItem colSpan={{ base: 1, lg: 2 }}>
-            <Alert status="warning" display="inline-table" whiteSpace="normal">
-              To see accurate decoded input data, the contract must be verified.{ space }
-              <Link href={ route({ pathname: '/address/[hash]/contract-verification', query: { hash: address.hash } }) }>Verify the contract here</Link>
-            </Alert>
-          </GridItem>
-        ) }
-        <RowHeader isLoading={ isLoading }>Type</RowHeader>
-        <GridItem display="flex" alignItems="center">
-          <Tag isLoading={ isLoading } fontSize="md">{ renderInferenceType() }</Tag>
-        </GridItem>
-
-        <RowHeader isLoading={ isLoading }>
-          Output
-          { /* <Flex alignItems="center" justifyContent="space-between">
-            Output
-            <Skeleton isLoaded={ !isLoading } ml="auto" borderRadius="base">
-              <Tooltip label="Parameter count">
-                <Button variant="outline" colorScheme="gray" data-selected="true" size="sm" fontWeight={ 400 }>
-                  { decoded.parameters.length }
-                </Button>
-              </Tooltip>
-            </Skeleton>
-          </Flex> */ }
-        </RowHeader>
-        <GridItem>
-          { decoded.parameters.map((param) => (
-            <InferenceOutput key={ param.name } value={ param.value } isLoading={ isLoading }/>
-          )) }
-        </GridItem>
-      </Grid>
-    )
+    <Grid
+      gridTemplateColumns={{ base: 'minmax(0, 1fr)', lg: '200px minmax(0, 1fr)' }}
+      gap={{ base: 2, lg: 8 }}
+      py={ 8 }
+      _notFirst={{
+        borderTopWidth: '1px',
+        borderTopColor: borderColor,
+      }}
+      _first={{
+        pt: 0,
+      }}
+    >
+      { renderGridItems() }
+    </Grid>
   );
 };
 
