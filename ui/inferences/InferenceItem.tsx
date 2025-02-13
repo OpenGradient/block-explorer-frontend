@@ -46,7 +46,7 @@ const InferenceItem = ({ address, data, decoded, isLoading }: Props) => {
 
           <RowHeader isLoading={ isLoading }>Mode</RowHeader>
           <GridItem>
-            <Skeleton isLoaded={ !isLoading }> { mode.toString() } </Skeleton>
+            <Tag isLoading={ isLoading }>{ mode }</Tag>
           </GridItem>
 
           <RowHeader isLoading={ isLoading }>Model CID</RowHeader>

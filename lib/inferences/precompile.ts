@@ -22,9 +22,8 @@ export interface PrecompileDecodedData {
   };
 }
 
-// Function to process decoded event data
 const buildDecodedData = (eventName: PrecompileEvent, decodedData: Result): PrecompileDecodedData => {
-  // Try converting the decodedData[1] (mode) from bigint into InferenceMode enum
+  // Try converting the decodedData[1] (mode) from bigint into InferenceMode string
   let mode: InferenceMode | undefined;
   try {
     const numberMode = Number(decodedData[1]);
