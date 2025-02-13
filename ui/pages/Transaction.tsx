@@ -7,7 +7,7 @@ import type { RoutedTab } from 'ui/shared/Tabs/types';
 import config from 'configs/app';
 import { useAppContext } from 'lib/contexts/app';
 import throwOnResourceLoadError from 'lib/errors/throwOnResourceLoadError';
-import { getInferenceEvent } from 'lib/inferences/event';
+import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import { publicClient } from 'lib/web3/client';
 import TextAd from 'ui/shared/ad/TextAd';
@@ -45,9 +45,9 @@ const TransactionPageContent = () => {
 
   const showDegradedView = publicClient && ((isError && error.status !== 422) || isPlaceholderData) && errorUpdateCount > 0;
 
-  const filterLogsByMethodCall = React.useCallback((log: Log): boolean => {
-    const methodCall = log.decoded?.method_call;
-    return Boolean(methodCall && getInferenceEvent(methodCall));
+  /** Used to filter logs for the inferences tab. */
+  const filterLogsByAddressHash = React.useCallback((log: Log): boolean => {
+    return Boolean(Object.values(SUPPORTED_INFERENCE_ADDRESSES).find((hash) => hash === log.address.hash));
   }, []);
 
   const tabs: Array<RoutedTab> = (() => {
@@ -61,7 +61,7 @@ const TransactionPageContent = () => {
         title: config.features.suave.isEnabled && data?.wrapped ? 'Confidential compute tx details' : 'Details',
         component: detailsComponent,
       },
-      { id: 'inferences', title: 'Inferences', component: <TxInferences txQuery={ txQuery } logsFilter={ filterLogsByMethodCall }/> },
+      { id: 'inferences', title: 'Inferences', component: <TxInferences txQuery={ txQuery } logsFilter={ filterLogsByAddressHash }/> },
       txInterpretation.isEnabled && txInterpretation.provider === 'noves' ?
         { id: 'asset_flows', title: 'Asset Flows', component: <TxAssetFlows hash={ hash }/> } :
         undefined,

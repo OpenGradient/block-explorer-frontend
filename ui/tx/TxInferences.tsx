@@ -1,12 +1,20 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon } from '@chakra-ui/react';
+import { range } from 'es-toolkit';
 import React from 'react';
 
+import type { AddressParam } from 'types/api/addressParams';
 import type { Log } from 'types/api/log';
 
+import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
 import { LOG } from 'stubs/log';
 import { generateListStub } from 'stubs/utils';
 import InferenceItem from 'ui/inferences/InferenceItem';
 import ActionBar from 'ui/shared/ActionBar';
+import Skeleton from 'ui/shared/chakra/Skeleton';
 import DataFetchAlert from 'ui/shared/DataFetchAlert';
 import Pagination from 'ui/shared/pagination/Pagination';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
@@ -14,6 +22,11 @@ import TxPendingAlert from 'ui/tx/TxPendingAlert';
 import TxSocketAlert from 'ui/tx/TxSocketAlert';
 
 import type { TxQuery } from './useTxQuery';
+
+interface AccordionItem {
+  label: string;
+  content: React.ReactNode;
+}
 
 interface Props {
   txQuery: TxQuery;
@@ -52,6 +65,20 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
     return <Text as="span">There are no inferences for this transaction.</Text>;
   }
 
+  // if (logsFilter) {
+  //   items = (data?.items ?? []).filter(logsFilter);
+  // }
+
+  const getLabelFromAddress = (address: AddressParam) => {
+    if (address.hash === SUPPORTED_INFERENCE_ADDRESSES.Precompile) {
+      return 'Pre-compile';
+    } else if (address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub) {
+      return 'InferenceHub';
+    }
+
+    return address.hash;
+  };
+
   return (
     <Box>
       { pagination.isVisible && (
@@ -59,14 +86,27 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
           <Pagination ml="auto" { ...pagination }/>
         </ActionBar>
       ) }
-      { items.map((item, index) => (
-        <InferenceItem
-          key={ index }
-          { ...item }
-          type="transaction"
-          isLoading={ isPlaceholderData }
-        />
-      )) }
+      <Skeleton isLoaded={ !isPlaceholderData }>
+        <Accordion defaultIndex={ range(0, items.length) } allowMultiple>
+          { items.map((item) => (
+            <AccordionItem key={ `${ item.address.hash }-${ item.index }` }>
+              <AccordionButton>
+                <Box as="span" flex="1" textAlign="left">
+                  { getLabelFromAddress(item.address) }
+                </Box>
+                <AccordionIcon/>
+              </AccordionButton>
+              <AccordionPanel>
+                <InferenceItem
+                  { ...item }
+                  type="transaction"
+                  isLoading={ isPlaceholderData }
+                />
+              </AccordionPanel>
+            </AccordionItem>
+          )) }
+        </Accordion>
+      </Skeleton>
     </Box>
   );
 };
