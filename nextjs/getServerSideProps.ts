@@ -92,6 +92,16 @@ export const withdrawals: GetServerSideProps<Props> = async(context) => {
   return base(context);
 };
 
+export const txnWithdrawals: GetServerSideProps<Props> = async(context) => {
+  if (!(rollupFeature.isEnabled && rollupFeature.type === 'arbitrum')) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return base(context);
+};
+
 export const rollup: GetServerSideProps<Props> = async(context) => {
   if (!config.features.rollup.isEnabled) {
     return {
@@ -115,6 +125,16 @@ export const outputRoots: GetServerSideProps<Props> = async(context) => {
 const BATCH_ROLLUP_TYPES: Array<RollupType> = [ 'zkEvm', 'zkSync', 'arbitrum', 'optimistic', 'scroll' ];
 export const batch: GetServerSideProps<Props> = async(context) => {
   if (!(rollupFeature.isEnabled && BATCH_ROLLUP_TYPES.includes(rollupFeature.type))) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return base(context);
+};
+
+export const batchCelestia: GetServerSideProps<Props> = async(context) => {
+  if (!(rollupFeature.isEnabled && (rollupFeature.type === 'arbitrum' || rollupFeature.type === 'optimistic'))) {
     return {
       notFound: true,
     };
@@ -226,6 +246,17 @@ export const userOps: GetServerSideProps<Props> = async(context) => {
 
 export const validators: GetServerSideProps<Props> = async(context) => {
   if (!config.features.validators.isEnabled) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return base(context);
+};
+
+export const validatorDetails: GetServerSideProps<Props> = async(context) => {
+  const feature = config.features.validators;
+  if (!feature.isEnabled || feature.chainType !== 'zilliqa') {
     return {
       notFound: true,
     };
