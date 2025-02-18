@@ -1,6 +1,5 @@
 import type {
   ToolCall,
-  ToolDefinition,
   ChatMessage,
   ToolCallArray,
   ChatMessageArray,
@@ -9,6 +8,7 @@ import type {
 } from 'types/client/inference/llmChat';
 
 import { isValidStringArray } from 'lib/array';
+import { isBigInt } from 'lib/number';
 
 import { convertChatMessageArray } from './response';
 
@@ -144,13 +144,6 @@ const isValidChatMessage = (value: unknown): value is ChatMessage => {
          typeof message.toolCallId === 'string' &&
          Array.isArray(message.toolCalls) &&
          message.toolCalls.every(isValidToolCall);
-};
-
-const isBigInt = (value: unknown): value is BigInt => {
-  return typeof value === 'bigint' ||
-         (typeof value === 'object' &&
-          value !== null &&
-          value.constructor === BigInt);
 };
 
 export const isLLMChatRequest = (value: unknown): value is LLMChatRequest => {

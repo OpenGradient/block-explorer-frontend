@@ -80,19 +80,9 @@ const InferenceItem = ({ type, address, preCompileData, decoded, isLoading }: Pr
 
         <RowHeader isLoading={ isLoading }>
           Output
-          { /* <Flex alignItems="center" justifyContent="space-between">
-        Output
-        <Skeleton isLoaded={ !isLoading } ml="auto" borderRadius="base">
-          <Tooltip label="Parameter count">
-            <Button variant="outline" colorScheme="gray" data-selected="true" size="sm" fontWeight={ 400 }>
-              { decoded.parameters.length }
-            </Button>
-          </Tooltip>
-        </Skeleton>
-      </Flex> */ }
         </RowHeader>
 
-        <GridItem colSpan={{ base: 1, lg: 2 }}>
+        <GridItem>
           { !decoded && !address.is_verified && type === 'transaction' ? (
             <Alert status="warning" display="inline-table" whiteSpace="normal">
               To see accurate decoded input data, the contract must be verified.{ space }

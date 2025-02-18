@@ -4,7 +4,7 @@ import type { DecodedInputParams } from 'types/api/decodedInput';
 
 import { convertArrayToLLMChatResponse } from 'lib/inferences/llmChat/response';
 import { convertArrayToLLMCompletionResponse } from 'lib/inferences/llmCompletion';
-import { convertArrayToModelOutput } from 'lib/inferences/traditional';
+import { convertArrayToModelOutput } from 'lib/inferences/traditional/convert';
 
 import ChatMessage from './ChatMessage';
 import Item from './layout/Item';

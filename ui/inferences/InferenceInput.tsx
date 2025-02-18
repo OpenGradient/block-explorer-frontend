@@ -11,6 +11,7 @@ import React from 'react';
 
 import { isLLMChatRequest } from 'lib/inferences/llmChat/request';
 import type { PrecompileDecodedData } from 'lib/inferences/precompile';
+import { isModelInput } from 'lib/inferences/traditional/typeGuards';
 import Tag from 'ui/shared/chakra/Tag';
 
 import ChatMessage from './ChatMessage';
@@ -37,7 +38,7 @@ const InferenceInput = ({ value, isLoading }: InferenceInputProps) => {
           <VStackContainer>
             <Item label={ `Messages (${ messages.length })` }>
               { isEmpty(messages) ? 'None' : (
-                <Accordion defaultIndex={ range(0, messages.length) } allowMultiple width="100%">
+                <Accordion defaultIndex={ range(0, messages.length) } allowMultiple width="100%" border="transparent">
                   { messages.map((message, index) => {
                     return (
                       <AccordionItem key={ index }>
@@ -108,15 +109,75 @@ const InferenceInput = ({ value, isLoading }: InferenceInputProps) => {
             </Item>
           </VStackContainer>
         );
+      } else if (isModelInput(value)) {
+        const {
+          numbers,
+          strings } = value;
+        return (
+          <VStackContainer>
+            { !isEmpty(numbers) && (
+              <Item label={ `Numbers (${ numbers.length })` }>
+                { isEmpty(numbers) ? 'None' : (
+                  <Accordion defaultIndex={ range(0, numbers.length) } allowMultiple width="100%" border="transparent">
+                    { numbers.map((number, index) => {
+                      return (
+                        <AccordionItem key={ index }>
+                          <AccordionButton>
+                            <Box as="span" flex="1" textAlign="left">
+                              { number.name }
+                            </Box>
+                            <AccordionIcon/>
+                          </AccordionButton>
+                          <AccordionPanel>
+                            <VStackContainer>
+                              <Item isLoading={ isLoading } isCode>
+                                { `[${ number.values.map((v) => Number(v.value) / (10 ** Number(v.decimals))).join(',') }]
+
+Shape: [${ number.shape.map(String).join(',') }]` }
+                              </Item>
+                            </VStackContainer>
+                          </AccordionPanel>
+                        </AccordionItem>
+                      );
+                    }) }
+                  </Accordion>
+                ) }
+              </Item>
+            ) }
+
+            { !isEmpty(strings) && (
+              <Item label={ `Strings (${ strings.length })` }>
+                <Accordion defaultIndex={ range(0, strings.length) } allowMultiple width="100%" border="transparent">
+                  { strings.map((string, index) => {
+                    return (
+                      <AccordionItem key={ index }>
+                        <AccordionButton>
+                          <Box as="span" flex="1" textAlign="left">
+                            { string.name }
+                          </Box>
+                          <AccordionIcon/>
+                        </AccordionButton>
+                        <AccordionPanel>
+                          <VStackContainer>
+                            <Item isLoading={ isLoading } isCode>
+                              { `[${ string.values.join(',') }]` }
+                            </Item>
+                          </VStackContainer>
+                        </AccordionPanel>
+                      </AccordionItem>
+                    );
+                  }) }
+                </Accordion>
+              </Item>
+            ) }
+          </VStackContainer>
+        );
       }
     }
 
     return <div>TODO</div>;
-  } catch (error) {
-
-    // console.log(error);
-
-    return <div>seomthing went wrong</div>;
+  } catch {
+    return 'None';
   }
 };
 

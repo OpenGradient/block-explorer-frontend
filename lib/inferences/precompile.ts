@@ -5,13 +5,14 @@ import type { InferenceMode } from 'types/client/inference/event';
 import { InferenceModes } from 'types/client/inference/event';
 import type { LLMChatRequest, LLMChatResponse } from 'types/client/inference/llmChat';
 import type { LLMCompletionResponse } from 'types/client/inference/llmCompletion';
-import type { ModelOutput } from 'types/client/inference/traditional';
+import type { ModelInput, ModelOutput } from 'types/client/inference/traditional';
 
 import { getObjectEntries } from 'lib/object';
 
 import { abi } from './abi.json';
 import { convertArrayToLLMChatRequest } from './llmChat/request';
 import { convertArrayToLLMChatResponse } from './llmChat/response';
+import { convertArrayToModelInput, convertArrayToModelOutput } from './traditional/convert';
 
 const PRECOMPILE_EVENTS = [ 'LLMChat', 'LLMCompletionEvent', 'ModelInferenceEvent' ] as const;
 
@@ -23,11 +24,11 @@ export interface PrecompileDecodedData {
   inferenceID: string;
   mode: InferenceMode;
   modelCID: string;
-  request: false | LLMChatRequest; // TODO(next): Put other requests here
+  request: false | ModelInput | LLMChatRequest; // TODO(next): Handle other requests here
   response: false | ModelOutput | LLMChatResponse | LLMCompletionResponse;
 }
 
-const buildDecodedData = (eventName: PrecompileEvent, decodedData: Result): PrecompileDecodedData => {
+const buildDecodedData = (eventName: PrecompileEvent, decodedData: Result): PrecompileDecodedData | undefined => {
   // Try converting the decodedData[1] (mode) from bigint into InferenceMode string
   let inferenceMode: InferenceMode | undefined;
 
@@ -56,13 +57,11 @@ const buildDecodedData = (eventName: PrecompileEvent, decodedData: Result): Prec
       request: convertArrayToLLMChatRequest(request),
       response: convertArrayToLLMChatResponse(response),
     };
-  };
-
-  return {
-    event: eventName,
-    inferenceID,
-    mode,
-    modelCID,
+  } else if (eventName === 'ModelInferenceEvent') {
+    return {
+      event: eventName,
+      inferenceID, mode, modelCID, request: convertArrayToModelInput(request[2]), response: convertArrayToModelOutput(response),
+    };
   };
 };
 

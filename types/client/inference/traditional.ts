@@ -1,11 +1,16 @@
+export interface ModelInput {
+  numbers: Array<TensorLibMultiDimensionalNumberTensor>;
+  strings: Array<TensorLibStringTensor>;
+}
+
 export interface TensorLibJsonScalar {
   name: string;
   value: string;
 }
 
 export interface TensorLibNumber {
-  value: string;
-  decimals: string;
+  value: string | number | bigint;
+  decimals: string | number | bigint;
 }
 
 export interface TensorLibStringTensor {
@@ -16,7 +21,7 @@ export interface TensorLibStringTensor {
 export interface TensorLibMultiDimensionalNumberTensor {
   name: string;
   values: Array<TensorLibNumber>;
-  shape: Array<number>;
+  shape: Array<number | bigint>;
 }
 
 export interface ModelOutput {
