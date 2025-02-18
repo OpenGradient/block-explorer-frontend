@@ -1,9 +1,12 @@
-import { Grid, GridItem, useColorModeValue,
+import { Alert, Grid, GridItem, Link, useColorModeValue,
 } from '@chakra-ui/react';
 import React from 'react';
 
 import type { Log } from 'types/api/log';
 
+import { route } from 'nextjs-routes';
+
+import { space } from 'lib/html-entities';
 import { decodePrecompileData } from 'lib/inferences/precompile';
 import Skeleton from 'ui/shared/chakra/Skeleton';
 import Tag from 'ui/shared/chakra/Tag';
@@ -22,7 +25,7 @@ const RowHeader = ({ children, isLoading }: { children: React.ReactNode; isLoadi
   </GridItem>
 );
 
-const InferenceItem = ({ preCompileData, decoded, isLoading }: Props) => {
+const InferenceItem = ({ type, address, preCompileData, decoded, isLoading }: Props) => {
 
   const borderColor = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
 
@@ -88,8 +91,14 @@ const InferenceItem = ({ preCompileData, decoded, isLoading }: Props) => {
         </Skeleton>
       </Flex> */ }
         </RowHeader>
-        <GridItem>
-          { decoded?.parameters.map((param) => (
+
+        <GridItem colSpan={{ base: 1, lg: 2 }}>
+          { !decoded && !address.is_verified && type === 'transaction' ? (
+            <Alert status="warning" display="inline-table" whiteSpace="normal">
+              To see accurate decoded input data, the contract must be verified.{ space }
+              <Link href={ route({ pathname: '/address/[hash]/contract-verification', query: { hash: address.hash } }) }>Verify the contract here</Link>
+            </Alert>
+          ) : decoded?.parameters.map((param) => (
             <InferenceOutput key={ param.name } value={ param.value } isLoading={ isLoading }/>
           )) }
         </GridItem>
