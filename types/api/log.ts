@@ -8,6 +8,9 @@ export interface Log {
   index: number;
   decoded: DecodedInput | null;
   transaction_hash: string | null;
+
+  // OpenGradient specific, populated manually from pre-compile logs
+  preCompileData?: string;
 }
 
 export interface LogsResponseTx {

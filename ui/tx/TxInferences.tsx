@@ -6,10 +6,12 @@ import { Box, Text, Accordion,
 import { range } from 'es-toolkit';
 import React from 'react';
 
-import type { AddressParam } from 'types/api/addressParams';
+import type { DecodedInput } from 'types/api/decodedInput';
 import type { Log } from 'types/api/log';
+import { InferenceEvents } from 'types/client/inference/event';
 
 import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
+import { getInferenceEvent } from 'lib/inferences/event';
 import { LOG } from 'stubs/log';
 import { generateListStub } from 'stubs/utils';
 import InferenceItem from 'ui/inferences/InferenceItem';
@@ -69,15 +71,31 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
   //   items = (data?.items ?? []).filter(logsFilter);
   // }
 
-  const getLabelFromAddress = (address: AddressParam) => {
-    if (address.hash === SUPPORTED_INFERENCE_ADDRESSES.Precompile) {
-      return 'Pre-compile';
-    } else if (address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub) {
-      return 'InferenceHub';
+  const renderInferenceType = (decoded: DecodedInput | null) => {
+    const event = getInferenceEvent(decoded?.method_call);
+    if (event === InferenceEvents.InferenceResult) {
+      return 'ML Inference';
+    } else if (event === InferenceEvents.LLMChatResult) {
+      return 'LLM Chat Inference';
+    } else if (event === InferenceEvents.LLMCompletionResult) {
+      return 'LLM Completion Inference';
     }
 
-    return address.hash;
+    return 'ML Inference';
   };
+
+  const inferenceHubLogs = items.map((item, index) => {
+    const prevItem = index > 0 ? items[index - 1] : undefined;
+
+    if (item.address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub && prevItem?.address.hash === SUPPORTED_INFERENCE_ADDRESSES.Precompile) {
+      return {
+        ...item,
+        preCompileData: prevItem.data,
+      };
+    }
+
+    return item;
+  }).filter((i) => i.address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub);
 
   return (
     <Box>
@@ -88,11 +106,11 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
       ) }
       <Skeleton isLoaded={ !isPlaceholderData }>
         <Accordion defaultIndex={ range(0, items.length) } allowMultiple>
-          { items.map((item) => (
+          { inferenceHubLogs.map((item) => (
             <AccordionItem key={ `${ item.address.hash }-${ item.index }` }>
               <AccordionButton>
                 <Box as="span" flex="1" textAlign="left">
-                  { getLabelFromAddress(item.address) }
+                  { renderInferenceType(item.decoded) }
                 </Box>
                 <AccordionIcon/>
               </AccordionButton>

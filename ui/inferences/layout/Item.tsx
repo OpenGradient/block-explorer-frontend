@@ -42,7 +42,7 @@ const Item = ({ label, labelProps = {}, children, isLoading, isCode = false, ...
         >
           { children }
         </Skeleton>
-      ) : <Skeleton flex={ 1 } isLoaded={ !isLoading }>{ children }</Skeleton> }
+      ) : <Skeleton flex={ 1 } width="100%" isLoaded={ !isLoading }>{ children }</Skeleton> }
     </Flex>
   );
 };

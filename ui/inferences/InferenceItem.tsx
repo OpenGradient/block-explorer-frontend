@@ -3,14 +3,12 @@ import { Grid, GridItem, useColorModeValue,
 import React from 'react';
 
 import type { Log } from 'types/api/log';
-import { InferenceEvents } from 'types/client/inference/event';
 
-import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
-import { getInferenceEvent } from 'lib/inferences/event';
 import { decodePrecompileData } from 'lib/inferences/precompile';
 import Skeleton from 'ui/shared/chakra/Skeleton';
 import Tag from 'ui/shared/chakra/Tag';
 
+import InferenceInput from './InferenceInput';
 import InferenceOutput from './InferenceOutput';
 
 type Props = Log & {
@@ -24,79 +22,79 @@ const RowHeader = ({ children, isLoading }: { children: React.ReactNode; isLoadi
   </GridItem>
 );
 
-const InferenceItem = ({ address, data, decoded, isLoading }: Props) => {
+const InferenceItem = ({ preCompileData, decoded, isLoading }: Props) => {
 
   const borderColor = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
 
   const renderGridItems = () => {
-    if (address.hash === SUPPORTED_INFERENCE_ADDRESSES.Precompile) {
-      const precompileDecoded = decodePrecompileData(data);
-      const { data: { inferenceID, mode, modelCID } } = precompileDecoded;
-      return (
-        <>
-          <RowHeader isLoading={ isLoading }>Event</RowHeader>
-          <GridItem>
-            <Tag isLoading={ isLoading }>{ precompileDecoded.event }</Tag>
-          </GridItem>
+    const precompileDecodedData = decodePrecompileData(preCompileData);
 
-          <RowHeader isLoading={ isLoading }>Inference ID</RowHeader>
-          <GridItem>
-            <Tag isLoading={ isLoading }>{ inferenceID }</Tag>
-          </GridItem>
+    // console.log(precompileDecodedData);
 
-          <RowHeader isLoading={ isLoading }>Mode</RowHeader>
-          <GridItem>
-            <Tag isLoading={ isLoading }>{ mode }</Tag>
-          </GridItem>
+    return (
+      <>
+        { precompileDecodedData && (
+          <>
+            <RowHeader isLoading={ isLoading }>
+              Inference ID
+            </RowHeader>
+            <GridItem>
+              <Tag>
+                { precompileDecodedData.inferenceID }
+              </Tag>
+            </GridItem>
 
-          <RowHeader isLoading={ isLoading }>Model CID</RowHeader>
-          <GridItem>
-            <Tag isLoading={ isLoading }>{ modelCID }</Tag>
-          </GridItem>
-        </>
-      );
-    } else if (address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub) {
-      return (
-        <>
-          <RowHeader isLoading={ isLoading }>Type</RowHeader>
-          <GridItem display="flex" alignItems="center">
-            <Tag isLoading={ isLoading } fontSize="md">{ renderInferenceType() }</Tag>
-          </GridItem>
+            <RowHeader isLoading={ isLoading }>
+              Mode
+            </RowHeader>
+            <GridItem>
+              <Tag>
+                { precompileDecodedData.mode }
+              </Tag>
+            </GridItem>
 
-          <RowHeader isLoading={ isLoading }>
-            Output
-            { /* <Flex alignItems="center" justifyContent="space-between">
+            <RowHeader isLoading={ isLoading }>
+              Model CID
+            </RowHeader>
+            <GridItem>
+              <Tag>
+                { precompileDecodedData.modelCID }
+              </Tag>
+            </GridItem>
+
+            { precompileDecodedData.request && (
+              <>
+                <RowHeader isLoading={ isLoading }>
+                  Input
+                </RowHeader>
+                <GridItem>
+                  <InferenceInput value={ precompileDecodedData.request } isLoading={ isLoading }/>
+                </GridItem>
+              </>
+            ) }
+          </>
+        ) }
+
+        <RowHeader isLoading={ isLoading }>
           Output
-          <Skeleton isLoaded={ !isLoading } ml="auto" borderRadius="base">
-            <Tooltip label="Parameter count">
-              <Button variant="outline" colorScheme="gray" data-selected="true" size="sm" fontWeight={ 400 }>
-                { decoded.parameters.length }
-              </Button>
-            </Tooltip>
-          </Skeleton>
-        </Flex> */ }
-          </RowHeader>
-          <GridItem>
-            { decoded?.parameters.map((param) => (
-              <InferenceOutput key={ param.name } value={ param.value } isLoading={ isLoading }/>
-            )) }
-          </GridItem>
-        </>
-      );
-    }
-  };
-
-  const renderInferenceType = () => {
-    const event = getInferenceEvent(decoded?.method_call);
-    if (event === InferenceEvents.InferenceResult) {
-      return 'ML Inference';
-    } else if (event === InferenceEvents.LLMChatResult) {
-      return 'LLM Chat Inference';
-    } else if (event === InferenceEvents.LLMCompletionResult) {
-      return 'LLM Completion Inference';
-    }
-
-    return 'ML Inference';
+          { /* <Flex alignItems="center" justifyContent="space-between">
+        Output
+        <Skeleton isLoaded={ !isLoading } ml="auto" borderRadius="base">
+          <Tooltip label="Parameter count">
+            <Button variant="outline" colorScheme="gray" data-selected="true" size="sm" fontWeight={ 400 }>
+              { decoded.parameters.length }
+            </Button>
+          </Tooltip>
+        </Skeleton>
+      </Flex> */ }
+        </RowHeader>
+        <GridItem>
+          { decoded?.parameters.map((param) => (
+            <InferenceOutput key={ param.name } value={ param.value } isLoading={ isLoading }/>
+          )) }
+        </GridItem>
+      </>
+    );
   };
 
   return (

@@ -10,74 +10,6 @@
           "type": "string"
         },
         {
-          "indexed": false,
-          "internalType": "enumLLMInferenceMode",
-          "name": "mode",
-          "type": "uint8"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "modelCID",
-          "type": "string"
-        }
-      ],
-      "name": "LLMChat",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "inferenceID",
-          "type": "string"
-        },
-        {
-          "indexed": false,
-          "internalType": "enumLLMInferenceMode",
-          "name": "mode",
-          "type": "uint8"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "modelCID",
-          "type": "string"
-        }
-      ],
-      "name": "LLMCompletionEvent",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "inferenceID",
-          "type": "string"
-        },
-        {
-          "indexed": false,
-          "internalType": "enumModelInferenceMode",
-          "name": "mode",
-          "type": "uint8"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "modelCID",
-          "type": "string"
-        }
-      ],
-      "name": "ModelInferenceEvent",
-      "type": "event"
-    },
-    {
-      "inputs": [
-        {
           "components": [
             {
               "internalType": "enumLLMInferenceMode",
@@ -181,13 +113,11 @@
               "type": "uint32"
             }
           ],
+          "indexed": false,
           "internalType": "structLLMChatRequest",
           "name": "request",
           "type": "tuple"
-        }
-      ],
-      "name": "runLLMChat",
-      "outputs": [
+        },
         {
           "components": [
             {
@@ -245,16 +175,24 @@
               "type": "tuple"
             }
           ],
+          "indexed": false,
           "internalType": "structLLMChatResponse",
-          "name": "",
+          "name": "response",
           "type": "tuple"
         }
       ],
-      "stateMutability": "nonpayable",
-      "type": "function"
+      "name": "LLMChat",
+      "type": "event"
     },
     {
+      "anonymous": false,
       "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "inferenceID",
+          "type": "string"
+        },
         {
           "components": [
             {
@@ -288,13 +226,11 @@
               "type": "uint32"
             }
           ],
+          "indexed": false,
           "internalType": "structLLMCompletionRequest",
           "name": "request",
           "type": "tuple"
-        }
-      ],
-      "name": "runLLMCompletion",
-      "outputs": [
+        },
         {
           "components": [
             {
@@ -303,16 +239,24 @@
               "type": "string"
             }
           ],
+          "indexed": false,
           "internalType": "structLLMCompletionResponse",
-          "name": "",
+          "name": "response",
           "type": "tuple"
         }
       ],
-      "stateMutability": "nonpayable",
-      "type": "function"
+      "name": "LLMCompletionEvent",
+      "type": "event"
     },
     {
+      "anonymous": false,
       "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "inferenceID",
+          "type": "string"
+        },
         {
           "components": [
             {
@@ -384,13 +328,11 @@
               "type": "tuple"
             }
           ],
+          "indexed": false,
           "internalType": "structModelInferenceRequest",
           "name": "request",
           "type": "tuple"
-        }
-      ],
-      "name": "runModelInference",
-      "outputs": [
+        },
         {
           "components": [
             {
@@ -467,13 +409,14 @@
               "type": "bool"
             }
           ],
+          "indexed": false,
           "internalType": "structModelOutput",
-          "name": "",
+          "name": "response",
           "type": "tuple"
         }
       ],
-      "stateMutability": "nonpayable",
-      "type": "function"
+      "name": "ModelInferenceEvent",
+      "type": "event"
     }
   ]
 }

@@ -2,6 +2,7 @@ import type {
   ToolCallArray,
   ChatMessageArray,
   LLMChatResponse,
+  ChatMessage,
 } from 'types/client/inference/llmChat';
 
 export const convertArrayToLLMChatResponse = (value: unknown): false | LLMChatResponse => {
@@ -31,6 +32,8 @@ export const convertArrayToLLMChatResponse = (value: unknown): false | LLMChatRe
   if (!isValidChatMessageArray(message)) {
     return false;
   }
+
+  // response.message = convertChatMessageArray(message);
   const [ role, content, name, toolCallId, toolCalls ] = message;
   response.message.role = role;
   response.message.content = content;
@@ -65,4 +68,19 @@ const isValidChatMessageArray = (value: unknown): value is ChatMessageArray => {
     typeof name === 'string' &&
     typeof toolCallId === 'string' &&
     Array.isArray(toolCalls) && toolCalls.every(isValidToolCallArray);
+};
+
+export const convertChatMessageArray = (value: ChatMessageArray): ChatMessage => {
+  const [ role, content, name, toolCallId, toolCalls ] = value;
+  return {
+    role,
+    content,
+    name,
+    toolCallId,
+    toolCalls: toolCalls.map(([ id, name, args ]) => ({
+      id,
+      name,
+      arguments: args,
+    })),
+  };
 };
