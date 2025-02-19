@@ -1,0 +1,422 @@
+{
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "inferenceID",
+          "type": "string"
+        },
+        {
+          "components": [
+            {
+              "internalType": "enumLLMInferenceMode",
+              "name": "mode",
+              "type": "uint8"
+            },
+            {
+              "internalType": "string",
+              "name": "modelCID",
+              "type": "string"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "role",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "content",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "tool_call_id",
+                  "type": "string"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "string",
+                      "name": "id",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "arguments",
+                      "type": "string"
+                    }
+                  ],
+                  "internalType": "structToolCall[]",
+                  "name": "tool_calls",
+                  "type": "tuple[]"
+                }
+              ],
+              "internalType": "structChatMessage[]",
+              "name": "messages",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "description",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "parameters",
+                  "type": "string"
+                }
+              ],
+              "internalType": "structToolDefinition[]",
+              "name": "tools",
+              "type": "tuple[]"
+            },
+            {
+              "internalType": "string",
+              "name": "tool_choice",
+              "type": "string"
+            },
+            {
+              "internalType": "uint32",
+              "name": "max_tokens",
+              "type": "uint32"
+            },
+            {
+              "internalType": "string[]",
+              "name": "stop_sequence",
+              "type": "string[]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "temperature",
+              "type": "uint32"
+            }
+          ],
+          "indexed": false,
+          "internalType": "structLLMChatRequest",
+          "name": "request",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "finish_reason",
+              "type": "string"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "role",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "content",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "tool_call_id",
+                  "type": "string"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "string",
+                      "name": "id",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string",
+                      "name": "arguments",
+                      "type": "string"
+                    }
+                  ],
+                  "internalType": "structToolCall[]",
+                  "name": "tool_calls",
+                  "type": "tuple[]"
+                }
+              ],
+              "internalType": "structChatMessage",
+              "name": "message",
+              "type": "tuple"
+            }
+          ],
+          "indexed": false,
+          "internalType": "structLLMChatResponse",
+          "name": "response",
+          "type": "tuple"
+        }
+      ],
+      "name": "LLMChat",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "inferenceID",
+          "type": "string"
+        },
+        {
+          "components": [
+            {
+              "internalType": "enumLLMInferenceMode",
+              "name": "mode",
+              "type": "uint8"
+            },
+            {
+              "internalType": "string",
+              "name": "modelCID",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "prompt",
+              "type": "string"
+            },
+            {
+              "internalType": "uint32",
+              "name": "max_tokens",
+              "type": "uint32"
+            },
+            {
+              "internalType": "string[]",
+              "name": "stop_sequence",
+              "type": "string[]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "temperature",
+              "type": "uint32"
+            }
+          ],
+          "indexed": false,
+          "internalType": "structLLMCompletionRequest",
+          "name": "request",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "answer",
+              "type": "string"
+            }
+          ],
+          "indexed": false,
+          "internalType": "structLLMCompletionResponse",
+          "name": "response",
+          "type": "tuple"
+        }
+      ],
+      "name": "LLMCompletionEvent",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "inferenceID",
+          "type": "string"
+        },
+        {
+          "components": [
+            {
+              "internalType": "enumModelInferenceMode",
+              "name": "mode",
+              "type": "uint8"
+            },
+            {
+              "internalType": "string",
+              "name": "modelCID",
+              "type": "string"
+            },
+            {
+              "components": [
+                {
+                  "components": [
+                    {
+                      "internalType": "string",
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "components": [
+                        {
+                          "internalType": "int128",
+                          "name": "value",
+                          "type": "int128"
+                        },
+                        {
+                          "internalType": "int128",
+                          "name": "decimals",
+                          "type": "int128"
+                        }
+                      ],
+                      "internalType": "structTensorLib.Number[]",
+                      "name": "values",
+                      "type": "tuple[]"
+                    },
+                    {
+                      "internalType": "uint32[]",
+                      "name": "shape",
+                      "type": "uint32[]"
+                    }
+                  ],
+                  "internalType": "structTensorLib.MultiDimensionalNumberTensor[]",
+                  "name": "numbers",
+                  "type": "tuple[]"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "string",
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "internalType": "string[]",
+                      "name": "values",
+                      "type": "string[]"
+                    }
+                  ],
+                  "internalType": "structTensorLib.StringTensor[]",
+                  "name": "strings",
+                  "type": "tuple[]"
+                }
+              ],
+              "internalType": "structModelInput",
+              "name": "input",
+              "type": "tuple"
+            }
+          ],
+          "indexed": false,
+          "internalType": "structModelInferenceRequest",
+          "name": "request",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "int128",
+                      "name": "value",
+                      "type": "int128"
+                    },
+                    {
+                      "internalType": "int128",
+                      "name": "decimals",
+                      "type": "int128"
+                    }
+                  ],
+                  "internalType": "structTensorLib.Number[]",
+                  "name": "values",
+                  "type": "tuple[]"
+                },
+                {
+                  "internalType": "uint32[]",
+                  "name": "shape",
+                  "type": "uint32[]"
+                }
+              ],
+              "internalType": "structTensorLib.MultiDimensionalNumberTensor[]",
+              "name": "numbers",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string[]",
+                  "name": "values",
+                  "type": "string[]"
+                }
+              ],
+              "internalType": "structTensorLib.StringTensor[]",
+              "name": "strings",
+              "type": "tuple[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "internalType": "structTensorLib.JsonScalar[]",
+              "name": "jsons",
+              "type": "tuple[]"
+            },
+            {
+              "internalType": "bool",
+              "name": "is_simulation_result",
+              "type": "bool"
+            }
+          ],
+          "indexed": false,
+          "internalType": "structModelOutput",
+          "name": "response",
+          "type": "tuple"
+        }
+      ],
+      "name": "ModelInferenceEvent",
+      "type": "event"
+    }
+  ]
+}

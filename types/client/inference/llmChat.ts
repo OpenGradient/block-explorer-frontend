@@ -4,12 +4,29 @@ export interface ToolCall {
   arguments: string;
 }
 
+export interface ToolDefinition {
+  name: string;
+  description: string;
+  parameters: string;
+}
+
 export interface ChatMessage {
   role: string;
   content: string;
   name: string;
   toolCallId: string;
   toolCalls: Array<ToolCall>;
+}
+
+export interface LLMChatRequest {
+  mode: bigint;
+  modelCID: string;
+  messages: Array<ChatMessage>;
+  tools?: Array<ToolDefinition>;
+  toolChoice?: string;
+  maxTokens: bigint;
+  stopSequence: Array<string>;
+  temperature: bigint;
 }
 
 export interface LLMChatResponse {
