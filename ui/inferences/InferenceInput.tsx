@@ -10,8 +10,10 @@ import { isEmpty } from 'es-toolkit/compat';
 import React from 'react';
 
 import { isLLMChatRequest } from 'lib/inferences/llmChat/request';
+import { isLLMCompletionRequest } from 'lib/inferences/llmCompletion/typeGuard';
 import type { PrecompileDecodedData } from 'lib/inferences/precompile';
 import { isModelInput } from 'lib/inferences/traditional/typeGuards';
+import reshapeArray from 'lib/reshapeArray';
 import Tag from 'ui/shared/chakra/Tag';
 
 import ChatMessage from './ChatMessage';
@@ -110,9 +112,8 @@ const InferenceInput = ({ value, isLoading }: InferenceInputProps) => {
           </VStackContainer>
         );
       } else if (isModelInput(value)) {
-        const {
-          numbers,
-          strings } = value;
+        const { numbers, strings } = value;
+
         return (
           <VStackContainer>
             { !isEmpty(numbers) && (
@@ -120,6 +121,8 @@ const InferenceInput = ({ value, isLoading }: InferenceInputProps) => {
                 { isEmpty(numbers) ? 'None' : (
                   <Accordion defaultIndex={ range(0, numbers.length) } allowMultiple width="100%" border="transparent">
                     { numbers.map((number, index) => {
+
+                      const values = number.values.map((v) => Number(v.value) / (10 ** Number(v.decimals)));
                       return (
                         <AccordionItem key={ index }>
                           <AccordionButton>
@@ -131,7 +134,7 @@ const InferenceInput = ({ value, isLoading }: InferenceInputProps) => {
                           <AccordionPanel>
                             <VStackContainer>
                               <Item isLoading={ isLoading } isCode>
-                                { `[${ number.values.map((v) => Number(v.value) / (10 ** Number(v.decimals))).join(',') }]
+                                { `${ JSON.stringify(reshapeArray(values, number.shape.map(Number))) }
 
 Shape: [${ number.shape.map(String).join(',') }]` }
                               </Item>
@@ -170,6 +173,29 @@ Shape: [${ number.shape.map(String).join(',') }]` }
                 </Accordion>
               </Item>
             ) }
+          </VStackContainer>
+        );
+      } else if (isLLMCompletionRequest(value)) {
+        const { prompt, maxTokens, stopSequence, temperature } = value;
+        return (
+          <VStackContainer>
+            <Item label="Prompt">
+              { prompt }
+            </Item>
+
+            <Item label="Max Tokens">
+              { maxTokens.toString() }
+            </Item>
+
+            <Item label="Temperature">
+              { temperature.toString() }
+            </Item>
+
+            <Item label="Stop Sequence">
+              <Tag>
+                { JSON.stringify(stopSequence) }
+              </Tag>
+            </Item>
           </VStackContainer>
         );
       }

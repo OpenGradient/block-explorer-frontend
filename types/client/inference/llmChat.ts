@@ -19,14 +19,14 @@ export interface ChatMessage {
 }
 
 export interface LLMChatRequest {
-  mode: BigInt;
+  mode: bigint;
   modelCID: string;
   messages: Array<ChatMessage>;
   tools?: Array<ToolDefinition>;
   toolChoice?: string;
-  maxTokens: BigInt;
+  maxTokens: bigint;
   stopSequence: Array<string>;
-  temperature: BigInt;
+  temperature: bigint;
 }
 
 export interface LLMChatResponse {

@@ -4,7 +4,7 @@ import { Interface, type Result } from 'ethers';
 import type { InferenceMode } from 'types/client/inference/event';
 import { InferenceModes } from 'types/client/inference/event';
 import type { LLMChatRequest, LLMChatResponse } from 'types/client/inference/llmChat';
-import type { LLMCompletionResponse } from 'types/client/inference/llmCompletion';
+import type { LLMCompletionRequest, LLMCompletionResponse } from 'types/client/inference/llmCompletion';
 import type { ModelInput, ModelOutput } from 'types/client/inference/traditional';
 
 import { getObjectEntries } from 'lib/object';
@@ -12,6 +12,7 @@ import { getObjectEntries } from 'lib/object';
 import { abi } from './abi.json';
 import { convertArrayToLLMChatRequest } from './llmChat/request';
 import { convertArrayToLLMChatResponse } from './llmChat/response';
+import { convertArrayToLLMCompletionRequest, convertArrayToLLMCompletionResponse } from './llmCompletion/convert';
 import { convertArrayToModelInput, convertArrayToModelOutput } from './traditional/convert';
 
 const PRECOMPILE_EVENTS = [ 'LLMChat', 'LLMCompletionEvent', 'ModelInferenceEvent' ] as const;
@@ -24,11 +25,11 @@ export interface PrecompileDecodedData {
   inferenceID: string;
   mode: InferenceMode;
   modelCID: string;
-  request: false | ModelInput | LLMChatRequest; // TODO(next): Handle other requests here
+  request: false | ModelInput | LLMChatRequest | LLMCompletionRequest;
   response: false | ModelOutput | LLMChatResponse | LLMCompletionResponse;
 }
 
-const buildDecodedData = (eventName: PrecompileEvent, decodedData: Result): PrecompileDecodedData | undefined => {
+const buildDecodedData = (event: PrecompileEvent, decodedData: Result): PrecompileDecodedData | undefined => {
   // Try converting the decodedData[1] (mode) from bigint into InferenceMode string
   let inferenceMode: InferenceMode | undefined;
 
@@ -48,19 +49,28 @@ const buildDecodedData = (eventName: PrecompileEvent, decodedData: Result): Prec
   const modelCID = typeof request[1] === 'string' ? request[1] : '';
 
   // Handle input and output parsing differently with events
-  if (eventName === 'LLMChat') {
+  if (event === 'LLMChat') {
     return {
-      event: eventName,
+      event,
       inferenceID,
       mode,
       modelCID,
       request: convertArrayToLLMChatRequest(request),
       response: convertArrayToLLMChatResponse(response),
     };
-  } else if (eventName === 'ModelInferenceEvent') {
+  } else if (event === 'ModelInferenceEvent') {
     return {
-      event: eventName,
+      event,
       inferenceID, mode, modelCID, request: convertArrayToModelInput(request[2]), response: convertArrayToModelOutput(response),
+    };
+  } else if (event === 'LLMCompletionEvent') {
+    return {
+      event,
+      inferenceID,
+      mode,
+      modelCID,
+      request: convertArrayToLLMCompletionRequest(request),
+      response: convertArrayToLLMCompletionResponse(response),
     };
   };
 };

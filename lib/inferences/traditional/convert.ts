@@ -1,4 +1,4 @@
-import type { ModelInput, TensorLibNumber, type ModelOutput } from 'types/client/inference/traditional';
+import type { ModelInput, TensorLibNumber, ModelOutput } from 'types/client/inference/traditional';
 
 import { isValidJsonScalarArray, isValidMultiDimensionalNumberTensorArray, isValidStringTensorArray } from './typeGuards';
 

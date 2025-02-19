@@ -56,7 +56,9 @@ export const isValidJsonScalarArray = (scalar: unknown): scalar is TensorLibJson
 
   const [ name, value ] = scalar;
   return typeof name === 'string' && typeof value === 'string';
-};export const isModelInput = (value: unknown): value is ModelInput => {
+};
+
+export const isModelInput = (value: unknown): value is ModelInput => {
   if (typeof value !== 'object' || value === null) {
     return false;
   }
