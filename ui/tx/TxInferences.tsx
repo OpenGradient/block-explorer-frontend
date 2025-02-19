@@ -97,6 +97,10 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
     return item;
   }).filter((i) => i.address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub);
 
+  if (!inferenceHubLogs.length && !isPlaceholderData) {
+    return <Text as="span">There are no inferences for this transaction.</Text>;
+  }
+
   return (
     <Box>
       { pagination.isVisible && (
@@ -105,6 +109,8 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
         </ActionBar>
       ) }
       <Skeleton isLoaded={ !isPlaceholderData }>
+        { /* Skeleton doesn't work for accordion, so this is a placeholder. */ }
+        { isPlaceholderData && 'Loading...' }
         <Accordion defaultIndex={ range(0, items.length) } allowMultiple>
           { inferenceHubLogs.map((item) => (
             <AccordionItem key={ `${ item.address.hash }-${ item.index }` }>
