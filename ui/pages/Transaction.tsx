@@ -8,6 +8,7 @@ import config from 'configs/app';
 import { useAppContext } from 'lib/contexts/app';
 import throwOnResourceLoadError from 'lib/errors/throwOnResourceLoadError';
 import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
+import { readWorkflowResult } from 'lib/opengradient/contracts/workflow';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import { publicClient } from 'lib/web3/client';
 import TextAd from 'ui/shared/ad/TextAd';
@@ -44,6 +45,12 @@ const TransactionPageContent = () => {
   const { data, isPlaceholderData, isError, error, errorUpdateCount } = txQuery;
 
   const showDegradedView = publicClient && ((isError && error.status !== 422) || isPlaceholderData) && errorUpdateCount > 0;
+
+  (async() => {
+    const result = await readWorkflowResult();
+    // eslint-disable-next-line
+    console.log(result);
+  })();
 
   /** Used to filter logs for the inferences tab. */
   const filterLogsByAddressHash = React.useCallback((log: Log): boolean => {
