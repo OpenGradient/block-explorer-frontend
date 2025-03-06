@@ -1,14 +1,15 @@
 import { Hide, Show } from '@chakra-ui/react';
+import { isNotNil } from 'es-toolkit';
 import React from 'react';
 
 import type { TokensSortingValue } from 'types/api/tokens';
 
 import { apos } from 'lib/html-entities';
+import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
 import DataFetchAlert from 'ui/shared/DataFetchAlert';
 import DataListDisplay from 'ui/shared/DataListDisplay';
 import type { QueryWithPagesResult } from 'ui/shared/pagination/useQueryWithPages';
 
-import { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
 import WorkflowsListItem from './WorkflowsListItem';
 import WorkflowsTable from './WorkflowsTable';
 
@@ -26,26 +27,22 @@ interface Props {
   error: Error | null;
 }
 
-const WorkflowsList = ({ query, onSortChange, sort, actionBar, description, hasActiveFilters, tableTop }: Props) => {
-
-  const { isError, isPlaceholderData, data, pagination } = query;
+const WorkflowsList = ({ query, onSortChange, sort, actionBar, description, hasActiveFilters, tableTop, data, isLoading, error }: Props) => {
+  const isError = isNotNil(error);
 
   if (isError) {
     return <DataFetchAlert/>;
   }
 
-  const content = data?.items ? (
+  const content = data ? (
     <>
       <Show below="lg" ssr={ false }>
         { description }
-        this is a mobile view
-        { data.items.map((item, index) => (
+        { data.map((item, index) => (
           <WorkflowsListItem
-            key={ item.address + (isPlaceholderData ? index : '') }
-            token={ item }
-            index={ index }
-            page={ pagination.page }
-            isLoading={ isPlaceholderData }
+            key={ index }
+            task={ item }
+            isLoading={ isLoading }
           />
         )) }
       </Show>
@@ -53,9 +50,8 @@ const WorkflowsList = ({ query, onSortChange, sort, actionBar, description, hasA
         this is a desktop view
         { description }
         <WorkflowsTable
-          items={ data.items }
-          page={ pagination.page }
-          isLoading={ isPlaceholderData }
+          items={ data }
+          isLoading={ isLoading }
           setSorting={ onSortChange }
           sorting={ sort }
           top={ tableTop }
@@ -67,8 +63,8 @@ const WorkflowsList = ({ query, onSortChange, sort, actionBar, description, hasA
   return (
     <DataListDisplay
       isError={ isError }
-      items={ data?.items }
-      emptyText="There are no tokens."
+      items={ data }
+      emptyText="There are no workflows."
       filterProps={{
         emptyFilteredText: `Couldn${ apos }t find token that matches your filter query.`,
         hasActiveFilters,
