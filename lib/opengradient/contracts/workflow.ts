@@ -1,18 +1,21 @@
 import { ethers } from 'ethers';
+import type { Address } from 'viem';
 
 import { type ModelOutput } from 'types/client/inference/traditional';
-
-import { getEnvValue } from 'configs/app/utils';
 
 import { convertArrayToModelOutput } from '../../inferences/traditional/convert';
 import PriceHistoryInferenceAbi from './abi/PriceHistoryInference.json';
 import { ethDevnetProvider } from './providers';
 
-const address = getEnvValue('NEXT_PUBLIC_OPENGRADIENT_INFERENCE_CONTRACT_ADDRESS') ?? '0x8383C9bD7462F12Eb996DD02F78234C0421A6FaE';
-const contract = new ethers.Contract(address, PriceHistoryInferenceAbi, ethDevnetProvider);
-
-export const readWorkflowResult = async(): Promise<false | ModelOutput> => {
+/**
+ * Reads the latest inference result from a deployed workflow contract.
+ * @param address The address of the workflow contract.
+ * @returns `false` or `ModelOutput`
+ */
+export const readWorkflowResult = async(address: Address): Promise<false | ModelOutput> => {
   try {
+    const contract = new ethers.Contract(address, PriceHistoryInferenceAbi, ethDevnetProvider);
+
     const result = await contract.getInferenceResult();
     return convertArrayToModelOutput(result);
   } catch (error) {

@@ -1,3 +1,4 @@
+import { isNotNil } from 'es-toolkit';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -8,6 +9,7 @@ import config from 'configs/app';
 import { useAppContext } from 'lib/contexts/app';
 import throwOnResourceLoadError from 'lib/errors/throwOnResourceLoadError';
 import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
+import { getAllTasks } from 'lib/opengradient/contracts/scheduler';
 import { readWorkflowResult } from 'lib/opengradient/contracts/workflow';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import { publicClient } from 'lib/web3/client';
@@ -47,9 +49,13 @@ const TransactionPageContent = () => {
   const showDegradedView = publicClient && ((isError && error.status !== 422) || isPlaceholderData) && errorUpdateCount > 0;
 
   (async() => {
-    const result = await readWorkflowResult();
-    // eslint-disable-next-line
-    console.log(result);
+    const workflows = await getAllTasks();
+    if (isNotNil(workflows[0])) {
+      const result = await readWorkflowResult(workflows[0].contractAddress);
+      // TODO(mhsu): Delete later, for testing purposes only
+      // eslint-disable-next-line
+      console.log('workflow result', result);
+    }
   })();
 
   /** Used to filter logs for the inferences tab. */
