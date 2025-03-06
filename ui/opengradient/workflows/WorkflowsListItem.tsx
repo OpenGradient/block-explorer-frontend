@@ -29,30 +29,38 @@ const WorkflowsListItem = ({
     <ListItemMobile rowGap={ 5 } py={ 8 }>
       <Box>
         <Label value="User Address" isLoading={ isLoading }/>
-        <AddressEntity
-          address={{ hash: user /* name: 'User address' */ }}
-          isLoading={ isLoading }
-          truncation="none"
-        />
+        <Skeleton isLoaded={ !isLoading }>
+          <AddressEntity
+            address={{ hash: user /* name: 'User address' */ }}
+            isLoading={ isLoading }
+            truncation="none"
+          />
+        </Skeleton>
       </Box>
 
       <Box>
         <Label value="Contract Address" isLoading={ isLoading }/>
-        <AddressEntity
-          address={{ hash: contractAddress, is_contract: true }}
-          isLoading={ isLoading }
-          truncation="none"
-        />
+        <Skeleton isLoaded={ !isLoading }>
+          <AddressEntity
+            address={{ hash: contractAddress, is_contract: true }}
+            isLoading={ isLoading }
+            truncation="none"
+          />
+        </Skeleton>
       </Box>
 
       <Box>
         <Label value="Frequency" isLoading={ isLoading }/>
-        <Text>{ `${ Number(frequency) / 60 }s` }</Text>
+        <Skeleton isLoaded={ !isLoading }>
+          <Text>{ `${ Number(frequency) / 60 }s` }</Text>
+        </Skeleton>
       </Box>
 
       <Box>
         <Label value="End Time" isLoading={ isLoading }/>
-        <Text>{ `${ endTimePretty.fullDate } (${ endTimePretty.relativeTime })` }</Text>
+        <Skeleton isLoaded={ !isLoading }>
+          <Text>{ `${ endTimePretty.fullDate } (${ endTimePretty.relativeTime })` }</Text>
+        </Skeleton>
       </Box>
     </ListItemMobile>
   );

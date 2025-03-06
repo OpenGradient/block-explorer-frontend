@@ -1,17 +1,21 @@
-import { Box, Hide, Show } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
+import { range } from 'es-toolkit';
 import { useRouter } from 'next/router';
 import React from 'react';
 
 import type { TokenType } from 'types/api/token';
 import type { TokensSortingValue, TokensSortingField, TokensSorting } from 'types/api/tokens';
-import type { RoutedTab } from 'ui/shared/Tabs/types';
 
 import config from 'configs/app';
 import useDebounce from 'lib/hooks/useDebounce';
 import useIsMobile from 'lib/hooks/useIsMobile';
+import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
+import { getAllTasks } from 'lib/opengradient/contracts/scheduler';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import { TOKEN_INFO_ERC_20 } from 'stubs/token';
 import { generateListStub } from 'stubs/utils';
+import WorkflowsActionBar from 'ui/opengradient/workflows/WorkflowsActionBar';
+import WorkflowsList from 'ui/opengradient/workflows/WorkflowsList';
 import PopoverFilter from 'ui/shared/filters/PopoverFilter';
 import TokenTypeFilter from 'ui/shared/filters/TokenTypeFilter';
 import PageTitle from 'ui/shared/Page/PageTitle';
@@ -20,14 +24,19 @@ import getSortParamsFromValue from 'ui/shared/sort/getSortParamsFromValue';
 import getSortValueFromQuery from 'ui/shared/sort/getSortValueFromQuery';
 import TokensBridgedChainsFilter from 'ui/tokens/TokensBridgedChainsFilter';
 import { SORT_OPTIONS, getTokenFilterValue, getBridgedChainsFilterValue } from 'ui/tokens/utils';
-import { getAllTasks } from 'lib/opengradient/contracts/scheduler';
-import { useQuery } from '@tanstack/react-query';
-import WorkflowsList from 'ui/opengradient/workflows/WorkflowsList';
-import WorkflowsActionBar from 'ui/opengradient/workflows/WorkflowsActionBar';
 
 const TABS_HEIGHT = 88;
 
 const bridgedTokensFeature = config.features.bridgedTokens;
+
+const generateFakeTasks = () => (
+  range(10).map(() => ({
+    user: '0xaddress',
+    contractAddress: '0xaddress',
+    endTime: BigInt(0),
+    frequency: BigInt(0),
+  })) satisfies Array<SchedulerTask>
+);
 
 const Workflows = () => {
   const router = useRouter();
@@ -36,9 +45,11 @@ const Workflows = () => {
   const tab = getQueryParamString(router.query.tab);
   const q = getQueryParamString(router.query.q);
 
+  const placeholderData = React.useMemo(() => generateFakeTasks(), []);
   const query = useQuery({
     queryKey: [ 'opengradient', 'contract', 'getAllTasks' ],
     queryFn: getAllTasks,
+    placeholderData,
   });
 
   const [ searchTerm, setSearchTerm ] = React.useState<string>(q ?? '');
@@ -129,7 +140,9 @@ const Workflows = () => {
         actionBar={ isMobile ? actionBar : null }
         hasActiveFilters={ Boolean(searchTerm || tokenTypes) }
         tableTop={ hasMultipleTabs ? TABS_HEIGHT : undefined }
-        { ...query }
+        data={ query.data }
+        isLoading={ query.isPlaceholderData }
+        error={ query.error }
       />
     </>
   );
