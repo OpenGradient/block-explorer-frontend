@@ -1,89 +1,195 @@
+import { Box } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React from 'react';
 
+import type { TokenType } from 'types/api/token';
+import type { TokensSortingValue, TokensSortingField, TokensSorting } from 'types/api/tokens';
 import type { RoutedTab } from 'ui/shared/Tabs/types';
 
 import config from 'configs/app';
+import useDebounce from 'lib/hooks/useDebounce';
 import useIsMobile from 'lib/hooks/useIsMobile';
 import getQueryParamString from 'lib/router/getQueryParamString';
-import { BLOCK } from 'stubs/block';
+import { TOKEN_INFO_ERC_20 } from 'stubs/token';
 import { generateListStub } from 'stubs/utils';
-import BlocksContent from 'ui/blocks/BlocksContent';
-import BlocksTabSlot from 'ui/blocks/BlocksTabSlot';
+import PopoverFilter from 'ui/shared/filters/PopoverFilter';
+import TokenTypeFilter from 'ui/shared/filters/TokenTypeFilter';
 import PageTitle from 'ui/shared/Page/PageTitle';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
+import getSortParamsFromValue from 'ui/shared/sort/getSortParamsFromValue';
+import getSortValueFromQuery from 'ui/shared/sort/getSortValueFromQuery';
 import RoutedTabs from 'ui/shared/Tabs/RoutedTabs';
+import TokensList from 'ui/tokens/Tokens';
+import TokensActionBar from 'ui/tokens/TokensActionBar';
+import TokensBridgedChainsFilter from 'ui/tokens/TokensBridgedChainsFilter';
+import { SORT_OPTIONS, getTokenFilterValue, getBridgedChainsFilterValue } from 'ui/tokens/utils';
 
 const TAB_LIST_PROPS = {
   marginBottom: 0,
   pt: 6,
   pb: 6,
   marginTop: -5,
+  alignItems: 'center',
 };
+const TABS_HEIGHT = 88;
+
+const TABS_RIGHT_SLOT_PROPS = {
+  ml: 8,
+  flexGrow: 1,
+};
+
+const bridgedTokensFeature = config.features.bridgedTokens;
 
 const Workflows = () => {
   const router = useRouter();
   const isMobile = useIsMobile();
+
   const tab = getQueryParamString(router.query.tab);
+  const q = getQueryParamString(router.query.q);
 
-  const blocksQuery = useQueryWithPages({
-    resourceName: 'blocks',
-    filters: { type: 'block' },
+  const [ searchTerm, setSearchTerm ] = React.useState<string>(q ?? '');
+  const [ sort, setSort ] = React.useState<TokensSortingValue | undefined>(getSortValueFromQuery<TokensSortingValue>(router.query, SORT_OPTIONS));
+  const [ tokenTypes, setTokenTypes ] = React.useState<Array<TokenType> | undefined>(getTokenFilterValue(router.query.type));
+  const [ bridgeChains, setBridgeChains ] = React.useState<Array<string> | undefined>(getBridgedChainsFilterValue(router.query.chain_ids));
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  const tokensQuery = useQueryWithPages({
+    resourceName: tab === 'bridged' ? 'tokens_bridged' : 'tokens',
+    filters: tab === 'bridged' ? { q: debouncedSearchTerm, chain_ids: bridgeChains } : { q: debouncedSearchTerm, type: tokenTypes },
+    sorting: getSortParamsFromValue<TokensSortingValue, TokensSortingField, TokensSorting['order']>(sort),
     options: {
-      enabled: tab === 'blocks' || !tab,
-      placeholderData: generateListStub<'blocks'>(BLOCK, 50, { next_page_params: {
-        block_number: 8988686,
-        items_count: 50,
-      } }),
-    },
-  });
-  const reorgsQuery = useQueryWithPages({
-    resourceName: 'blocks',
-    filters: { type: 'reorg' },
-    options: {
-      enabled: tab === 'reorgs',
-      placeholderData: generateListStub<'blocks'>(BLOCK, 50, { next_page_params: {
-        block_number: 8988686,
-        items_count: 50,
-      } }),
-    },
-  });
-  const unclesQuery = useQueryWithPages({
-    resourceName: 'blocks',
-    filters: { type: 'uncle' },
-    options: {
-      enabled: tab === 'uncles',
-      placeholderData: generateListStub<'blocks'>(BLOCK, 50, { next_page_params: {
-        block_number: 8988686,
-        items_count: 50,
-      } }),
+      placeholderData: generateListStub<'tokens'>(
+        TOKEN_INFO_ERC_20,
+        50,
+        {
+          next_page_params: {
+            holder_count: 81528,
+            items_count: 50,
+            name: '',
+            market_cap: null,
+          },
+        },
+      ),
     },
   });
 
-  const pagination = (() => {
-    if (tab === 'reorgs') {
-      return reorgsQuery.pagination;
+  const handleSearchTermChange = React.useCallback((value: string) => {
+    tab === 'bridged' ?
+      tokensQuery.onFilterChange({ q: value, chain_ids: bridgeChains }) :
+      tokensQuery.onFilterChange({ q: value, type: tokenTypes });
+    setSearchTerm(value);
+  }, [ bridgeChains, tab, tokenTypes, tokensQuery ]);
+
+  const handleTokenTypesChange = React.useCallback((value: Array<TokenType>) => {
+    tokensQuery.onFilterChange({ q: debouncedSearchTerm, type: value });
+    setTokenTypes(value);
+  }, [ debouncedSearchTerm, tokensQuery ]);
+
+  const handleBridgeChainsChange = React.useCallback((value: Array<string>) => {
+    tokensQuery.onFilterChange({ q: debouncedSearchTerm, chain_ids: value });
+    setBridgeChains(value);
+  }, [ debouncedSearchTerm, tokensQuery ]);
+
+  const handleSortChange = React.useCallback((value?: TokensSortingValue) => {
+    setSort(value);
+    tokensQuery.onSortingChange(getSortParamsFromValue(value));
+  }, [ tokensQuery ]);
+
+  const handleTabChange = React.useCallback(() => {
+    setSearchTerm('');
+    setSort(undefined);
+    setTokenTypes(undefined);
+    setBridgeChains(undefined);
+  }, []);
+
+  const hasMultipleTabs = bridgedTokensFeature.isEnabled;
+
+  const filter = tab === 'bridged' ? (
+    <PopoverFilter contentProps={{ maxW: '350px' }} appliedFiltersNum={ bridgeChains?.length }>
+      <TokensBridgedChainsFilter onChange={ handleBridgeChainsChange } defaultValue={ bridgeChains }/>
+    </PopoverFilter>
+  ) : (
+    <PopoverFilter contentProps={{ w: '200px' }} appliedFiltersNum={ tokenTypes?.length }>
+      <TokenTypeFilter<TokenType> onChange={ handleTokenTypesChange } defaultValue={ tokenTypes } nftOnly={ false }/>
+    </PopoverFilter>
+  );
+
+  const actionBar = (
+    <TokensActionBar
+      key={ tab }
+      pagination={ tokensQuery.pagination }
+      filter={ filter }
+      searchTerm={ searchTerm }
+      onSearchChange={ handleSearchTermChange }
+      sort={ sort }
+      onSortChange={ handleSortChange }
+      inTabsSlot={ !isMobile && hasMultipleTabs }
+    />
+  );
+
+  const description = (() => {
+    if (!bridgedTokensFeature.isEnabled) {
+      return null;
     }
-    if (tab === 'uncles') {
-      return unclesQuery.pagination;
-    }
-    return blocksQuery.pagination;
+
+    const bridgesListText = bridgedTokensFeature.bridges.map((item, index, array) => {
+      return item.title + (index < array.length - 2 ? ', ' : '') + (index === array.length - 2 ? ' and ' : '');
+    });
+
+    return (
+      <Box fontSize="sm" mb={ 4 } mt={ 1 } whiteSpace="pre-wrap" flexWrap="wrap">
+        List of the tokens bridged through { bridgesListText } extensions
+      </Box>
+    );
   })();
 
   const tabs: Array<RoutedTab> = [
-    { id: 'blocks', title: 'All', component: <BlocksContent type="block" query={ blocksQuery }/> },
-    { id: 'reorgs', title: 'Forked', component: <BlocksContent type="reorg" query={ reorgsQuery }/> },
-    { id: 'uncles', title: 'Uncles', component: <BlocksContent type="uncle" query={ unclesQuery }/> },
-  ];
+    {
+      id: 'all',
+      title: 'All',
+      component: (
+        <TokensList
+          query={ tokensQuery }
+          sort={ sort }
+          onSortChange={ handleSortChange }
+          actionBar={ isMobile ? actionBar : null }
+          hasActiveFilters={ Boolean(searchTerm || tokenTypes) }
+          tableTop={ hasMultipleTabs ? TABS_HEIGHT : undefined }
+        />
+      ),
+    },
+    bridgedTokensFeature.isEnabled ? {
+      id: 'bridged',
+      title: 'Bridged',
+      component: (
+        <TokensList
+          query={ tokensQuery }
+          sort={ sort }
+          onSortChange={ handleSortChange }
+          actionBar={ isMobile ? actionBar : null }
+          hasActiveFilters={ Boolean(searchTerm || bridgeChains) }
+          description={ description }
+          tableTop={ hasMultipleTabs ? TABS_HEIGHT : undefined }
+        />
+      ),
+    } : undefined,
+  ].filter(Boolean);
 
   return (
     <>
-      <PageTitle title={ `${ config.chain.name } workflows` } withTextAd/>
+      <PageTitle
+        title="Workflows"
+        withTextAd
+      />
+      { !hasMultipleTabs && !isMobile && actionBar }
       <RoutedTabs
         tabs={ tabs }
         tabListProps={ isMobile ? undefined : TAB_LIST_PROPS }
-        rightSlot={ <BlocksTabSlot pagination={ pagination }/> }
+        rightSlot={ hasMultipleTabs && !isMobile ? actionBar : null }
+        rightSlotProps={ !isMobile ? TABS_RIGHT_SLOT_PROPS : undefined }
         stickyEnabled={ !isMobile }
+        onTabChange={ handleTabChange }
       />
     </>
   );

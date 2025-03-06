@@ -53,7 +53,8 @@ const TransactionPageContent = () => {
     const workflows = await getAllTasks();
     if (isNotNil(workflows[0])) {
       const result = await readWorkflowResult(workflows[0].contractAddress);
-      console.log('first workflow result', result);
+      // eslint-disable-next-line
+      console.log('workflow result', result);
     }
   })();
 
