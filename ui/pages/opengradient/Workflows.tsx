@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Hide, Show } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -18,25 +18,14 @@ import PageTitle from 'ui/shared/Page/PageTitle';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 import getSortParamsFromValue from 'ui/shared/sort/getSortParamsFromValue';
 import getSortValueFromQuery from 'ui/shared/sort/getSortValueFromQuery';
-import RoutedTabs from 'ui/shared/Tabs/RoutedTabs';
-import TokensList from 'ui/tokens/Tokens';
-import TokensActionBar from 'ui/tokens/TokensActionBar';
 import TokensBridgedChainsFilter from 'ui/tokens/TokensBridgedChainsFilter';
 import { SORT_OPTIONS, getTokenFilterValue, getBridgedChainsFilterValue } from 'ui/tokens/utils';
+import { getAllTasks } from 'lib/opengradient/contracts/scheduler';
+import { useQuery } from '@tanstack/react-query';
+import WorkflowsList from 'ui/opengradient/workflows/WorkflowsList';
+import WorkflowsActionBar from 'ui/opengradient/workflows/WorkflowsActionBar';
 
-const TAB_LIST_PROPS = {
-  marginBottom: 0,
-  pt: 6,
-  pb: 6,
-  marginTop: -5,
-  alignItems: 'center',
-};
 const TABS_HEIGHT = 88;
-
-const TABS_RIGHT_SLOT_PROPS = {
-  ml: 8,
-  flexGrow: 1,
-};
 
 const bridgedTokensFeature = config.features.bridgedTokens;
 
@@ -46,6 +35,11 @@ const Workflows = () => {
 
   const tab = getQueryParamString(router.query.tab);
   const q = getQueryParamString(router.query.q);
+
+  const query = useQuery({
+    queryKey: [ 'opengradient', 'contract', 'getAllTasks' ],
+    queryFn: getAllTasks,
+  });
 
   const [ searchTerm, setSearchTerm ] = React.useState<string>(q ?? '');
   const [ sort, setSort ] = React.useState<TokensSortingValue | undefined>(getSortValueFromQuery<TokensSortingValue>(router.query, SORT_OPTIONS));
@@ -96,13 +90,6 @@ const Workflows = () => {
     tokensQuery.onSortingChange(getSortParamsFromValue(value));
   }, [ tokensQuery ]);
 
-  const handleTabChange = React.useCallback(() => {
-    setSearchTerm('');
-    setSort(undefined);
-    setTokenTypes(undefined);
-    setBridgeChains(undefined);
-  }, []);
-
   const hasMultipleTabs = bridgedTokensFeature.isEnabled;
 
   const filter = tab === 'bridged' ? (
@@ -116,7 +103,7 @@ const Workflows = () => {
   );
 
   const actionBar = (
-    <TokensActionBar
+    <WorkflowsActionBar
       key={ tab }
       pagination={ tokensQuery.pagination }
       filter={ filter }
@@ -128,54 +115,6 @@ const Workflows = () => {
     />
   );
 
-  const description = (() => {
-    if (!bridgedTokensFeature.isEnabled) {
-      return null;
-    }
-
-    const bridgesListText = bridgedTokensFeature.bridges.map((item, index, array) => {
-      return item.title + (index < array.length - 2 ? ', ' : '') + (index === array.length - 2 ? ' and ' : '');
-    });
-
-    return (
-      <Box fontSize="sm" mb={ 4 } mt={ 1 } whiteSpace="pre-wrap" flexWrap="wrap">
-        List of the tokens bridged through { bridgesListText } extensions
-      </Box>
-    );
-  })();
-
-  const tabs: Array<RoutedTab> = [
-    {
-      id: 'all',
-      title: 'All',
-      component: (
-        <TokensList
-          query={ tokensQuery }
-          sort={ sort }
-          onSortChange={ handleSortChange }
-          actionBar={ isMobile ? actionBar : null }
-          hasActiveFilters={ Boolean(searchTerm || tokenTypes) }
-          tableTop={ hasMultipleTabs ? TABS_HEIGHT : undefined }
-        />
-      ),
-    },
-    bridgedTokensFeature.isEnabled ? {
-      id: 'bridged',
-      title: 'Bridged',
-      component: (
-        <TokensList
-          query={ tokensQuery }
-          sort={ sort }
-          onSortChange={ handleSortChange }
-          actionBar={ isMobile ? actionBar : null }
-          hasActiveFilters={ Boolean(searchTerm || bridgeChains) }
-          description={ description }
-          tableTop={ hasMultipleTabs ? TABS_HEIGHT : undefined }
-        />
-      ),
-    } : undefined,
-  ].filter(Boolean);
-
   return (
     <>
       <PageTitle
@@ -183,13 +122,14 @@ const Workflows = () => {
         withTextAd
       />
       { !hasMultipleTabs && !isMobile && actionBar }
-      <RoutedTabs
-        tabs={ tabs }
-        tabListProps={ isMobile ? undefined : TAB_LIST_PROPS }
-        rightSlot={ hasMultipleTabs && !isMobile ? actionBar : null }
-        rightSlotProps={ !isMobile ? TABS_RIGHT_SLOT_PROPS : undefined }
-        stickyEnabled={ !isMobile }
-        onTabChange={ handleTabChange }
+      <WorkflowsList
+        query={ tokensQuery }
+        sort={ sort }
+        onSortChange={ handleSortChange }
+        actionBar={ isMobile ? actionBar : null }
+        hasActiveFilters={ Boolean(searchTerm || tokenTypes) }
+        tableTop={ hasMultipleTabs ? TABS_HEIGHT : undefined }
+        { ...query }
       />
     </>
   );
