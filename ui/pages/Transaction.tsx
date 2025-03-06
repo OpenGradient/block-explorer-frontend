@@ -48,12 +48,11 @@ const TransactionPageContent = () => {
 
   const showDegradedView = publicClient && ((isError && error.status !== 422) || isPlaceholderData) && errorUpdateCount > 0;
 
+  // TODO(mhsu): Delete later, for testing purposes only
   (async() => {
     const workflows = await getAllTasks();
     if (isNotNil(workflows[0])) {
       const result = await readWorkflowResult(workflows[0].contractAddress);
-      // TODO(mhsu): Delete later, for testing purposes only
-      // eslint-disable-next-line
       console.log('workflow result', result);
     }
   })();
