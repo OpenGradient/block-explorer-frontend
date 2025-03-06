@@ -61,6 +61,9 @@ const TEMPLATE_MAP: Record<Route['pathname'], string> = {
   '/pools': '%network_name% DEX pools',
   '/pools/[hash]': '%network_name% pool details',
 
+  // OpenGradient routes
+  '/workflows': '%network_name% workflows - %network_name% explorer',
+
   // service routes, added only to make typescript happy
   '/login': '%network_name% login',
   '/sprite': '%network_name% SVG sprite',
