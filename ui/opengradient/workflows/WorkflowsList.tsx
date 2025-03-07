@@ -10,7 +10,7 @@ import DataFetchAlert from 'ui/shared/DataFetchAlert';
 import DataListDisplay from 'ui/shared/DataListDisplay';
 import type { QueryWithPagesResult } from 'ui/shared/pagination/useQueryWithPages';
 
-import WorkflowsListItem from './WorkflowsListItem';
+import WorkflowsListItemMobile from './WorkflowsListItemMobile';
 import WorkflowsTable from './WorkflowsTable';
 
 interface Props {
@@ -39,7 +39,7 @@ const WorkflowsList = ({ query, onSortChange, sort, actionBar, description, hasA
       <Show below="lg" ssr={ false }>
         { description }
         { data.map((item, index) => (
-          <WorkflowsListItem
+          <WorkflowsListItemMobile
             key={ index }
             task={ item }
             isLoading={ isLoading }

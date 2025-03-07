@@ -13,15 +13,8 @@ import { ethDevnetProvider } from './providers';
  * @returns `false` or `ModelOutput`
  */
 export const readWorkflowResult = async(address: Address): Promise<false | ModelOutput> => {
-  try {
-    const contract = new ethers.Contract(address, PriceHistoryInferenceAbi, ethDevnetProvider);
+  const contract = new ethers.Contract(address, PriceHistoryInferenceAbi, ethDevnetProvider);
 
-    const result = await contract.getInferenceResult();
-    return convertArrayToModelOutput(result);
-  } catch (error) {
-    // eslint-disable-next-line
-    console.log('error when reading workflow', error);
-  }
-
-  return false;
+  const result = await contract.getInferenceResult();
+  return convertArrayToModelOutput(result);
 };

@@ -47,7 +47,7 @@ const Workflows = () => {
 
   const placeholderData = React.useMemo(() => generateFakeTasks(), []);
   const query = useQuery({
-    queryKey: [ 'opengradient', 'contract', 'getAllTasks' ],
+    queryKey: [ 'opengradient', 'getAllTasks' ],
     queryFn: getAllTasks,
     placeholderData,
   });
