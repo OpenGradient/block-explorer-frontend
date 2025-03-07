@@ -2,13 +2,11 @@ import { isNotNil } from 'es-toolkit';
 import { ethers } from 'ethers';
 import type { Address } from 'viem';
 
-import { getEnvValue } from 'configs/app/utils';
-
+import { OPENGRADIENT_SCHEDULER_CONTRACT_ADDRESS } from '../constants';
 import TaskSchedulerAbi from './abi/TaskScheduler.json';
 import { ethDevnetProvider } from './providers';
 
-const address = (getEnvValue('NEXT_PUBLIC_OPENGRADIENT_SCHEDULER_CONTRACT_ADDRESS') ?? '0x7179724De4e7FF9271FA40C0337c7f90C0508eF6') as Address;
-const contract = new ethers.Contract(address, TaskSchedulerAbi, ethDevnetProvider);
+const contract = new ethers.Contract(OPENGRADIENT_SCHEDULER_CONTRACT_ADDRESS, TaskSchedulerAbi, ethDevnetProvider);
 
 export interface SchedulerTask {
   user: Address;
