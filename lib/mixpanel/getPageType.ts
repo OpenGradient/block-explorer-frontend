@@ -59,6 +59,9 @@ export const PAGE_TYPE_DICT: Record<Route['pathname'], string> = {
   '/pools': 'DEX pools',
   '/pools/[hash]': 'Pool details',
 
+  // OpenGradient routes
+  '/workflows': 'Workflows',
+
   // service routes, added only to make typescript happy
   '/login': 'Login',
   '/sprite': 'Sprite',
