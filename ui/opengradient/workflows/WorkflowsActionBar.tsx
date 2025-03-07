@@ -1,32 +1,27 @@
 import { HStack } from '@chakra-ui/react';
 import React from 'react';
 
-import type { TokensSortingValue } from 'types/api/tokens';
-import type { PaginationParams } from 'ui/shared/pagination/types';
-
 import ActionBar from 'ui/shared/ActionBar';
 import FilterInput from 'ui/shared/filters/FilterInput';
-import Pagination from 'ui/shared/pagination/Pagination';
-import Sort from 'ui/shared/sort/Sort';
-import { SORT_OPTIONS } from 'ui/tokens/utils';
+// import Sort from 'ui/shared/sort/Sort';
+// import { SORT_OPTIONS } from 'ui/tokens/utils';
 
 interface Props {
-  pagination: PaginationParams;
+  // pagination: PaginationParams;
   searchTerm: string | undefined;
   onSearchChange: (value: string) => void;
-  sort: TokensSortingValue | undefined;
-  onSortChange: () => void;
-  filter: React.ReactNode;
+  // sort: TokensSortingValue | undefined;
+  // onSortChange: () => void;
+  // filter: React.ReactNode;
   inTabsSlot?: boolean;
 }
 
 const WorkflowsActionBar = ({
-  sort,
-  onSortChange,
+  // sort,
+  // onSortChange,
   searchTerm,
   onSearchChange,
-  pagination,
-  filter,
+  // filter,
   inTabsSlot,
 }: Props) => {
 
@@ -35,7 +30,7 @@ const WorkflowsActionBar = ({
       w={{ base: '100%', lg: '360px' }}
       size="xs"
       onChange={ onSearchChange }
-      placeholder="Token name or symbol"
+      placeholder="User or contract address"
       initialValue={ searchTerm }
     />
   );
@@ -43,26 +38,26 @@ const WorkflowsActionBar = ({
   return (
     <>
       <HStack spacing={ 3 } mb={ 6 } display={{ base: 'flex', lg: 'none' }}>
-        { filter }
+        { /* { filter }
         <Sort
           name="tokens_sorting"
           defaultValue={ sort }
           options={ SORT_OPTIONS }
           onChange={ onSortChange }
-        />
+        /> */ }
         { searchInput }
       </HStack>
       <ActionBar
         mt={ inTabsSlot ? 0 : -6 }
         py={{ lg: inTabsSlot ? 0 : undefined }}
         justifyContent={ inTabsSlot ? 'space-between' : undefined }
-        display={{ base: pagination.isVisible ? 'flex' : 'none', lg: 'flex' }}
+        display={{ base: 'none', lg: 'flex' }}
+        mb={ 4 }
       >
         <HStack spacing={ 3 } display={{ base: 'none', lg: 'flex' }}>
-          { filter }
           { searchInput }
         </HStack>
-        <Pagination { ...pagination } ml={ inTabsSlot ? 8 : 'auto' }/>
+        { /* <Pagination { ...pagination } ml={ inTabsSlot ? 8 : 'auto' }/> */ }
       </ActionBar>
     </>
   );
