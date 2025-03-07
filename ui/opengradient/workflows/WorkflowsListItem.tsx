@@ -6,7 +6,7 @@ import type { ModelOutput } from 'types/client/inference/traditional';
 
 import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
 import { readWorkflowResult } from 'lib/opengradient/contracts/workflow';
-import { formatPrettyTimestamp } from 'lib/opengradient/datetime';
+import { formatTimestamp, getRelativeTime } from 'lib/opengradient/datetime';
 import Code from 'ui/inferences/layout/Code';
 import Skeleton from 'ui/shared/chakra/Skeleton';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
@@ -21,13 +21,14 @@ const Label = ({ value, isLoading }: { value: string; isLoading?: boolean }) => 
   <Skeleton mb={{ base: 2 }} isLoaded={ !isLoading } /* display="inline-block" */><Text fontWeight="semibold">{ value }</Text></Skeleton>
 );
 
-const WorkflowsListItemMobile = ({
+const WorkflowsListItem = ({
   task,
   isLoading,
 }: Props) => {
   const { user, contractAddress, endTime, frequency } = task;
 
-  const endTimePretty = formatPrettyTimestamp(Number(endTime));
+  const prettyEndTime = formatTimestamp(Number(endTime));
+  const relativeEndTime = getRelativeTime(Number(endTime), { addSuffix: true });
 
   const placeholderData: ModelOutput = React.useMemo(() => ({
     numbers: [ { name: 'Y', values: [ { value: '3774157376028597354888916016', decimals: '31' } ], shape: [ 1 ] } ],
@@ -107,11 +108,11 @@ const WorkflowsListItemMobile = ({
       <Box>
         <Label value="End Time" isLoading={ isLoading }/>
         <Skeleton isLoaded={ !isLoading }>
-          <Text>{ `${ endTimePretty.fullDate } (${ endTimePretty.relativeTime })` }</Text>
+          <Text>{ `${ prettyEndTime } (${ relativeEndTime })` }</Text>
         </Skeleton>
       </Box>
     </ListItemMobile>
   );
 };
 
-export default WorkflowsListItemMobile;
+export default WorkflowsListItem;

@@ -1,59 +1,68 @@
-import { Flex, Td, Tr } from '@chakra-ui/react';
-import BigNumber from 'bignumber.js';
+import { Td, Text, Tr } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
-import type { TokenInfo } from 'types/api/token';
+import type { ModelOutput } from 'types/client/inference/traditional';
 
-import config from 'configs/app';
-import getItemIndex from 'lib/getItemIndex';
-import { getTokenTypeName } from 'lib/token/tokenTypes';
-import AddressAddToWallet from 'ui/shared/address/AddressAddToWallet';
+import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
+import { readWorkflowResult } from 'lib/opengradient/contracts/workflow';
+import { formatTimestamp, getRelativeTime } from 'lib/opengradient/datetime';
+import Code from 'ui/inferences/layout/Code';
 import Skeleton from 'ui/shared/chakra/Skeleton';
-import Tag from 'ui/shared/chakra/Tag';
-import type { EntityProps as AddressEntityProps } from 'ui/shared/entities/address/AddressEntity';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
-import TokenEntity from 'ui/shared/entities/token/TokenEntity';
 
 type Props = {
-  token: TokenInfo;
-  index: number;
-  page: number;
+  task: SchedulerTask;
   isLoading?: boolean;
 };
 
-const bridgedTokensFeature = config.features.bridgedTokens;
-
 const WorkflowsTableItem = ({
-  token,
-  page,
-  index,
+  task,
   isLoading,
 }: Props) => {
 
-  const {
-    address,
-    filecoin_robust_address: filecoinRobustAddress,
-    exchange_rate: exchangeRate,
-    type,
-    holders,
-    circulating_market_cap: marketCap,
-    origin_chain_id: originalChainId,
-  } = token;
+  const { user, contractAddress, endTime, frequency } = task;
 
-  const bridgedChainTag = bridgedTokensFeature.isEnabled ?
-    bridgedTokensFeature.chains.find(({ id }) => id === originalChainId)?.short_title :
-    undefined;
+  const prettyEndTime = formatTimestamp(Number(endTime));
+  const relativeEndTime = getRelativeTime(Number(endTime), { addSuffix: true });
 
-  const tokenAddress: AddressEntityProps['address'] = {
-    hash: address,
-    filecoin: {
-      robust: filecoinRobustAddress,
-    },
-    name: '',
-    is_contract: true,
-    is_verified: false,
-    ens_domain_name: null,
-    implementations: null,
+  const placeholderData: ModelOutput = React.useMemo(() => ({
+    numbers: [ { name: 'Y', values: [ { value: '3774157376028597354888916016', decimals: '31' } ], shape: [ 1 ] } ],
+    strings: [],
+    jsons: [],
+    isSimulationResult: true,
+  }), []);
+  const { data: workflowResult, error, isPlaceholderData } = useQuery({
+    queryKey: [ 'opengradient', 'readWorkflowResult' ],
+    queryFn: async() => readWorkflowResult(contractAddress),
+    placeholderData,
+  });
+
+  const renderWorkflowResult = () => {
+    if (!workflowResult || error) {
+      return;
+    }
+
+    const { numbers, strings, jsons } = workflowResult;
+    const nameToValues: Array<string> = [];
+    if (numbers.length > 0) {
+      nameToValues.push(...numbers.map(({ name, values }) => {
+        const decimalValues = values.map((v) => (Number(v.value) / (10 ** Number(v.decimals))));
+        return `${ name }: ${ JSON.stringify(decimalValues) }`;
+      }));
+    }
+    if (strings.length > 0) {
+      nameToValues.push(...strings.map(({ name, values }) => {
+        return `${ name }: ${ JSON.stringify(values) }`;
+      }));
+    }
+    if (jsons.length > 0) {
+      nameToValues.push(...jsons.map(({ name, value }) => {
+        return `${ name }: ${ JSON.stringify(JSON.parse(value)) }`;
+      }));
+    }
+
+    return nameToValues.join('\n');
   };
 
   return (
@@ -61,68 +70,38 @@ const WorkflowsTableItem = ({
       role="group"
     >
       <Td>
-        <Flex alignItems="flex-start">
-          <Skeleton
-            isLoaded={ !isLoading }
-            fontSize="sm"
-            lineHeight="20px"
-            fontWeight={ 600 }
-            mr={ 3 }
-            minW="28px"
-          >
-            { getItemIndex(index, page) }
-          </Skeleton>
-          <Flex overflow="hidden" flexDir="column" rowGap={ 2 }>
-            <TokenEntity
-              token={ token }
-              isLoading={ isLoading }
-              jointSymbol
-              noCopy
-              fontSize="sm"
-              fontWeight="700"
-            />
-            <Flex columnGap={ 2 } py="5px" alignItems="center">
-              <AddressEntity
-                address={ tokenAddress }
-                isLoading={ isLoading }
-                noIcon
-                fontSize="sm"
-                fontWeight={ 500 }
-              />
-              <AddressAddToWallet
-                token={ token }
-                isLoading={ isLoading }
-                iconSize={ 5 }
-                opacity={ 0 }
-                _groupHover={{ opacity: 1 }}
-              />
-            </Flex>
-            <Flex columnGap={ 1 }>
-              <Tag isLoading={ isLoading }>{ getTokenTypeName(type) }</Tag>
-              { bridgedChainTag && <Tag isLoading={ isLoading }>{ bridgedChainTag }</Tag> }
-            </Flex>
-          </Flex>
-        </Flex>
-      </Td>
-      <Td isNumeric>
-        <Skeleton isLoaded={ !isLoading } fontSize="sm" lineHeight="24px" fontWeight={ 500 } display="inline-block">
-          { exchangeRate && `$${ Number(exchangeRate).toLocaleString(undefined, { minimumSignificantDigits: 4 }) }` }
+        <Skeleton isLoaded={ !isLoading }>
+          <AddressEntity
+            address={{ hash: user }}
+            isLoading={ isLoading }
+            truncation="constant_long"
+          />
         </Skeleton>
       </Td>
-      <Td isNumeric maxWidth="300px" width="300px">
-        <Skeleton isLoaded={ !isLoading } fontSize="sm" lineHeight="24px" fontWeight={ 500 } display="inline-block">
-          { marketCap && `$${ BigNumber(marketCap).toFormat() }` }
+
+      <Td>
+        <Skeleton isLoaded={ !isLoading }>
+          <AddressEntity
+            address={{ hash: contractAddress, is_contract: true }}
+            isLoading={ isLoading }
+            truncation="constant_long"
+          />
         </Skeleton>
       </Td>
-      <Td isNumeric>
-        <Skeleton
-          isLoaded={ !isLoading }
-          fontSize="sm"
-          lineHeight="24px"
-          fontWeight={ 500 }
-          display="inline-block"
-        >
-          { Number(holders).toLocaleString() }
+
+      <Td>
+        <Code isLoaded={ !isPlaceholderData }>{ renderWorkflowResult() ?? 'None' }</Code>
+      </Td>
+
+      <Td>
+        <Skeleton isLoaded={ !isLoading }>
+          <Text>{ `${ Number(frequency) / 60 }s` }</Text>
+        </Skeleton>
+      </Td>
+
+      <Td>
+        <Skeleton isLoaded={ !isLoading }>
+          <Text>{ `${ prettyEndTime } (${ relativeEndTime })` }</Text>
         </Skeleton>
       </Td>
     </Tr>

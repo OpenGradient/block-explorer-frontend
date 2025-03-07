@@ -25,8 +25,6 @@ import getSortValueFromQuery from 'ui/shared/sort/getSortValueFromQuery';
 import TokensBridgedChainsFilter from 'ui/tokens/TokensBridgedChainsFilter';
 import { SORT_OPTIONS, getTokenFilterValue, getBridgedChainsFilterValue } from 'ui/tokens/utils';
 
-const TABS_HEIGHT = 88;
-
 const bridgedTokensFeature = config.features.bridgedTokens;
 
 const generateFakeTasks = () => (
@@ -139,7 +137,6 @@ const Workflows = () => {
         onSortChange={ handleSortChange }
         actionBar={ isMobile ? actionBar : null }
         hasActiveFilters={ Boolean(searchTerm || tokenTypes) }
-        tableTop={ hasMultipleTabs ? TABS_HEIGHT : undefined }
         data={ query.data }
         isLoading={ query.isPlaceholderData }
         error={ query.error }

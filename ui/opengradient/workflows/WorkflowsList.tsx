@@ -10,7 +10,7 @@ import DataFetchAlert from 'ui/shared/DataFetchAlert';
 import DataListDisplay from 'ui/shared/DataListDisplay';
 import type { QueryWithPagesResult } from 'ui/shared/pagination/useQueryWithPages';
 
-import WorkflowsListItemMobile from './WorkflowsListItemMobile';
+import WorkflowsListItem from './WorkflowsListItem';
 import WorkflowsTable from './WorkflowsTable';
 
 interface Props {
@@ -27,7 +27,7 @@ interface Props {
   error: Error | null;
 }
 
-const WorkflowsList = ({ query, onSortChange, sort, actionBar, description, hasActiveFilters, tableTop, data, isLoading, error }: Props) => {
+const WorkflowsList = ({ query, onSortChange, sort, actionBar, description, hasActiveFilters, data, isLoading, error }: Props) => {
   const isError = isNotNil(error);
 
   if (isError) {
@@ -39,7 +39,7 @@ const WorkflowsList = ({ query, onSortChange, sort, actionBar, description, hasA
       <Show below="lg" ssr={ false }>
         { description }
         { data.map((item, index) => (
-          <WorkflowsListItemMobile
+          <WorkflowsListItem
             key={ index }
             task={ item }
             isLoading={ isLoading }
@@ -47,14 +47,12 @@ const WorkflowsList = ({ query, onSortChange, sort, actionBar, description, hasA
         )) }
       </Show>
       <Hide below="lg" ssr={ false }>
-        this is a desktop view
         { description }
         <WorkflowsTable
           items={ data }
           isLoading={ isLoading }
           setSorting={ onSortChange }
           sorting={ sort }
-          top={ tableTop }
         />
       </Hide>
     </>

@@ -1,20 +1,25 @@
-import { formatDistanceToNow, format, fromUnixTime } from 'date-fns';
+import type { FormatDistanceToNowOptions, FormatOptions } from 'date-fns';
+import { formatDistanceToNow, format, fromUnixTime, formatISO } from 'date-fns';
+
+export const getRelativeTime = (unixTimestamp: number, options?: FormatDistanceToNowOptions): string => {
+  const date = fromUnixTime(unixTimestamp);
+  return formatDistanceToNow(date, options);
+};
 
 /**
  * Formats a Unix timestamp to a pretty relative time with timezone info
  * @param unixTimestamp Unix timestamp in seconds
  * @returns Formatted relative time string with date and timezone
  */
-export const formatPrettyTimestamp = (unixTimestamp: number): { relativeTime: string; fullDate: string } => {
+export const formatTimestamp = (unixTimestamp: number, formatStr = 'Pp', options?: FormatOptions): string => {
   // Convert Unix timestamp (seconds) to Date
   const date = fromUnixTime(unixTimestamp);
 
-  // Get the relative time string (e.g., "in 15 days" or "2 hours ago")
-  const relativeTime = formatDistanceToNow(date, { addSuffix: true });
-
   // Get full date with timezone for additional context
-  const fullDate = format(date, 'Pp');
+  return format(date, formatStr, options);
+};
 
-  // Combine relative and absolute time
-  return { relativeTime, fullDate };
+export const convertUnixTimestampToUTC = (unixTimestamp: number) => {
+  const date = fromUnixTime(unixTimestamp);
+  return formatISO(date, { format: 'extended' });
 };
