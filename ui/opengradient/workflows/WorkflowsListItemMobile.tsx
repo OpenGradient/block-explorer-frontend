@@ -65,7 +65,7 @@ const WorkflowsListItemMobile = ({
       }));
     }
 
-    return nameToValues;
+    return nameToValues.join('\n');
   };
 
   return (
