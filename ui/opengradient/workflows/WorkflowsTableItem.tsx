@@ -33,7 +33,7 @@ const WorkflowsTableItem = ({
     isSimulationResult: true,
   }), []);
   const { data: workflowResult, error, isPlaceholderData } = useQuery({
-    queryKey: [ 'opengradient', 'readWorkflowResult' ],
+    queryKey: [ 'opengradient', 'readWorkflowResult', contractAddress ],
     queryFn: async() => readWorkflowResult(contractAddress),
     placeholderData,
   });
@@ -60,6 +60,10 @@ const WorkflowsTableItem = ({
       nameToValues.push(...jsons.map(({ name, value }) => {
         return `${ name }: ${ JSON.stringify(JSON.parse(value)) }`;
       }));
+    }
+
+    if (nameToValues.length === 0) {
+      return;
     }
 
     return nameToValues.join('\n');
