@@ -67,11 +67,17 @@ export const convertArrayToModelOutput = (value: unknown): false | ModelOutput =
 
   const [ numbersTensor, stringsTensor, jsonsTensor, isSimulation ] = value;
 
-  // Check if last element is a string that can be converted to boolean
-  if (typeof isSimulation !== 'string' || (isSimulation !== 'true' && isSimulation !== 'false')) {
+  if (typeof isSimulation === 'string') {
+    if (isSimulation !== 'true' && isSimulation !== 'false') {
+      return false;
+    }
+
+    modelOutput.isSimulationResult = Boolean(isSimulation === 'true');
+  } else if (typeof isSimulation === 'boolean') {
+    modelOutput.isSimulationResult = isSimulation;
+  } else {
     return false;
   }
-  modelOutput.isSimulationResult = Boolean(isSimulation === 'true');
 
   // Validate number tensors array
   if (!Array.isArray(numbersTensor)) {

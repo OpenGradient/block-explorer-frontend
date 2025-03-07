@@ -1,4 +1,5 @@
 import * as descriptors from './policies';
+import * as ogDescriptors from './policies/opengradient';
 import { makePolicyString, mergeDescriptors } from './utils';
 
 function generateCspPolicy() {
@@ -19,6 +20,9 @@ function generateCspPolicy() {
     descriptors.safe(),
     descriptors.usernameApi(),
     descriptors.walletConnect(),
+
+    // OpenGradient descriptors
+    ogDescriptors.ethereumRpc(),
   );
 
   return makePolicyString(policyDescriptor);

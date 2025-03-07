@@ -1,8 +1,10 @@
 import type { FlexProps, SkeletonProps } from '@chakra-ui/react';
-import { Flex, useColorModeValue } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import React from 'react';
 
 import Skeleton from 'ui/shared/chakra/Skeleton';
+
+import Code from './Code';
 
 interface ItemProps extends FlexProps {
   label?: React.ReactNode;
@@ -13,8 +15,6 @@ interface ItemProps extends FlexProps {
 }
 
 const Item = ({ label, labelProps = {}, children, isLoading, isCode = false, ...rest }: ItemProps) => {
-  const dataBgColor = useColorModeValue('blackAlpha.50', 'whiteAlpha.50');
-
   return (
     <Flex
       w="100%"
@@ -30,18 +30,7 @@ const Item = ({ label, labelProps = {}, children, isLoading, isCode = false, ...
         </Skeleton >
       ) }
       { isCode ? (
-        <Skeleton
-          flex={ 1 }
-          wordBreak="break-word"
-          whiteSpace="pre-wrap"
-          isLoaded={ !isLoading }
-          p={ 4 }
-          fontSize="sm"
-          borderRadius="md"
-          bgColor={ isLoading ? undefined : dataBgColor }
-        >
-          { children }
-        </Skeleton>
+        <Code isLoaded={ !isLoading }>{ children }</Code>
       ) : <Skeleton flex={ 1 } width="100%" isLoaded={ !isLoading }>{ children }</Skeleton> }
     </Flex>
   );

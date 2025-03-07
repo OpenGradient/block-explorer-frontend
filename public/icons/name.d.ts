@@ -113,6 +113,7 @@
 	| "networks/logo-placeholder"
 	| "nft_shield"
 	| "open-link"
+	| "opengradient/workflow"
 	| "output_roots"
 	| "payment_link"
 	| "plus"

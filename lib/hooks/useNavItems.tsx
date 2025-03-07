@@ -272,6 +272,12 @@ export default function useNavItems(): ReturnType {
         subItems: blockchainNavItems,
       },
       {
+        text: 'Workflows',
+        nextRoute: { pathname: '/workflows' as const },
+        icon: 'opengradient/workflow',
+        isActive: pathname.startsWith('/workflows'),
+      },
+      {
         text: 'Tokens',
         icon: 'token',
         isActive: tokensNavItems.flat().some(item => isInternalItem(item) && item.isActive),

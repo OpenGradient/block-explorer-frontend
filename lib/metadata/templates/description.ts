@@ -64,6 +64,9 @@ const TEMPLATE_MAP: Record<Route['pathname'], string> = {
   '/pools': DEFAULT_TEMPLATE,
   '/pools/[hash]': DEFAULT_TEMPLATE,
 
+  // OpenGradient routes
+  '/workflows': 'View workflows on the %network_title%',
+
   // service routes, added only to make typescript happy
   '/login': DEFAULT_TEMPLATE,
   '/sprite': DEFAULT_TEMPLATE,
