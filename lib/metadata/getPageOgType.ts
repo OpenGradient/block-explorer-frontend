@@ -61,6 +61,9 @@ const OG_TYPE_DICT: Record<Route['pathname'], OGPageType> = {
   '/pools': 'Root page',
   '/pools/[hash]': 'Regular page',
 
+  // OpenGradient routes
+  '/workflows': 'Root page',
+
   // service routes, added only to make typescript happy
   '/login': 'Regular page',
   '/sprite': 'Regular page',
