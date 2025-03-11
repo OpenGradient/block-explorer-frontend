@@ -76,16 +76,6 @@ const WorkflowsTableItem = ({
       <Td>
         <Skeleton isLoaded={ !isLoading }>
           <AddressEntity
-            address={{ hash: user }}
-            isLoading={ isLoading }
-            truncation="constant_long"
-          />
-        </Skeleton>
-      </Td>
-
-      <Td>
-        <Skeleton isLoaded={ !isLoading }>
-          <AddressEntity
             address={{ hash: contractAddress, is_contract: true }}
             isLoading={ isLoading }
             truncation="constant_long"
@@ -95,6 +85,16 @@ const WorkflowsTableItem = ({
 
       <Td>
         <Code isLoaded={ !isPlaceholderData }>{ renderWorkflowResult() ?? 'None' }</Code>
+      </Td>
+
+      <Td>
+        <Skeleton isLoaded={ !isLoading }>
+          <AddressEntity
+            address={{ hash: user }}
+            isLoading={ isLoading }
+            truncation="constant_long"
+          />
+        </Skeleton>
       </Td>
 
       <Td>

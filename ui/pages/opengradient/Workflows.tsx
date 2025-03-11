@@ -3,6 +3,8 @@ import { range } from 'es-toolkit';
 import { useRouter } from 'next/router';
 import React from 'react';
 
+import type { RoutedTab } from 'ui/shared/Tabs/types';
+
 import useDebounce from 'lib/hooks/useDebounce';
 import useIsMobile from 'lib/hooks/useIsMobile';
 import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
@@ -11,6 +13,21 @@ import getQueryParamString from 'lib/router/getQueryParamString';
 import WorkflowsActionBar from 'ui/opengradient/workflows/WorkflowsActionBar';
 import WorkflowsList from 'ui/opengradient/workflows/WorkflowsList';
 import PageTitle from 'ui/shared/Page/PageTitle';
+import RoutedTabs from 'ui/shared/Tabs/RoutedTabs';
+
+const TAB_LIST_PROPS = {
+  marginBottom: 0,
+  pt: 6,
+  pb: 6,
+  marginTop: -5,
+  alignItems: 'center',
+};
+const TABS_HEIGHT = 88;
+
+const TABS_RIGHT_SLOT_PROPS = {
+  ml: 8,
+  flexGrow: 1,
+};
 
 const generateFakeTasks = () => (
   range(10).map(() => ({
@@ -46,6 +63,8 @@ const Workflows = () => {
     setSearchTerm(value);
   }, []);
 
+  const hasMultipleTabs = false;
+
   const actionBar = (
     <WorkflowsActionBar
       key={ tab }
@@ -54,9 +73,26 @@ const Workflows = () => {
       onSearchChange={ handleSearchTermChange }
       // sort={ sort }
       // onSortChange={ handleSortChange }
-      inTabsSlot={ !isMobile }
+      inTabsSlot={ !isMobile && hasMultipleTabs }
     />
   );
+
+  const tabs: Array<RoutedTab> = [
+    {
+      id: 'all',
+      title: 'All',
+      component: (
+        <WorkflowsList
+          hasActiveFilters={ Boolean(searchTerm) }
+          data={ filteredTasks }
+          isLoading={ query.isPlaceholderData }
+          error={ query.error }
+          actionBar={ isMobile ? actionBar : null }
+          tableTop={ hasMultipleTabs ? TABS_HEIGHT : undefined }
+        />
+      ),
+    },
+  ].filter(Boolean);
 
   return (
     <>
@@ -65,14 +101,13 @@ const Workflows = () => {
         withTextAd
       />
       { actionBar }
-      <WorkflowsList
-        // sort={ sort }
-        // onSortChange={ handleSortChange }
-        // actionBar={ isMobile ? actionBar : null }
-        hasActiveFilters={ Boolean(searchTerm) }
-        data={ filteredTasks }
-        isLoading={ query.isPlaceholderData }
-        error={ query.error }
+      <RoutedTabs
+        tabs={ tabs }
+        tabListProps={ isMobile ? undefined : TAB_LIST_PROPS }
+        rightSlot={ hasMultipleTabs && !isMobile ? actionBar : null }
+        rightSlotProps={ !isMobile ? TABS_RIGHT_SLOT_PROPS : undefined }
+        stickyEnabled={ !isMobile }
+        // onTabChange={ handleTabChange }
       />
     </>
   );
