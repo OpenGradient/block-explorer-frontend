@@ -20,13 +20,14 @@ type Props = {
   // sorting?: TokensSortingValue;
   // setSorting: (val?: TokensSortingValue) => void;
   isLoading?: boolean;
+  top?: number;
 };
 
 /** Taken from TokensTable. */
-const WorkflowsTable = ({ items, isLoading }: Props) => {
+const WorkflowsTable = ({ items, isLoading, top }: Props) => {
   return (
     <Table>
-      <Thead top={ ACTION_BAR_HEIGHT_DESKTOP }>
+      <Thead top={ top ?? ACTION_BAR_HEIGHT_DESKTOP }>
         <Tr>
           <Th>Workflow Address</Th>
           <Th>Latest Result</Th>

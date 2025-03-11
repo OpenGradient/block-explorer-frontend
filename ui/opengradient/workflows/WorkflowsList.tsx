@@ -13,16 +13,18 @@ import WorkflowsTable from './WorkflowsTable';
 interface Props {
   // onSortChange: () => void;
   // sort: TokensSortingValue | undefined;
-  // actionBar?: React.ReactNode;
+  actionBar?: React.ReactNode;
   hasActiveFilters: boolean;
   description?: React.ReactNode;
 
   data: Array<SchedulerTask> | undefined;
   isLoading: boolean;
   error: Error | null;
+
+  tableTop?: number;
 }
 
-const WorkflowsList = ({ description, hasActiveFilters, data, isLoading, error }: Props) => {
+const WorkflowsList = ({ description, hasActiveFilters, actionBar, data, isLoading, error, tableTop }: Props) => {
   const isError = isNotNil(error);
 
   if (isError) {
@@ -46,6 +48,7 @@ const WorkflowsList = ({ description, hasActiveFilters, data, isLoading, error }
         <WorkflowsTable
           items={ data }
           isLoading={ isLoading }
+          top={ tableTop }
           // setSorting={ onSortChange }
           // sorting={ sort }
         />
@@ -63,7 +66,7 @@ const WorkflowsList = ({ description, hasActiveFilters, data, isLoading, error }
         hasActiveFilters,
       }}
       content={ content }
-      // actionBar={ query.pagination.isVisible || hasActiveFilters ? actionBar : null }
+      actionBar={ hasActiveFilters ? actionBar : null }
     />
   );
 };
