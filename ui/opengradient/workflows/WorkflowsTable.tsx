@@ -28,9 +28,9 @@ const WorkflowsTable = ({ items, isLoading }: Props) => {
     <Table>
       <Thead top={ ACTION_BAR_HEIGHT_DESKTOP }>
         <Tr>
-          <Th>User Address</Th>
-          <Th>Contract Address</Th>
+          <Th>Workflow Address</Th>
           <Th>Latest Result</Th>
+          <Th>Creator Address</Th>
           <Th w="10%">Frequency</Th>
           <Th>End Time</Th>
         </Tr>
