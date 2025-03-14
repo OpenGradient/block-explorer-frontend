@@ -92,7 +92,7 @@ const WorkflowsTableItem = ({
       </Td>
 
       <Td>
-        <Skeleton isLoaded={ !isLoading }>
+        <Skeleton isLoaded={ !isPlaceholderData }>
           { workflowResult?.modelCid ? (
             <Flex>
               <Text isTruncated>{ workflowResult.modelCid }</Text>

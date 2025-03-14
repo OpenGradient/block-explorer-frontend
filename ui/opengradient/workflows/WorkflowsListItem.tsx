@@ -94,7 +94,7 @@ const WorkflowsListItem = ({
 
       <Box>
         <Label value="Model CID" isLoading={ isPlaceholderData }/>
-        <Skeleton isLoaded={ !isLoading }>
+        <Skeleton isLoaded={ !isPlaceholderData }>
           { workflowResult?.modelCid ? (
             <Flex>
               <Text isTruncated>{ workflowResult.modelCid }</Text>
