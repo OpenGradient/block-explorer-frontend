@@ -1,15 +1,14 @@
-import { Td, Text, Tr } from '@chakra-ui/react';
+import { Flex, Td, Text, Tr } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
-import type { ModelOutput } from 'types/client/inference/traditional';
-
 import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
-import { readWorkflowResult } from 'lib/opengradient/contracts/workflow';
+import { getReadWorkflowResultQueryKey, READ_WORKFLOW_RESULT_PLACEHOLDER_DATA, readWorkflowResult } from 'lib/opengradient/contracts/workflow';
 import { formatTimestamp, getRelativeTime } from 'lib/opengradient/datetime';
 import Code from 'ui/inferences/layout/Code';
 import Skeleton from 'ui/shared/chakra/Skeleton';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
+import * as EntityBase from 'ui/shared/entities/base/components';
 
 type Props = {
   task: SchedulerTask;
@@ -26,24 +25,19 @@ const WorkflowsTableItem = ({
   const prettyEndTime = formatTimestamp(Number(endTime));
   const relativeEndTime = getRelativeTime(Number(endTime), { addSuffix: true });
 
-  const placeholderData: ModelOutput = React.useMemo(() => ({
-    numbers: [ { name: 'Y', values: [ { value: '3774157376028597354888916016', decimals: '31' } ], shape: [ 1 ] } ],
-    strings: [],
-    jsons: [],
-    isSimulationResult: true,
-  }), []);
   const { data: workflowResult, error, isPlaceholderData } = useQuery({
-    queryKey: [ 'opengradient', 'readWorkflowResult', contractAddress ],
+    queryKey: getReadWorkflowResultQueryKey(contractAddress),
     queryFn: async() => readWorkflowResult(contractAddress),
-    placeholderData,
+    placeholderData: READ_WORKFLOW_RESULT_PLACEHOLDER_DATA,
   });
 
-  const renderWorkflowResult = () => {
-    if (!workflowResult || error) {
+  const renderLatestResult = () => {
+    const modelOutput = workflowResult?.output;
+    if (!modelOutput || error) {
       return;
     }
 
-    const { numbers, strings, jsons } = workflowResult;
+    const { numbers, strings, jsons } = modelOutput;
     const nameToValues: Array<string> = [];
     if (numbers.length > 0) {
       nameToValues.push(...numbers.map(({ name, values }) => {
@@ -84,7 +78,7 @@ const WorkflowsTableItem = ({
       </Td>
 
       <Td>
-        <Code isLoaded={ !isPlaceholderData }>{ renderWorkflowResult() ?? 'None' }</Code>
+        <Code isLoaded={ !isPlaceholderData }>{ renderLatestResult() ?? 'N/A' }</Code>
       </Td>
 
       <Td>
@@ -94,6 +88,19 @@ const WorkflowsTableItem = ({
             isLoading={ isLoading }
             truncation="constant_long"
           />
+        </Skeleton>
+      </Td>
+
+      <Td>
+        <Skeleton isLoaded={ !isLoading }>
+          { workflowResult?.modelCid ? (
+            <Flex>
+              <Text isTruncated>{ workflowResult.modelCid }</Text>
+              <EntityBase.Copy
+                text={ workflowResult?.modelCid ?? '' }
+              />
+            </Flex>
+          ) : <Text>N/A</Text> }
         </Skeleton>
       </Td>
 

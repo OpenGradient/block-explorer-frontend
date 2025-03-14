@@ -32,6 +32,7 @@ const WorkflowsTable = ({ items, isLoading, top }: Props) => {
           <Th>Workflow Address</Th>
           <Th>Latest Result</Th>
           <Th>Creator Address</Th>
+          <Th>Model CID</Th>
           <Th w="10%">Frequency</Th>
           <Th>End Time</Th>
         </Tr>
