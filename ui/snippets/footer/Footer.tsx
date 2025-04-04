@@ -113,7 +113,7 @@ const Footer = () => {
           <span>Powered by</span>
           <Link href="https://www.opengradient.ai" target="_blank" display="inline-flex" color={ logoColor } _hover={{ color: logoColor }}>
             <IconSvg
-              name="networks/logo-placeholder"
+              name="opengradient/full-black-logo"
               width="80px"
               height={ 4 }
             />

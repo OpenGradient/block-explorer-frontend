@@ -116,6 +116,8 @@
 	| "networks/logo-placeholder"
 	| "nft_shield"
 	| "open-link"
+	| "opengradient/full-black-logo"
+	| "opengradient/full-cyan-logo"
 	| "opengradient/workflow"
 	| "output_roots"
 	| "payment_link"
