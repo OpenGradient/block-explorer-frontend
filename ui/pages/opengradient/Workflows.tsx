@@ -3,17 +3,17 @@ import { range } from 'es-toolkit';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import type { RoutedTab } from 'ui/shared/Tabs/types';
+import type { TabItemRegular } from 'toolkit/components/AdaptiveTabs/types';
 
 import useDebounce from 'lib/hooks/useDebounce';
 import useIsMobile from 'lib/hooks/useIsMobile';
 import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
 import { getAllTasks } from 'lib/opengradient/contracts/scheduler';
 import getQueryParamString from 'lib/router/getQueryParamString';
+import RoutedTabs from 'toolkit/components/RoutedTabs/RoutedTabs';
 import WorkflowsActionBar from 'ui/opengradient/workflows/WorkflowsActionBar';
 import WorkflowsList from 'ui/opengradient/workflows/WorkflowsList';
 import PageTitle from 'ui/shared/Page/PageTitle';
-import RoutedTabs from 'ui/shared/Tabs/RoutedTabs';
 
 const TAB_LIST_PROPS = {
   marginBottom: 0,
@@ -77,7 +77,7 @@ const Workflows = () => {
     />
   );
 
-  const tabs: Array<RoutedTab> = [
+  const tabs: Array<TabItemRegular> = [
     {
       id: 'all',
       title: 'All',
@@ -103,7 +103,7 @@ const Workflows = () => {
       { actionBar }
       <RoutedTabs
         tabs={ tabs }
-        tabListProps={ isMobile ? undefined : TAB_LIST_PROPS }
+        listProps={ isMobile ? undefined : TAB_LIST_PROPS }
         rightSlot={ hasMultipleTabs && !isMobile ? actionBar : null }
         rightSlotProps={ !isMobile ? TABS_RIGHT_SLOT_PROPS : undefined }
         stickyEnabled={ !isMobile }

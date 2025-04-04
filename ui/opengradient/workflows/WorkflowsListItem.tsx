@@ -1,12 +1,12 @@
-import { Text, Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
 import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
 import { getReadWorkflowResultQueryKey, READ_WORKFLOW_RESULT_PLACEHOLDER_DATA, readWorkflowResult } from 'lib/opengradient/contracts/workflow';
 import { formatTimestamp, getRelativeTime } from 'lib/opengradient/datetime';
+import { Skeleton } from 'toolkit/chakra/skeleton';
 import Code from 'ui/inferences/layout/Code';
-import Skeleton from 'ui/shared/chakra/Skeleton';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import * as EntityBase from 'ui/shared/entities/base/components';
 import ListItemMobile from 'ui/shared/ListItemMobile/ListItemMobile';
@@ -17,7 +17,7 @@ type Props = {
 };
 
 const Label = ({ value, isLoading }: { value: string; isLoading?: boolean }) => (
-  <Skeleton mb={{ base: 2 }} isLoaded={ !isLoading } /* display="inline-block" */><Text fontWeight="semibold">{ value }</Text></Skeleton>
+  <Skeleton mb={{ base: 2 }} loading={ isLoading } /* display="inline-block" */><Text fontWeight="semibold">{ value }</Text></Skeleton>
 );
 
 const WorkflowsListItem = ({
@@ -67,7 +67,7 @@ const WorkflowsListItem = ({
     <ListItemMobile rowGap={ 5 } py={ 8 }>
       <Box>
         <Label value="User Address" isLoading={ isLoading }/>
-        <Skeleton isLoaded={ !isLoading }>
+        <Skeleton loading={ isLoading }>
           <AddressEntity
             address={{ hash: user /* name: 'User address' */ }}
             isLoading={ isLoading }
@@ -78,7 +78,7 @@ const WorkflowsListItem = ({
 
       <Box>
         <Label value="Contract Address" isLoading={ isLoading }/>
-        <Skeleton isLoaded={ !isLoading }>
+        <Skeleton loading={ isLoading }>
           <AddressEntity
             address={{ hash: contractAddress, is_contract: true }}
             isLoading={ isLoading }
@@ -89,15 +89,15 @@ const WorkflowsListItem = ({
 
       <Box>
         <Label value="Latest Result" isLoading={ isPlaceholderData }/>
-        <Code isLoaded={ !isPlaceholderData }>{ renderLatestResult() ?? 'N/A' }</Code>
+        <Code loading={ isPlaceholderData } p={ 4 }>{ renderLatestResult() ?? 'N/A' }</Code>
       </Box>
 
       <Box>
         <Label value="Model CID" isLoading={ isPlaceholderData }/>
-        <Skeleton isLoaded={ !isPlaceholderData }>
+        <Skeleton loading={ isPlaceholderData }>
           { workflowResult?.modelCid ? (
             <Flex>
-              <Text isTruncated>{ workflowResult.modelCid }</Text>
+              <Text truncate>{ workflowResult.modelCid }</Text>
               <EntityBase.Copy
                 text={ workflowResult?.modelCid ?? '' }
               />
@@ -108,14 +108,14 @@ const WorkflowsListItem = ({
 
       <Box>
         <Label value="Frequency" isLoading={ isLoading }/>
-        <Skeleton isLoaded={ !isLoading }>
+        <Skeleton loading={ isLoading }>
           <Text>{ `${ Number(frequency) / 60 }s` }</Text>
         </Skeleton>
       </Box>
 
       <Box>
         <Label value="End Time" isLoading={ isLoading }/>
-        <Skeleton isLoaded={ !isLoading }>
+        <Skeleton loading={ isLoading }>
           <Text>{ `${ prettyEndTime } (${ relativeEndTime })` }</Text>
         </Skeleton>
       </Box>

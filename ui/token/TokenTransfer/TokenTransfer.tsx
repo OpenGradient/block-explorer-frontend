@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import type { SocketMessage } from 'lib/socket/types';
-import type { TokenInfo } from 'types/api/token';
+import type { TokenInfo, TokenInstance } from 'types/api/token';
 
 import type { ResourceError } from 'lib/api/resources';
 import useGradualIncrement from 'lib/hooks/useGradualIncrement';
@@ -25,11 +25,13 @@ const TABS_HEIGHT = 88;
 type Props = {
   transfersQuery: QueryWithPagesResult<'token_transfers'> | QueryWithPagesResult<'token_instance_transfers'>;
   tokenId?: string;
+  tokenInstance?: TokenInstance;
   tokenQuery: UseQueryResult<TokenInfo, ResourceError<unknown>>;
   shouldRender?: boolean;
+  tabsHeight?: number;
 };
 
-const TokenTransfer = ({ transfersQuery, tokenId, tokenQuery, shouldRender = true }: Props) => {
+const TokenTransfer = ({ transfersQuery, tokenId, tokenQuery, tabsHeight = TABS_HEIGHT, tokenInstance, shouldRender = true }: Props) => {
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();
   const router = useRouter();
@@ -74,12 +76,13 @@ const TokenTransfer = ({ transfersQuery, tokenId, tokenQuery, shouldRender = tru
       <Box display={{ base: 'none', lg: 'block' }}>
         <TokenTransferTable
           data={ data?.items }
-          top={ pagination.isVisible ? TABS_HEIGHT : 0 }
+          top={ tabsHeight }
           showSocketInfo={ pagination.page === 1 }
           socketInfoAlert={ socketAlert }
           socketInfoNum={ newItemsCount }
           tokenId={ tokenId }
           token={ token }
+          instance={ tokenInstance }
           isLoading={ isLoading }
         />
       </Box>
@@ -93,7 +96,7 @@ const TokenTransfer = ({ transfersQuery, tokenId, tokenQuery, shouldRender = tru
             isLoading={ isLoading }
           />
         ) }
-        <TokenTransferList data={ data?.items } tokenId={ tokenId } isLoading={ isLoading }/>
+        <TokenTransferList data={ data?.items } tokenId={ tokenId } instance={ tokenInstance } isLoading={ isLoading }/>
       </Box>
     </>
   ) : null;
@@ -107,11 +110,12 @@ const TokenTransfer = ({ transfersQuery, tokenId, tokenQuery, shouldRender = tru
   return (
     <DataListDisplay
       isError={ isError || isTokenError }
-      items={ data?.items }
+      itemsNum={ data?.items.length }
       emptyText="There are no token transfers."
-      content={ content }
       actionBar={ actionBar }
-    />
+    >
+      { content }
+    </DataListDisplay>
   );
 };
 

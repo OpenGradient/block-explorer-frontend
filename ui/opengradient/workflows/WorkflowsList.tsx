@@ -1,4 +1,4 @@
-import { Hide, Show } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { isNotNil } from 'es-toolkit';
 import React from 'react';
 
@@ -33,7 +33,7 @@ const WorkflowsList = ({ description, hasActiveFilters, actionBar, data, isLoadi
 
   const content = data ? (
     <>
-      <Show below="lg" ssr={ false }>
+      <Box hideFrom="lg">
         { description }
         { data.map((item, index) => (
           <WorkflowsListItem
@@ -42,8 +42,8 @@ const WorkflowsList = ({ description, hasActiveFilters, actionBar, data, isLoadi
             isLoading={ isLoading }
           />
         )) }
-      </Show>
-      <Hide below="lg" ssr={ false }>
+      </Box>
+      <Box hideBelow="lg">
         { description }
         <WorkflowsTable
           items={ data }
@@ -52,22 +52,23 @@ const WorkflowsList = ({ description, hasActiveFilters, actionBar, data, isLoadi
           // setSorting={ onSortChange }
           // sorting={ sort }
         />
-      </Hide>
+      </Box>
     </>
   ) : null;
 
   return (
     <DataListDisplay
       isError={ isError }
-      items={ data }
+      itemsNum={ data?.length }
       emptyText="There are no workflows."
       filterProps={{
         emptyFilteredText: `Couldn${ apos }t find a workflow that matches your filter query.`,
         hasActiveFilters,
       }}
-      content={ content }
       actionBar={ hasActiveFilters ? actionBar : null }
-    />
+    >
+      { content }
+    </DataListDisplay>
   );
 };
 

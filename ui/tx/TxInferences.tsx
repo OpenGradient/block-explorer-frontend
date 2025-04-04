@@ -1,9 +1,4 @@
-import { Box, Text, Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon } from '@chakra-ui/react';
-import { range } from 'es-toolkit';
+import { Box, Text } from '@chakra-ui/react';
 import React from 'react';
 
 import type { DecodedInput } from 'types/api/decodedInput';
@@ -14,9 +9,10 @@ import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
 import { getInferenceEvent } from 'lib/inferences/event';
 import { LOG } from 'stubs/log';
 import { generateListStub } from 'stubs/utils';
+import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from 'toolkit/chakra/accordion';
+import { Skeleton } from 'toolkit/chakra/skeleton';
 import InferenceItem from 'ui/inferences/InferenceItem';
 import ActionBar from 'ui/shared/ActionBar';
-import Skeleton from 'ui/shared/chakra/Skeleton';
 import DataFetchAlert from 'ui/shared/DataFetchAlert';
 import Pagination from 'ui/shared/pagination/Pagination';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
@@ -24,6 +20,8 @@ import TxPendingAlert from 'ui/tx/TxPendingAlert';
 import TxSocketAlert from 'ui/tx/TxSocketAlert';
 
 import type { TxQuery } from './useTxQuery';
+
+const calculateAccordionKeyValue = (hash: string, index: number) => `${ hash }-${ index }`;
 
 interface AccordionItem {
   label: string;
@@ -108,28 +106,31 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
           <Pagination ml="auto" { ...pagination }/>
         </ActionBar>
       ) }
-      <Skeleton isLoaded={ !isPlaceholderData }>
+      <Skeleton loading={ isPlaceholderData }>
         { /* Skeleton doesn't work for accordion, so this is a placeholder. */ }
         { isPlaceholderData && 'Loading...' }
-        <Accordion defaultIndex={ range(0, items.length) } allowMultiple>
-          { inferenceHubLogs.map((item) => (
-            <AccordionItem key={ `${ item.address.hash }-${ item.index }` }>
-              <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
-                  { renderInferenceType(item.decoded) }
-                </Box>
-                <AccordionIcon/>
-              </AccordionButton>
-              <AccordionPanel>
-                <InferenceItem
-                  { ...item }
-                  type="transaction"
-                  isLoading={ isPlaceholderData }
-                />
-              </AccordionPanel>
-            </AccordionItem>
-          )) }
-        </Accordion>
+        <AccordionRoot defaultValue={ inferenceHubLogs.map((it) => calculateAccordionKeyValue(it.address.hash, it.index)) } multiple>
+          { inferenceHubLogs.map((item) => {
+            const keyValue = calculateAccordionKeyValue(item.address.hash, item.index);
+
+            return (
+              <AccordionItem key={ keyValue } value={ keyValue }>
+                <AccordionItemTrigger indicatorPlacement="end">
+                  <Box as="span" flex="1" textAlign="left">
+                    { renderInferenceType(item.decoded) }
+                  </Box>
+                </AccordionItemTrigger>
+                <AccordionItemContent>
+                  <InferenceItem
+                    { ...item }
+                    type="transaction"
+                    isLoading={ isPlaceholderData }
+                  />
+                </AccordionItemContent>
+              </AccordionItem>
+            );
+          }) }
+        </AccordionRoot>
       </Skeleton>
     </Box>
   );

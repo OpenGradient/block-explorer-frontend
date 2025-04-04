@@ -1,6 +1,6 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
-import { omit } from 'es-toolkit';
+import { clamp, omit } from 'es-toolkit';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
 import { animateScroll } from 'react-scroll';
@@ -129,11 +129,9 @@ export default function useQueryWithPages<Resource extends PaginatedResources>({
     }
 
     scrollToTop();
-    router.push({ pathname: router.pathname, query: nextPageQuery }, undefined, { shallow: true })
-      .then(() => {
-        setPage(prev => prev - 1);
-        page === 2 && queryClient.removeQueries({ queryKey: [ resourceName ] });
-      });
+    setPage(prev => clamp(prev - 1, 1, Infinity));
+    page === 2 && queryClient.removeQueries({ queryKey: [ resourceName ] });
+    router.push({ pathname: router.pathname, query: nextPageQuery }, undefined, { shallow: true });
   }, [ router, page, pageParams, scrollToTop, queryClient, resourceName ]);
 
   const resetPage = useCallback(() => {

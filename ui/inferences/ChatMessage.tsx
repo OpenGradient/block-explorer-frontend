@@ -1,8 +1,9 @@
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
-import { range } from 'es-toolkit';
+import { Box } from '@chakra-ui/react';
 import { isEmpty } from 'es-toolkit/compat';
 
 import type { ChatMessage as ChatMessageType } from 'types/client/inference/llmChat';
+
+import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from 'toolkit/chakra/accordion';
 
 import Item from './layout/Item';
 import VStackContainer from './layout/VStackContainer';
@@ -24,7 +25,7 @@ const ChatMessage = ({ message }: { message: ChatMessageType }) => (
 
     <Item label="Tool Calls">
       { isEmpty(message.toolCalls) ? 'None' : (
-        <Accordion defaultIndex={ range(0, message.toolCalls.length) } allowMultiple>
+        <AccordionRoot defaultValue={ message.toolCalls.map((t, i) => t.id + i) } multiple>
           { message.toolCalls.map(({ id, name, arguments: args }, index) => {
             if (args.length === 0) {
               return;
@@ -32,22 +33,21 @@ const ChatMessage = ({ message }: { message: ChatMessageType }) => (
             const decoded = JSON.parse(args);
 
             return (
-              <AccordionItem key={ id + index }>
-                <AccordionButton>
+              <AccordionItem key={ id + index } value={ id + index }>
+                <AccordionItemTrigger indicatorPlacement="end">
                   <Box as="span" flex="1" textAlign="left">
                     { name }
                   </Box>
-                  <AccordionIcon/>
-                </AccordionButton>
-                <AccordionPanel>
+                </AccordionItemTrigger>
+                <AccordionItemContent>
                   <Item isCode>
                     { JSON.stringify(decoded, null, 4) }
                   </Item>
-                </AccordionPanel>
+                </AccordionItemContent>
               </AccordionItem>
             );
           }) }
-        </Accordion>
+        </AccordionRoot>
       ) }
     </Item>
   </VStackContainer>

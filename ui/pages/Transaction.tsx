@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 
+import type { TabItemRegular } from 'toolkit/components/AdaptiveTabs/types';
 import { type Log } from 'types/api/log';
-import type { RoutedTab } from 'ui/shared/Tabs/types';
+import type { EntityTag as TEntityTag } from 'ui/shared/EntityTags/types';
 
 import config from 'configs/app';
 import { useAppContext } from 'lib/contexts/app';
@@ -10,13 +11,13 @@ import throwOnResourceLoadError from 'lib/errors/throwOnResourceLoadError';
 import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import { publicClient } from 'lib/web3/client';
+import RoutedTabs from 'toolkit/components/RoutedTabs/RoutedTabs';
+import RoutedTabsSkeleton from 'toolkit/components/RoutedTabs/RoutedTabsSkeleton';
+import useActiveTabFromQuery from 'toolkit/components/RoutedTabs/useActiveTabFromQuery';
 import TextAd from 'ui/shared/ad/TextAd';
 import isCustomAppError from 'ui/shared/AppError/isCustomAppError';
 import EntityTags from 'ui/shared/EntityTags/EntityTags';
 import PageTitle from 'ui/shared/Page/PageTitle';
-import RoutedTabs from 'ui/shared/Tabs/RoutedTabs';
-import TabsSkeleton from 'ui/shared/Tabs/TabsSkeleton';
-import useTabIndexFromQuery from 'ui/shared/Tabs/useTabIndexFromQuery';
 import TxAssetFlows from 'ui/tx/TxAssetFlows';
 import TxAuthorizations from 'ui/tx/TxAuthorizations';
 import TxBlobs from 'ui/tx/TxBlobs';
@@ -34,6 +35,7 @@ import TxUserOps from 'ui/tx/TxUserOps';
 import useTxQuery from 'ui/tx/useTxQuery';
 
 const txInterpretation = config.features.txInterpretation;
+const rollupFeature = config.features.rollup;
 
 const TransactionPageContent = () => {
   const router = useRouter();
@@ -50,7 +52,7 @@ const TransactionPageContent = () => {
     return Boolean(Object.values(SUPPORTED_INFERENCE_ADDRESSES).find((hash) => hash === log.address.hash));
   }, []);
 
-  const tabs: Array<RoutedTab> = (() => {
+  const tabs: Array<TabItemRegular> = (() => {
     const detailsComponent = showDegradedView ?
       <TxDetailsDegraded hash={ hash } txQuery={ txQuery }/> :
       <TxDetails txQuery={ txQuery }/>;
@@ -85,12 +87,23 @@ const TransactionPageContent = () => {
     ].filter(Boolean);
   })();
 
-  const tabIndex = useTabIndexFromQuery(tabs);
+  const activeTab = useActiveTabFromQuery(tabs);
+
+  const txTags: Array<TEntityTag> = data?.transaction_tag ?
+    [ { slug: data.transaction_tag, name: data.transaction_tag, tagType: 'private_tag' as const, ordinal: 1 } ] : [];
+  if (rollupFeature.isEnabled && rollupFeature.interopEnabled && data?.op_interop) {
+    if (data.op_interop.init_chain !== undefined) {
+      txTags.push({ slug: 'relay_tx', name: 'Relay tx', tagType: 'custom' as const, ordinal: 0 });
+    }
+    if (data.op_interop.relay_chain !== undefined) {
+      txTags.push({ slug: 'init_tx', name: 'Source tx', tagType: 'custom' as const, ordinal: 0 });
+    }
+  }
 
   const tags = (
     <EntityTags
       isLoading={ isPlaceholderData }
-      tags={ data?.transaction_tag ? [ { slug: data.transaction_tag, name: data.transaction_tag, tagType: 'private_tag' as const } ] : [] }
+      tags={ txTags }
     />
   );
 
@@ -113,8 +126,8 @@ const TransactionPageContent = () => {
     if (isPlaceholderData && !showDegradedView) {
       return (
         <>
-          <TabsSkeleton tabs={ tabs } mt={ 6 }/>
-          { tabs[tabIndex]?.component }
+          <RoutedTabsSkeleton tabs={ tabs } mt={ 6 }/>
+          { activeTab?.component }
         </>
       );
     }

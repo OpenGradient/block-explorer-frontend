@@ -59,7 +59,7 @@ module.exports = {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/auth/*', '/login', '/sprite', '/account/*', '/api/*', '/node-api/*'],
+        disallow: ['/auth/*', '/login', '/chakra', '/sprite', '/account/*', '/api/*', '/node-api/*'],
       },
     ],
   },
@@ -70,6 +70,7 @@ module.exports = {
     '/auth/*',
     '/login',
     '/sprite',
+    '/chakra',
   ],
   transform: async(config, path) => {
     switch (path) {
@@ -111,6 +112,11 @@ module.exports = {
         break;
       case '/output-roots':
         if (process.env.NEXT_PUBLIC_ROLLUP_OUTPUT_ROOTS_ENABLED !== 'true') {
+          return null;
+        }
+        break;
+      case '/interop-messages':
+        if (process.env.NEXT_PUBLIC_INTEROP_ENABLED !== 'true') {
           return null;
         }
         break;

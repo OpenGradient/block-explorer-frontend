@@ -1,8 +1,9 @@
-import type { FlexProps, SkeletonProps } from '@chakra-ui/react';
+import type { FlexProps } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
 import React from 'react';
 
-import Skeleton from 'ui/shared/chakra/Skeleton';
+import type { SkeletonProps } from 'toolkit/chakra/skeleton';
+import { Skeleton } from 'toolkit/chakra/skeleton';
 
 import Code from './Code';
 
@@ -14,7 +15,7 @@ interface ItemProps extends FlexProps {
   isCode?: boolean;
 }
 
-const Item = ({ label, labelProps = {}, children, isLoading, isCode = false, ...rest }: ItemProps) => {
+const Item = ({ label, isLoading, labelProps = { loading: isLoading }, children, isCode = false, ...rest }: ItemProps) => {
   return (
     <Flex
       w="100%"
@@ -25,13 +26,13 @@ const Item = ({ label, labelProps = {}, children, isLoading, isCode = false, ...
       { ...rest }
     >
       { label && (
-        <Skeleton fontWeight={ 600 } w={{ base: 'auto', lg: '120px' }} flexShrink={ 0 } isLoaded={ !isLoading } { ...labelProps }>
+        <Skeleton fontWeight={ 600 } w={{ base: 'auto', lg: '120px' }} flexShrink={ 0 } { ...labelProps }>
           { label }
         </Skeleton >
       ) }
       { isCode ? (
-        <Code isLoaded={ !isLoading }>{ children }</Code>
-      ) : <Skeleton flex={ 1 } width="100%" isLoaded={ !isLoading }>{ children }</Skeleton> }
+        <Code loading={ isLoading } px={ 4 }>{ children }</Code>
+      ) : <Skeleton flex={ 1 } width="100%" loading={ isLoading }>{ children }</Skeleton> }
     </Flex>
   );
 };

@@ -1,9 +1,8 @@
-import { Table, Tbody, Th, Tr } from '@chakra-ui/react';
 import React from 'react';
 
 import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
+import { TableBody, TableColumnHeader, TableHeaderSticky, TableRoot, TableRow } from 'toolkit/chakra/table';
 import { ACTION_BAR_HEIGHT_DESKTOP } from 'ui/shared/ActionBar';
-import { default as Thead } from 'ui/shared/TheadSticky';
 
 import WorkflowsTableItem from './WorkflowsTableItem';
 
@@ -26,23 +25,23 @@ type Props = {
 /** Taken from TokensTable. */
 const WorkflowsTable = ({ items, isLoading, top }: Props) => {
   return (
-    <Table>
-      <Thead top={ top ?? ACTION_BAR_HEIGHT_DESKTOP }>
-        <Tr>
-          <Th>Workflow Address</Th>
-          <Th>Latest Result</Th>
-          <Th>Creator Address</Th>
-          <Th>Model CID</Th>
-          <Th w="10%">Frequency</Th>
-          <Th>End Time</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
+    <TableRoot>
+      <TableHeaderSticky top={ top ?? ACTION_BAR_HEIGHT_DESKTOP }>
+        <TableRow>
+          <TableColumnHeader>Workflow Address</TableColumnHeader>
+          <TableColumnHeader>Latest Result</TableColumnHeader>
+          <TableColumnHeader>Creator Address</TableColumnHeader>
+          <TableColumnHeader>Model CID</TableColumnHeader>
+          <TableColumnHeader w="10%">Frequency</TableColumnHeader>
+          <TableColumnHeader>End Time</TableColumnHeader>
+        </TableRow>
+      </TableHeaderSticky>
+      <TableBody>
         { items.map((item, index) => (
           <WorkflowsTableItem key={ index } task={ item } isLoading={ isLoading }/>
         )) }
-      </Tbody>
-    </Table>
+      </TableBody>
+    </TableRoot>
   );
 };
 

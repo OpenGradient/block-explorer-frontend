@@ -3,6 +3,7 @@ import type { ArbitrumBatchStatus, ArbitrumL2TxData } from './arbitrumL2';
 import type { BlockTransactionsResponse } from './block';
 import type { DecodedInput } from './decodedInput';
 import type { Fee } from './fee';
+import type { ChainInfo, MessageStatus } from './interop';
 import type { NovesTxTranslation } from './noves';
 import type { OptimisticL2WithdrawalStatus } from './optimisticL2';
 import type { ScrollL2BlockStatus } from './scrollL2';
@@ -15,7 +16,7 @@ export type TransactionRevertReason = {
   raw: string;
 } | DecodedInput;
 
-type WrappedTransactionFields = 'decoded_input' | 'fee' | 'gas_limit' | 'gas_price' | 'hash' | 'max_fee_per_gas' |
+export type WrappedTransactionFields = 'decoded_input' | 'fee' | 'gas_limit' | 'gas_price' | 'hash' | 'max_fee_per_gas' |
 'max_priority_fee_per_gas' | 'method' | 'nonce' | 'raw_input' | 'to' | 'type' | 'value';
 
 export interface OpWithdrawal {
@@ -107,6 +108,8 @@ export type Transaction = {
   scroll?: ScrollTransactionData;
   // EIP-7702
   authorization_list?: Array<TxAuthorization>;
+  // Interop
+  op_interop?: InteropTransactionInfo;
 };
 
 type ArbitrumTransactionData = {
@@ -193,7 +196,7 @@ export interface TransactionsSorting {
 
 export type TransactionsSortingField = TransactionsSorting['sort'];
 
-export type TransactionsSortingValue = `${ TransactionsSortingField }-${ TransactionsSorting['order'] }`;
+export type TransactionsSortingValue = `${ TransactionsSortingField }-${ TransactionsSorting['order'] }` | 'default';
 
 export type ScrollTransactionData = {
   l1_fee: string;
@@ -214,4 +217,16 @@ export interface TxAuthorization {
   authority: string;
   chain_id: number;
   nonce: number;
+}
+
+export interface InteropTransactionInfo {
+  nonce: number;
+  payload: string;
+  init_chain?: ChainInfo | null;
+  relay_chain?: ChainInfo | null;
+  init_transaction_hash?: string;
+  relay_transaction_hash?: string;
+  sender: string;
+  status: MessageStatus;
+  target: string;
 }

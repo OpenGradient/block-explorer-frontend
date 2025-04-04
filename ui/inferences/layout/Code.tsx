@@ -1,14 +1,14 @@
-import type { SkeletonProps } from '@chakra-ui/react';
-import { useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
 
-import Skeleton from 'ui/shared/chakra/Skeleton';
+import { useColorModeValue } from 'toolkit/chakra/color-mode';
+import type { SkeletonProps } from 'toolkit/chakra/skeleton';
+import { Skeleton } from 'toolkit/chakra/skeleton';
 
 interface Props extends SkeletonProps {
   children: React.ReactNode;
 }
 
-const Code = ({ children, isLoaded, ...rest }: Props) => {
+const Code = ({ children, loading, ...rest }: Props) => {
   const bgColor = useColorModeValue('blackAlpha.50', 'whiteAlpha.50');
 
   return (
@@ -16,11 +16,10 @@ const Code = ({ children, isLoaded, ...rest }: Props) => {
       flex={ 1 }
       wordBreak="break-word"
       whiteSpace="pre-wrap"
-      isLoaded={ isLoaded }
-      p={ 4 }
+      loading={ loading }
       fontSize="sm"
       borderRadius="md"
-      bgColor={ isLoaded ? bgColor : undefined }
+      bgColor={ !loading ? bgColor : undefined }
       { ...rest }
     >
       { children }

@@ -63,6 +63,7 @@ const TEMPLATE_MAP: Record<Route['pathname'], string> = {
   '/advanced-filter': DEFAULT_TEMPLATE,
   '/pools': DEFAULT_TEMPLATE,
   '/pools/[hash]': DEFAULT_TEMPLATE,
+  '/interop-messages': DEFAULT_TEMPLATE,
 
   // OpenGradient routes
   '/workflows': 'View workflows on the %network_title%',
@@ -70,6 +71,7 @@ const TEMPLATE_MAP: Record<Route['pathname'], string> = {
   // service routes, added only to make typescript happy
   '/login': DEFAULT_TEMPLATE,
   '/sprite': DEFAULT_TEMPLATE,
+  '/chakra': DEFAULT_TEMPLATE,
   '/api/metrics': DEFAULT_TEMPLATE,
   '/api/monitoring/invalid-api-schema': DEFAULT_TEMPLATE,
   '/api/log': DEFAULT_TEMPLATE,
@@ -78,7 +80,6 @@ const TEMPLATE_MAP: Record<Route['pathname'], string> = {
   '/api/csrf': DEFAULT_TEMPLATE,
   '/api/healthz': DEFAULT_TEMPLATE,
   '/api/config': DEFAULT_TEMPLATE,
-  '/api/sprite': DEFAULT_TEMPLATE,
 };
 
 const TEMPLATE_MAP_ENHANCED: Partial<Record<Route['pathname'], string>> = {

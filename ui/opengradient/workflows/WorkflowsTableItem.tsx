@@ -1,12 +1,13 @@
-import { Flex, Td, Text, Tr } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
 import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
 import { getReadWorkflowResultQueryKey, READ_WORKFLOW_RESULT_PLACEHOLDER_DATA, readWorkflowResult } from 'lib/opengradient/contracts/workflow';
 import { formatTimestamp, getRelativeTime } from 'lib/opengradient/datetime';
+import { Skeleton } from 'toolkit/chakra/skeleton';
+import { TableCell, TableRow } from 'toolkit/chakra/table';
 import Code from 'ui/inferences/layout/Code';
-import Skeleton from 'ui/shared/chakra/Skeleton';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import * as EntityBase from 'ui/shared/entities/base/components';
 
@@ -64,58 +65,58 @@ const WorkflowsTableItem = ({
   };
 
   return (
-    <Tr
+    <TableRow
       role="group"
     >
-      <Td>
-        <Skeleton isLoaded={ !isLoading }>
+      <TableCell>
+        <Skeleton loading={ isLoading }>
           <AddressEntity
             address={{ hash: contractAddress, is_contract: true }}
             isLoading={ isLoading }
             truncation="constant_long"
           />
         </Skeleton>
-      </Td>
+      </TableCell>
 
-      <Td>
-        <Code isLoaded={ !isPlaceholderData }>{ renderLatestResult() ?? 'N/A' }</Code>
-      </Td>
+      <TableCell>
+        <Code loading={ isPlaceholderData } p={ 4 }>{ renderLatestResult() ?? 'N/A' }</Code>
+      </TableCell>
 
-      <Td>
-        <Skeleton isLoaded={ !isLoading }>
+      <TableCell>
+        <Skeleton loading={ isLoading }>
           <AddressEntity
             address={{ hash: user }}
             isLoading={ isLoading }
             truncation="constant_long"
           />
         </Skeleton>
-      </Td>
+      </TableCell>
 
-      <Td>
-        <Skeleton isLoaded={ !isPlaceholderData }>
+      <TableCell>
+        <Skeleton loading={ isPlaceholderData }>
           { workflowResult?.modelCid ? (
             <Flex>
-              <Text isTruncated>{ workflowResult.modelCid }</Text>
+              <Text truncate>{ workflowResult.modelCid }</Text>
               <EntityBase.Copy
                 text={ workflowResult?.modelCid ?? '' }
               />
             </Flex>
           ) : <Text>N/A</Text> }
         </Skeleton>
-      </Td>
+      </TableCell>
 
-      <Td>
-        <Skeleton isLoaded={ !isLoading }>
+      <TableCell>
+        <Skeleton loading={ isLoading }>
           <Text>{ `${ Number(frequency) / 60 }s` }</Text>
         </Skeleton>
-      </Td>
+      </TableCell>
 
-      <Td>
-        <Skeleton isLoaded={ !isLoading }>
+      <TableCell>
+        <Skeleton loading={ isLoading }>
           <Text>{ `${ prettyEndTime } (${ relativeEndTime })` }</Text>
         </Skeleton>
-      </Td>
-    </Tr>
+      </TableCell>
+    </TableRow>
   );
 };
 

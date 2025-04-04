@@ -60,6 +60,7 @@ const OG_TYPE_DICT: Record<Route['pathname'], OGPageType> = {
   '/advanced-filter': 'Root page',
   '/pools': 'Root page',
   '/pools/[hash]': 'Regular page',
+  '/interop-messages': 'Root page',
 
   // OpenGradient routes
   '/workflows': 'Root page',
@@ -67,6 +68,7 @@ const OG_TYPE_DICT: Record<Route['pathname'], OGPageType> = {
   // service routes, added only to make typescript happy
   '/login': 'Regular page',
   '/sprite': 'Regular page',
+  '/chakra': 'Regular page',
   '/api/metrics': 'Regular page',
   '/api/monitoring/invalid-api-schema': 'Regular page',
   '/api/log': 'Regular page',
@@ -75,7 +77,6 @@ const OG_TYPE_DICT: Record<Route['pathname'], OGPageType> = {
   '/api/csrf': 'Regular page',
   '/api/healthz': 'Regular page',
   '/api/config': 'Regular page',
-  '/api/sprite': 'Regular page',
 };
 
 export default function getPageOgType(pathname: Route['pathname']) {

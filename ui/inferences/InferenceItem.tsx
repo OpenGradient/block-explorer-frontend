@@ -1,5 +1,4 @@
-import { Alert, Grid, GridItem, Link, useColorModeValue,
-} from '@chakra-ui/react';
+import { Grid, GridItem } from '@chakra-ui/react';
 import React from 'react';
 
 import type { Log } from 'types/api/log';
@@ -8,8 +7,11 @@ import { route } from 'nextjs-routes';
 
 import { space } from 'lib/html-entities';
 import { decodePrecompileData } from 'lib/inferences/precompile';
-import Skeleton from 'ui/shared/chakra/Skeleton';
-import Tag from 'ui/shared/chakra/Tag';
+import { Alert } from 'toolkit/chakra/alert';
+import { useColorModeValue } from 'toolkit/chakra/color-mode';
+import { Link } from 'toolkit/chakra/link';
+import { Skeleton } from 'toolkit/chakra/skeleton';
+import { Tag } from 'toolkit/chakra/tag';
 
 import InferenceInput from './InferenceInput';
 import InferenceOutput from './InferenceOutput';
@@ -21,7 +23,7 @@ type Props = Log & {
 
 const RowHeader = ({ children, isLoading }: { children: React.ReactNode; isLoading?: boolean }) => (
   <GridItem _notFirst={{ my: { base: 4, lg: 0 } }}>
-    <Skeleton fontWeight={ 500 } isLoaded={ !isLoading } /* display="inline-block" */>{ children }</Skeleton>
+    <Skeleton fontWeight={ 500 } loading={ isLoading } /* display="inline-block" */>{ children }</Skeleton>
   </GridItem>
 );
 

@@ -47,33 +47,32 @@ const matchFilter = (filterValue: AddressFromToFilter, transaction: Transaction,
 };
 
 type Props = {
-  scrollRef?: React.RefObject<HTMLDivElement>;
   shouldRender?: boolean;
   isQueryEnabled?: boolean;
   // for tests only
   overloadCount?: number;
 };
 
-const AddressTxs = ({ scrollRef, overloadCount = OVERLOAD_COUNT, shouldRender = true, isQueryEnabled = true }: Props) => {
+const AddressTxs = ({ overloadCount = OVERLOAD_COUNT, shouldRender = true, isQueryEnabled = true }: Props) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const isMounted = useIsMounted();
 
   const [ socketAlert, setSocketAlert ] = React.useState('');
   const [ newItemsCount, setNewItemsCount ] = React.useState(0);
-  const [ sort, setSort ] = React.useState<TransactionsSortingValue | undefined>(getSortValueFromQuery<TransactionsSortingValue>(router.query, SORT_OPTIONS));
+  const [ sort, setSort ] = React.useState<TransactionsSortingValue>(getSortValueFromQuery<TransactionsSortingValue>(router.query, SORT_OPTIONS) || 'default');
 
   const isMobile = useIsMobile();
   const currentAddress = getQueryParamString(router.query.hash);
 
-  const [ filterValue, setFilterValue ] = React.useState<AddressFromToFilter>(getFilterValue(router.query.filter));
+  const initialFilterValue = getFilterValue(router.query.filter);
+  const [ filterValue, setFilterValue ] = React.useState<AddressFromToFilter>(initialFilterValue);
 
   const addressTxsQuery = useQueryWithPages({
     resourceName: 'address_txs',
     pathParams: { hash: currentAddress },
     filters: { filter: filterValue },
     sorting: getSortParamsFromValue<TransactionsSortingValue, TransactionsSortingField, TransactionsSorting['order']>(sort),
-    scrollRef,
     options: {
       enabled: isQueryEnabled,
       placeholderData: generateListStub<'address_txs'>(TX, 50, { next_page_params: {
@@ -167,7 +166,7 @@ const AddressTxs = ({ scrollRef, overloadCount = OVERLOAD_COUNT, shouldRender = 
 
   const filter = (
     <AddressTxsFilter
-      defaultFilter={ filterValue }
+      initialValue={ initialFilterValue }
       onFilterChange={ handleFilterChange }
       hasActiveFilter={ Boolean(filterValue) }
       isLoading={ addressTxsQuery.pagination.isLoading }
@@ -185,8 +184,8 @@ const AddressTxs = ({ scrollRef, overloadCount = OVERLOAD_COUNT, shouldRender = 
 
   return (
     <>
-      { !isMobile && (
-        <ActionBar mt={ -6 }>
+      { !isMobile && addressTxsQuery.pagination.isVisible && (
+        <ActionBar>
           { filter }
           { currentAddress && csvExportLink }
           <Pagination { ...addressTxsQuery.pagination } ml={ 8 }/>

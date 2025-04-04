@@ -9,7 +9,12 @@ RUN ln -sf /usr/bin/python3 /usr/bin/python
 ### APP
 # Install dependencies
 WORKDIR /app
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock tsconfig.json ./
+COPY types ./types
+COPY lib ./lib
+COPY configs/app ./configs/app
+COPY toolkit/theme ./toolkit/theme
+COPY ui/shared/forms/validators/url.ts ./ui/shared/forms/validators/url.ts
 RUN apk add git
 RUN yarn --frozen-lockfile --network-timeout 100000
 
@@ -44,7 +49,7 @@ RUN yarn --frozen-lockfile --network-timeout 100000
 # ****** STAGE 2: Build *******
 # *****************************
 FROM node:22.11.0-alpine AS builder
-RUN apk add --no-cache --upgrade libc6-compat bash
+RUN apk add --no-cache --upgrade libc6-compat bash jq
 
 # pass build args to env variables
 ARG GIT_COMMIT_SHA

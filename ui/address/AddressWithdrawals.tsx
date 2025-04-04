@@ -1,4 +1,4 @@
-import { Show, Hide } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -14,11 +14,10 @@ import BeaconChainWithdrawalsListItem from 'ui/withdrawals/beaconChain/BeaconCha
 import BeaconChainWithdrawalsTable from 'ui/withdrawals/beaconChain/BeaconChainWithdrawalsTable';
 
 type Props = {
-  scrollRef?: React.RefObject<HTMLDivElement>;
   shouldRender?: boolean;
   isQueryEnabled?: boolean;
 };
-const AddressWithdrawals = ({ scrollRef, shouldRender = true, isQueryEnabled = true }: Props) => {
+const AddressWithdrawals = ({ shouldRender = true, isQueryEnabled = true }: Props) => {
   const router = useRouter();
   const isMounted = useIsMounted();
 
@@ -27,7 +26,6 @@ const AddressWithdrawals = ({ scrollRef, shouldRender = true, isQueryEnabled = t
   const { data, isPlaceholderData, isError, pagination } = useQueryWithPages({
     resourceName: 'address_withdrawals',
     pathParams: { hash },
-    scrollRef,
     options: {
       enabled: isQueryEnabled,
       placeholderData: generateListStub<'address_withdrawals'>(WITHDRAWAL, 50, { next_page_params: {
@@ -43,7 +41,7 @@ const AddressWithdrawals = ({ scrollRef, shouldRender = true, isQueryEnabled = t
 
   const content = data?.items ? (
     <>
-      <Show below="lg" ssr={ false }>
+      <Box hideFrom="lg">
         { data.items.map((item, index) => (
           <BeaconChainWithdrawalsListItem
             key={ item.index + Number(isPlaceholderData ? index : '') }
@@ -52,15 +50,15 @@ const AddressWithdrawals = ({ scrollRef, shouldRender = true, isQueryEnabled = t
             isLoading={ isPlaceholderData }
           />
         )) }
-      </Show>
-      <Hide below="lg" ssr={ false }>
+      </Box>
+      <Box hideBelow="lg">
         <BeaconChainWithdrawalsTable
           items={ data.items }
           view="address"
           top={ pagination.isVisible ? ACTION_BAR_HEIGHT_DESKTOP : 0 }
           isLoading={ isPlaceholderData }
         />
-      </Hide>
+      </Box>
     </>
   ) : null ;
 
@@ -73,11 +71,12 @@ const AddressWithdrawals = ({ scrollRef, shouldRender = true, isQueryEnabled = t
   return (
     <DataListDisplay
       isError={ isError }
-      items={ data?.items }
+      itemsNum={ data?.items?.length }
       emptyText="There are no withdrawals for this address."
-      content={ content }
       actionBar={ actionBar }
-    />
+    >
+      { content }
+    </DataListDisplay>
   );
 };
 
