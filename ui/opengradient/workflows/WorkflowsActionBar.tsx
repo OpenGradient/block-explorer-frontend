@@ -28,7 +28,7 @@ const WorkflowsActionBar = ({
   const searchInput = (
     <FilterInput
       w={{ base: '100%', lg: '360px' }}
-      size="xs"
+      size="sm"
       onChange={ onSearchChange }
       placeholder="User or contract address"
       initialValue={ searchTerm }
@@ -37,7 +37,7 @@ const WorkflowsActionBar = ({
 
   return (
     <>
-      <HStack spacing={ 3 } mb={ 6 } display={{ base: 'flex', lg: 'none' }}>
+      <HStack gap={ 3 } mb={ 6 } display={{ base: 'flex', lg: 'none' }}>
         { /* { filter }
         <Sort
           name="tokens_sorting"
@@ -54,7 +54,7 @@ const WorkflowsActionBar = ({
         display={{ base: 'none', lg: 'flex' }}
         mb={ 4 }
       >
-        <HStack spacing={ 3 } display={{ base: 'none', lg: 'flex' }}>
+        <HStack gap={ 3 } display={{ base: 'none', lg: 'flex' }}>
           { searchInput }
         </HStack>
         { /* <Pagination { ...pagination } ml={ inTabsSlot ? 8 : 'auto' }/> */ }

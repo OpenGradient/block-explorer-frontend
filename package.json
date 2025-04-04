@@ -187,7 +187,10 @@
     "ws": "^8.17.1"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "eslint --cache --fix"
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --cache --fix",
+      "bash -c 'npx tsc -p ./tsconfig.json'"
+    ]
   },
   "resolutions": {
     "@types/react": "18.3.12",
