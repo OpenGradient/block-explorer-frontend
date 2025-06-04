@@ -70,8 +70,8 @@ const HeroBanner = () => {
           >
             {
               config.meta.seo.enhancedDataEnabled ?
-                `${ config.chain.name } Devnet Explorer` :
-                `${ config.chain.name } Devnet Explorer`
+                `${ config.chain.name } Testnet Explorer` :
+                `${ config.chain.name } Testnet Explorer`
             }
           </Heading>
           { config.UI.navigation.layout === 'vertical' && (

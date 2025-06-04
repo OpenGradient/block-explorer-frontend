@@ -3,7 +3,7 @@ import type { Route } from 'nextjs-routes';
 import config from 'configs/app';
 
 const TEMPLATE_MAP: Record<Route['pathname'], string> = {
-  '/': '%network_name% Devnet Explorer',
+  '/': '%network_name% Testnet Explorer',
   '/txs': '%network_name% transactions - %network_name% explorer',
   '/internal-txs': '%network_name% internal transactions - %network_name% explorer',
   '/txs/kettle/[hash]': '%network_name% kettle %hash% transactions',
