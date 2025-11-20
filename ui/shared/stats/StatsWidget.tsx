@@ -60,7 +60,9 @@ const StatsWidget = ({
         alignItems="center"
         bgColor={ isLoading ? { _light: 'blackAlpha.50', _dark: 'whiteAlpha.50' } : { _light: 'gray.50', _dark: 'whiteAlpha.100' } }
         p={ 3 }
-        borderRadius="base"
+        borderRadius="none"
+        border="1px solid"
+        borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.200' }}
         justifyContent="space-between"
         columnGap={ 2 }
         w="100%"
@@ -71,7 +73,7 @@ const StatsWidget = ({
             p={ 2 }
             boxSize="40px"
             isLoading={ isLoading }
-            borderRadius="base"
+            borderRadius="none"
             display={{ base: 'none', lg: 'block' }}
             flexShrink={ 0 }
           />
@@ -111,7 +113,7 @@ const StatsWidget = ({
           </Skeleton>
         </Box>
         { typeof hint === 'string' ? (
-          <Skeleton loading={ isLoading } alignSelf="center" borderRadius="base">
+          <Skeleton loading={ isLoading } alignSelf="center" borderRadius="none">
             <Hint label={ hint } boxSize={ 6 } color={{ _light: 'gray.600', _dark: 'gray.400' }}/>
           </Skeleton>
         ) : hint }

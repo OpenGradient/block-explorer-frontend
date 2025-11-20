@@ -24,7 +24,7 @@ const LatestBlocksItem = ({ block, isLoading, animation }: Props) => {
   return (
     <Box
       animation={ animation }
-      borderRadius="md"
+      borderRadius="none"
       border="1px solid"
       borderColor="border.divider"
       p={ 3 }

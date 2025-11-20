@@ -4,26 +4,25 @@ type Props = {
   isActive?: boolean;
 };
 
-export default function useNavLinkStyleProps({ isExpanded, isCollapsed, isActive }: Props) {
+export default function useNavLinkStyleProps({ isActive }: Props) {
   return {
     itemProps: {
       variant: 'navigation' as const,
-      py: '9px',
+      py: 2.5,
+      px: 3,
       display: 'flex',
       ...(isActive ? { 'data-selected': true } : {}),
-      borderRadius: 'base',
-      transitionProperty: 'width, padding',
-      transitionDuration: 'normal',
-      transitionTimingFunction: 'ease',
+      borderRadius: 'none',
+      transitionProperty: 'background-color, color',
+      transitionDuration: '150ms',
+      transitionTimingFunction: 'ease-out',
     },
     textProps: {
       variant: 'inherit',
       fontSize: 'sm',
+      fontWeight: isActive ? 500 : 400,
       lineHeight: '20px',
-      opacity: { base: '1', lg: isExpanded ? '1' : '0', xl: isCollapsed ? '0' : '1' },
-      transitionProperty: 'opacity',
-      transitionDuration: 'normal',
-      transitionTimingFunction: 'ease',
+      opacity: 1,
     },
   };
 }

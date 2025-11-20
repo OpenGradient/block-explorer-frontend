@@ -31,12 +31,12 @@ const Home = () => {
   return (
     <Box as="main">
       <HeroBanner/>
-      <Flex flexDir={{ base: 'column', lg: 'row' }} columnGap={ 2 } rowGap={ 1 } mt={ 3 } _empty={{ mt: 0 }}>
+      <Flex flexDir={{ base: 'column', lg: 'row' }} columnGap={ 4 } rowGap={ 4 } mt={ 6 } _empty={{ mt: 0 }}>
         <Stats/>
         <ChainIndicators/>
       </Flex>
-      <AdBanner mt={ 6 } mx="auto" display={{ base: 'flex', lg: 'none' }} justifyContent="center"/>
-      <Flex mt={ 8 } direction={{ base: 'column', lg: 'row' }} columnGap={ 12 } rowGap={ 6 }>
+      <AdBanner mt={ 8 } mx="auto" display={{ base: 'flex', lg: 'none' }} justifyContent="center"/>
+      <Flex mt={ 10 } direction={{ base: 'column', lg: 'row' }} columnGap={ 8 } rowGap={ 8 }>
         { leftWidget }
         <Box flexGrow={ 1 }>
           <Transactions/>

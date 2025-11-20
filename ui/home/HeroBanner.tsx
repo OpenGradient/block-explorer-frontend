@@ -10,23 +10,21 @@ import SearchBar from 'ui/snippets/searchBar/SearchBar';
 import UserProfileDesktop from 'ui/snippets/user/profile/UserProfileDesktop';
 import UserWalletDesktop from 'ui/snippets/user/wallet/UserWalletDesktop';
 
-export const BACKGROUND_DEFAULT =
-  'radial-gradient(103.03% 103.03% at 0% 0%, rgba(183, 148, 244, 0.8) 0%, rgba(0, 163, 196, 0.8) 100%), var(--chakra-colors-blue-400)';
+export const BACKGROUND_DEFAULT = { _light: 'gray.900', _dark: 'gray.800' };
 const TEXT_COLOR_DEFAULT = 'white';
 const BORDER_DEFAULT = 'none';
 
 const HeroBanner = () => {
-  const background = {
-    _light:
-      config.UI.homepage.heroBanner?.background?.[0] ||
-      config.UI.homepage.plate.background ||
-      BACKGROUND_DEFAULT,
-    _dark:
-      config.UI.homepage.heroBanner?.background?.[1] ||
-      config.UI.homepage.heroBanner?.background?.[0] ||
-      config.UI.homepage.plate.background ||
-      BACKGROUND_DEFAULT,
-  };
+  // Use config background if provided (could be gradient string), otherwise use flat color
+  const configBackgroundLight = config.UI.homepage.heroBanner?.background?.[0] || config.UI.homepage.plate.background;
+  const configBackgroundDark = config.UI.homepage.heroBanner?.background?.[1] ||
+    config.UI.homepage.heroBanner?.background?.[0] ||
+    config.UI.homepage.plate.background;
+
+  const hasConfigBackground = Boolean(configBackgroundLight);
+  const backgroundValue = hasConfigBackground ?
+    { _light: configBackgroundLight, _dark: configBackgroundDark } :
+    { _light: BACKGROUND_DEFAULT._light, _dark: BACKGROUND_DEFAULT._dark };
 
   const textColor = {
     _light:
@@ -52,9 +50,11 @@ const HeroBanner = () => {
   return (
     <Flex
       w="100%"
-      background={ background }
+      { ...(hasConfigBackground && typeof configBackgroundLight === 'string' ?
+        { background: backgroundValue } :
+        { bgColor: backgroundValue }) }
       border={ border }
-      borderRadius="md"
+      borderRadius="none"
       p={{ base: 4, lg: 8 }}
       columnGap={ 8 }
       alignItems="center"
@@ -86,7 +86,7 @@ const HeroBanner = () => {
         </Flex>
         <SearchBar isHomepage/>
       </Box>
-      <AdBanner platform="mobile" w="fit-content" flexShrink={ 0 } borderRadius="md" overflow="hidden" display={{ base: 'none', lg: 'block ' }}/>
+      <AdBanner platform="mobile" w="fit-content" flexShrink={ 0 } borderRadius="none" overflow="hidden" display={{ base: 'none', lg: 'block ' }}/>
     </Flex>
   );
 };

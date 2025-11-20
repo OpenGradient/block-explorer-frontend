@@ -25,11 +25,27 @@ const NavLinkGroup = ({ item, isCollapsed }: Props) => {
   const isHighlighted = checkRouteHighlight(item.subItems);
 
   const content = (
-    <Box width="220px" top={{ lg: isExpanded ? '-16px' : 0, xl: isCollapsed ? 0 : '-16px' }}>
-      <Text color="text.secondary" fontSize="sm" mb={ 1 } display={{ lg: isExpanded ? 'none' : 'block', xl: isCollapsed ? 'block' : 'none' }}>
+    <Box
+      { ...styleProps.itemProps }
+      width="240px"
+      borderRadius="none"
+      border="1px solid"
+      borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.200' }}
+      bgColor={{ _light: 'white', _dark: 'gray.900' }}
+      p={ 2 }
+    >
+      <Text
+        { ...styleProps.textProps }
+        color={{ _light: 'gray.600', _dark: 'gray.400' }}
+        fontSize="xs"
+        fontWeight={ 500 }
+        mb={ 2 }
+        px={ 2 }
+        textTransform="uppercase"
+        letterSpacing="0.5px">
         { item.text }
       </Text>
-      <VStack gap={ 1 } alignItems="start" as="ul">
+      <VStack gap={ 0.5 } alignItems="stretch" as="ul">
         { item.subItems.map((subItem, index) => Array.isArray(subItem) ? (
           <Box
             key={ index }
@@ -63,15 +79,25 @@ const NavLinkGroup = ({ item, isCollapsed }: Props) => {
       >
         <Box
           { ...styleProps.itemProps }
-          w={{ lg: isExpanded ? '180px' : '60px', xl: isCollapsed ? '60px' : '180px' }}
-          pl={{ lg: isExpanded ? 2 : '15px', xl: isCollapsed ? '15px' : 2 }}
-          pr={{ lg: isExpanded ? 0 : '15px', xl: isCollapsed ? '15px' : 0 }}
+          w="100%"
           aria-label={ `${ item.text } link group` }
           position="relative"
-          color={ item.isActive ? 'link.navigation.fg.selected' : 'link.navigation.fg' }
-          bgColor={ item.isActive ? 'link.navigation.bg.selected' : 'link.navigation.bg' }
+          bgColor={ item.isActive ?
+            { _light: 'gray.100', _dark: 'whiteAlpha.100' } :
+            'transparent'
+          }
+          color={ item.isActive ?
+            { _light: 'gray.900', _dark: 'white' } :
+            { _light: 'gray.700', _dark: 'gray.300' }
+          }
+          _hover={{
+            bgColor: { _light: 'gray.50', _dark: 'whiteAlpha.50' },
+            color: item.isActive ?
+              { _light: 'gray.900', _dark: 'white' } :
+              { _light: 'gray.900', _dark: 'gray.100' },
+          }}
         >
-          <HStack gap={ 0 } overflow="hidden">
+          <HStack gap={ 0 } overflow="hidden" w="100%" alignItems="center">
             <NavLinkIcon item={ item }/>
             <Text
               { ...styleProps.textProps }
@@ -82,19 +108,16 @@ const NavLinkGroup = ({ item, isCollapsed }: Props) => {
             { isHighlighted && (
               <LightningLabel
                 iconColor={ item.isActive ? 'link.navigation.bg.selected' : 'link.navigation.bg' }
-                isCollapsed={ isCollapsed }
+                isCollapsed={ false }
               />
             ) }
             <IconSvg
               name="arrows/east-mini"
               position="absolute"
-              right="7px"
+              right={ 3 }
               transform="rotate(180deg)"
-              boxSize={ 6 }
-              opacity={{ lg: isExpanded ? '1' : '0', xl: isCollapsed ? '0' : '1' }}
-              transitionProperty="opacity"
-              transitionDuration="normal"
-              transitionTimingFunction="ease"
+              boxSize={ 5 }
+              opacity={ 0.6 }
             />
           </HStack>
         </Box>
