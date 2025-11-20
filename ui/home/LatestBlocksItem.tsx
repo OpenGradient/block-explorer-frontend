@@ -24,10 +24,17 @@ const LatestBlocksItem = ({ block, isLoading, animation }: Props) => {
   return (
     <Box
       animation={ animation }
-      borderRadius="md"
+      borderRadius="lg"
       border="1px solid"
-      borderColor="border.divider"
-      p={ 3 }
+      borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.200' }}
+      bgColor={{ _light: 'gray.50', _dark: 'whiteAlpha.50' }}
+      p={ 4 }
+      transition="all 0.2s ease-in-out"
+      _hover={{
+        borderColor: { _light: 'blue.300', _dark: 'blue.400' },
+        boxShadow: { _light: '0 2px 8px rgba(0, 0, 0, 0.08)', _dark: '0 4px 12px rgba(0, 0, 0, 0.2)' },
+        transform: 'translateY(-1px)',
+      }}
     >
       <Flex alignItems="center" overflow="hidden" w="100%" mb={ 3 }>
         <BlockEntity

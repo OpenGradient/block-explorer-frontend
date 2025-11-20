@@ -102,25 +102,45 @@ const LatestBlocks = () => {
   }
 
   return (
-    <Box width={{ base: '100%', lg: '280px' }} flexShrink={ 0 }>
-      <Heading level="3">Latest blocks</Heading>
+    <Box 
+      width={{ base: '100%', lg: '320px' }} 
+      flexShrink={ 0 }
+      bgColor={{ _light: 'white', _dark: 'whiteAlpha.50' }}
+      border="1px solid"
+      borderColor={{ _light: 'gray.100', _dark: 'whiteAlpha.200' }}
+      borderRadius="xl"
+      p={ 5 }
+      boxShadow={{ _light: '0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1)', _dark: '0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1)' }}
+      position="relative"
+      overflow="hidden"
+      _before={{
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '3px',
+        background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.8) 0%, rgba(139, 92, 246, 0.8) 50%, rgba(59, 130, 246, 0.8) 100%)',
+      }}
+    >
+      <Heading level="3" mb={ 4 } fontSize="lg" fontWeight={ 700 }>Latest blocks</Heading>
       { statsQueryResult.data?.network_utilization_percentage !== undefined && (
-        <Skeleton loading={ statsQueryResult.isPlaceholderData } mt={ 2 } display="inline-block" textStyle="sm">
-          <Text as="span">
+        <Skeleton loading={ statsQueryResult.isPlaceholderData } mt={ 2 } mb={ 3 } display="inline-block" textStyle="sm">
+          <Text as="span" color="text.secondary">
             Network utilization:{ nbsp }
           </Text>
-          <Text as="span" color="blue.400" fontWeight={ 700 }>
+          <Text as="span" color="blue.500" fontWeight={ 700 }>
             { statsQueryResult.data?.network_utilization_percentage.toFixed(2) }%
           </Text>
         </Skeleton>
       ) }
       { statsQueryResult.data?.celo && (
-        <Box whiteSpace="pre-wrap" textStyle="sm" mt={ 2 }>
+        <Box whiteSpace="pre-wrap" textStyle="sm" mt={ 2 } mb={ 3 }>
           <span>Current epoch: </span>
           <chakra.span fontWeight={ 700 }>#{ statsQueryResult.data.celo.epoch_number }</chakra.span>
         </Box>
       ) }
-      <Box mt={ 3 }>
+      <Box mt={ 2 }>
         { content }
       </Box>
     </Box>
