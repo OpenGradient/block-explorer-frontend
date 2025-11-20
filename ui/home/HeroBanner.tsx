@@ -23,9 +23,9 @@ const HeroBanner = () => {
 
   const hasConfigBackground = Boolean(configBackgroundLight);
 
-  // Premium gradient backgrounds for web3/AI aesthetic
-  const premiumGradientLight = 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%)';
-  const premiumGradientDark = 'linear-gradient(135deg, #0f0c29 0%, #302b63 25%, #24243e 50%, #1a1a2e 75%, #16213e 100%)';
+  // Bright cyan-based gradient matching OpenGradient branding
+  const premiumGradientLight = 'linear-gradient(135deg, #00d4ff 0%, #00a3cc 25%, #0066ff 50%, #00d4ff 75%, #00ffff 100%)';
+  const premiumGradientDark = 'linear-gradient(135deg, #001a33 0%, #003366 25%, #004080 50%, #001a33 75%, #002244 100%)';
 
   const backgroundValue = hasConfigBackground ?
     { _light: configBackgroundLight, _dark: configBackgroundDark } :
@@ -70,10 +70,10 @@ const HeroBanner = () => {
         left: 0,
         right: 0,
         bottom: 0,
-        background: 'radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.3) 0%, transparent 50%)',
+        background: 'radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(0, 102, 255, 0.4) 0%, transparent 50%)',
         pointerEvents: 'none',
         _dark: {
-          background: 'radial-gradient(circle at 20% 50%, rgba(66, 153, 225, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%)',
+          background: 'radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.25) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(0, 102, 255, 0.25) 0%, transparent 50%)',
         },
       }}
     >
@@ -97,17 +97,11 @@ const HeroBanner = () => {
               <VStack gap={ 2 } alignItems={{ base: 'stretch', lg: 'flex-start' }} flex={ 1 }>
                 <Heading
                   as="h1"
-                  fontSize={{ base: '28px', md: '36px', lg: '48px' }}
+                  fontSize={{ base: '30px', md: '40px', lg: '50px' }}
                   lineHeight={{ base: '1.2', lg: '1.1' }}
-                  fontWeight={ 800 }
+                  fontWeight={ 700 }
                   color={ textColor }
                   letterSpacing="-0.02em"
-                  background={ hasConfigBackground ? 'none' : {
-                    _light: 'linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%)',
-                    _dark: 'linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)',
-                  } }
-                  backgroundClip={ hasConfigBackground ? 'unset' : 'text' }
-                  style={ hasConfigBackground ? {} : { WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } }
                 >
                   {
                     config.meta.seo.enhancedDataEnabled ?
@@ -129,30 +123,8 @@ const HeroBanner = () => {
             <Box
               w="100%"
               maxW={{ lg: '800px' }}
-              position="relative"
-              _before={{
-                content: '""',
-                position: 'absolute',
-                inset: '-2px',
-                padding: '2px',
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%)',
-                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                WebkitMaskComposite: 'xor',
-                maskComposite: 'exclude',
-                _dark: {
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%)',
-                },
-                pointerEvents: 'none',
-              }}
             >
-              <Box
-                position="relative"
-                bg={{ _light: 'rgba(255, 255, 255, 0.95)', _dark: 'rgba(0, 0, 0, 0.4)' }}
-                backdropFilter="blur(20px)"
-                p={ 1 }
-              >
-                <SearchBar isHomepage/>
-              </Box>
+              <SearchBar isHomepage/>
             </Box>
           </VStack>
         </Box>

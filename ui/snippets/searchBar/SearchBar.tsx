@@ -197,7 +197,7 @@ const SearchBar = ({ isHomepage }: Props) => {
           ) }
         </PopoverContent>
       </PopoverRoot>
-      <SearchBarBackdrop isOpen={ open }/>
+      { !isHomepage && <SearchBarBackdrop isOpen={ open }/> }
     </>
   );
 };
