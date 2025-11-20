@@ -92,7 +92,7 @@ const ChainIndicators = () => {
     }
 
     return (
-      <Text fontWeight={ 700 } fontSize="32px" lineHeight="40px" letterSpacing="-0.02em">
+      <Text fontWeight={ 700 } fontSize="30px" lineHeight="36px">
         { indicatorValue }
       </Text>
     );
@@ -115,36 +115,22 @@ const ChainIndicators = () => {
 
   return (
     <Flex
-      px={{ base: 4, lg: 6 }}
-      py={ 4 }
-      borderRadius="xl"
-      bgColor={{ _light: 'white', _dark: 'whiteAlpha.50' }}
-      border="1px solid"
-      borderColor={{ _light: 'gray.100', _dark: 'whiteAlpha.200' }}
-      boxShadow={{ _light: '0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1)', _dark: '0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1)' }}
+      px={{ base: 3, lg: 4 }}
+      py={ 3 }
+      borderRadius="base"
+      bgColor={{ _light: 'gray.50', _dark: 'whiteAlpha.100' }}
       columnGap={{ base: 3, lg: 4 }}
       rowGap={ 0 }
       flexBasis="50%"
       flexGrow={ 1 }
       alignItems="stretch"
-      position="relative"
-      overflow="hidden"
-      _before={{
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '3px',
-        background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.8) 0%, rgba(139, 92, 246, 0.8) 50%, rgba(59, 130, 246, 0.8) 100%)',
-      }}
     >
       <Flex flexGrow={ 1 } flexDir="column">
-        <Flex alignItems="center" mb={ 2 }>
-          <Text fontWeight={ 600 } fontSize="sm" textTransform="uppercase" letterSpacing="0.05em" color="text.secondary">{ title }</Text>
+        <Flex alignItems="center">
+          <Text fontWeight={ 500 }>{ title }</Text>
           { hint && <Hint label={ hint } ml={ 1 }/> }
         </Flex>
-        <Flex mb={{ base: 2, lg: 3 }} mt={ 1 } alignItems="end">
+        <Flex mb={{ base: 0, lg: 2 }} mt={ 1 } alignItems="end">
           { valueTitle }
           { valueDiff }
         </Flex>
