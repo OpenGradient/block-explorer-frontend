@@ -17,45 +17,31 @@ type Props = {
   isCollapsed?: boolean;
 };
 
-const NavLinkGroup = ({ item, isCollapsed }: Props) => {
-  const isExpanded = isCollapsed === false;
-
-  const styleProps = useNavLinkStyleProps({ isCollapsed, isExpanded, isActive: item.isActive });
+const NavLinkGroup = ({ item }: Props) => {
+  const styleProps = useNavLinkStyleProps({ isActive: item.isActive });
 
   const isHighlighted = checkRouteHighlight(item.subItems);
 
   const content = (
     <Box
-      { ...styleProps.itemProps }
       width="240px"
       borderRadius="none"
       border="1px solid"
       borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.200' }}
       bgColor={{ _light: 'white', _dark: 'gray.900' }}
-      p={ 2 }
+      p={ 1 }
     >
-      <Text
-        { ...styleProps.textProps }
-        color={{ _light: 'gray.600', _dark: 'gray.400' }}
-        fontSize="xs"
-        fontWeight={ 500 }
-        mb={ 2 }
-        px={ 2 }
-        textTransform="uppercase"
-        letterSpacing="0.5px">
-        { item.text }
-      </Text>
-      <VStack gap={ 0.5 } alignItems="stretch" as="ul">
+      <VStack gap={ 0 } alignItems="stretch" as="ul">
         { item.subItems.map((subItem, index) => Array.isArray(subItem) ? (
           <Box
             key={ index }
             w="100%"
             as="ul"
             _notLast={{
-              mb: 2,
-              pb: 2,
+              mb: 1,
+              pb: 1,
               borderBottomWidth: '1px',
-              borderColor: 'border.divider',
+              borderColor: { _light: 'gray.200', _dark: 'whiteAlpha.200' },
             }}
           >
             { subItem.map(subSubItem => <NavLink key={ subSubItem.text } item={ subSubItem } isCollapsed={ false }/>) }
@@ -71,17 +57,27 @@ const NavLinkGroup = ({ item, isCollapsed }: Props) => {
     <Box as="li" listStyleType="none" w="100%">
       <Tooltip
         content={ content }
-        positioning={{ placement: 'right-start', offset: { crossAxis: 0, mainAxis: 8 } }}
+        positioning={{
+          placement: 'right-start',
+          offset: { crossAxis: 4, mainAxis: 0 },
+          strategy: 'fixed',
+        }}
         // should not be lazy to help google indexing pages
         lazyMount={ false }
         variant="popover"
         interactive
+        contentProps={{
+          borderRadius: 'none',
+          p: 0,
+          boxShadow: { _light: '0 4px 12px rgba(0, 0, 0, 0.08)', _dark: '0 4px 12px rgba(0, 0, 0, 0.4)' },
+        }}
       >
         <Box
           { ...styleProps.itemProps }
           w="100%"
           aria-label={ `${ item.text } link group` }
           position="relative"
+          cursor="pointer"
           bgColor={ item.isActive ?
             { _light: 'gray.100', _dark: 'whiteAlpha.100' } :
             'transparent'
