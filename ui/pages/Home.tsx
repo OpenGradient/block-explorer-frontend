@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, Container } from '@chakra-ui/react';
 import React from 'react';
 
 import config from 'configs/app';
@@ -29,19 +29,124 @@ const Home = () => {
   })();
 
   return (
-    <Box as="main">
+    <Box as="main" position="relative">
       <HeroBanner/>
-      <Flex flexDir={{ base: 'column', lg: 'row' }} columnGap={ 2 } rowGap={ 1 } mt={ 3 } _empty={{ mt: 0 }}>
-        <Stats/>
-        <ChainIndicators/>
-      </Flex>
-      <AdBanner mt={ 6 } mx="auto" display={{ base: 'flex', lg: 'none' }} justifyContent="center"/>
-      <Flex mt={ 8 } direction={{ base: 'column', lg: 'row' }} columnGap={ 12 } rowGap={ 6 }>
-        { leftWidget }
-        <Box flexGrow={ 1 }>
-          <Transactions/>
+      <Container maxW="container.xl" px={{ base: 4, lg: 6 }}>
+        <Box
+          position="relative"
+          mb={{ base: 6, lg: 8 }}
+        >
+          <Flex
+            flexDir={{ base: 'column', lg: 'row' }}
+            columnGap={{ base: 4, lg: 6 }}
+            rowGap={{ base: 4, lg: 6 }}
+            _empty={{ mt: 0 }}
+          >
+            <Box
+              flex={ 1 }
+              position="relative"
+              _before={{
+                content: '""',
+                position: 'absolute',
+                inset: 0,
+                padding: '1px',
+                background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 50%, rgba(79, 172, 254, 0.1) 100%)',
+                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                WebkitMaskComposite: 'xor',
+                maskComposite: 'exclude',
+                _dark: {
+                  background: 'linear-gradient(135deg, rgba(66, 153, 225, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(79, 172, 254, 0.15) 100%)',
+                },
+                pointerEvents: 'none',
+              }}
+            >
+              <Box
+                bg={{ _light: 'white', _dark: 'rgba(26, 32, 44, 0.6)' }}
+                backdropFilter="blur(10px)"
+                p={{ base: 4, lg: 6 }}
+              >
+                <Stats/>
+              </Box>
+            </Box>
+            <Box
+              flex={ 1 }
+              position="relative"
+              _before={{
+                content: '""',
+                position: 'absolute',
+                inset: 0,
+                padding: '1px',
+                background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 50%, rgba(79, 172, 254, 0.1) 100%)',
+                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                WebkitMaskComposite: 'xor',
+                maskComposite: 'exclude',
+                _dark: {
+                  background: 'linear-gradient(135deg, rgba(66, 153, 225, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(79, 172, 254, 0.15) 100%)',
+                },
+                pointerEvents: 'none',
+              }}
+            >
+              <Box
+                bg={{ _light: 'white', _dark: 'rgba(26, 32, 44, 0.6)' }}
+                backdropFilter="blur(10px)"
+                p={{ base: 4, lg: 6 }}
+              >
+                <ChainIndicators/>
+              </Box>
+            </Box>
+          </Flex>
         </Box>
-      </Flex>
+        <AdBanner
+          mt={{ base: 6, lg: 8 }}
+          mx="auto"
+          display={{ base: 'flex', lg: 'none' }}
+          justifyContent="center"
+        />
+        <Flex
+          mt={{ base: 8, lg: 10 }}
+          direction={{ base: 'column', lg: 'row' }}
+          columnGap={{ base: 6, lg: 8 }}
+          rowGap={{ base: 6, lg: 8 }}
+        >
+          <Box
+            width={{ base: '100%', lg: '280px' }}
+            flexShrink={ 0 }
+          >
+            <Box
+              bg={{ _light: 'white', _dark: 'rgba(26, 32, 44, 0.6)' }}
+              backdropFilter="blur(10px)"
+              height="fit-content"
+            >
+              { leftWidget }
+            </Box>
+          </Box>
+          <Box
+            flexGrow={ 1 }
+            position="relative"
+            _before={{
+              content: '""',
+              position: 'absolute',
+              inset: 0,
+              padding: '1px',
+              background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 50%, rgba(79, 172, 254, 0.1) 100%)',
+              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              WebkitMaskComposite: 'xor',
+              maskComposite: 'exclude',
+              _dark: {
+                background: 'linear-gradient(135deg, rgba(66, 153, 225, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(79, 172, 254, 0.15) 100%)',
+              },
+              pointerEvents: 'none',
+            }}
+          >
+            <Box
+              bg={{ _light: 'white', _dark: 'rgba(26, 32, 44, 0.6)' }}
+              backdropFilter="blur(10px)"
+            >
+              <Transactions/>
+            </Box>
+          </Box>
+        </Flex>
+      </Container>
     </Box>
   );
 };

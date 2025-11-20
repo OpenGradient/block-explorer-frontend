@@ -8,17 +8,13 @@ import React from 'react';
 
 import type { Transaction } from 'types/api/transaction';
 
-import config from 'configs/app';
-import getValueWithUnit from 'lib/getValueWithUnit';
-import { currencyUnits } from 'lib/units';
-import { Skeleton } from 'toolkit/chakra/skeleton';
+import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
+import { Badge } from 'toolkit/chakra/badge';
 import AddressFromTo from 'ui/shared/address/AddressFromTo';
 import TxEntity from 'ui/shared/entities/tx/TxEntity';
 import TxStatus from 'ui/shared/statusTag/TxStatus';
 import TimeAgoWithTooltip from 'ui/shared/TimeAgoWithTooltip';
-import TxFee from 'ui/shared/tx/TxFee';
 import TxWatchListTags from 'ui/shared/tx/TxWatchListTags';
-import TxAdditionalInfo from 'ui/txs/TxAdditionalInfo';
 import TxType from 'ui/txs/TxType';
 
 type Props = {
@@ -28,66 +24,65 @@ type Props = {
 
 const LatestTxsItem = ({ tx, isLoading }: Props) => {
   const dataTo = tx.to ? tx.to : tx.created_contract;
+  const hasInference = tx.to?.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub;
 
   return (
     <Box
       width="100%"
-      borderBottom="1px solid"
-      borderColor="border.divider"
-      py={ 4 }
+      py={ 5 }
+      px={{ base: 4, lg: 6 }}
+      transition="all 0.15s ease"
+      _hover={{
+        bg: { _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(255, 255, 255, 0.03)' },
+      }}
       display={{ base: 'block', lg: 'none' }}
     >
-      <Flex justifyContent="space-between">
-        <HStack flexWrap="wrap">
-          <TxType types={ tx.transaction_types } isLoading={ isLoading }/>
-          <TxStatus status={ tx.status } errorText={ tx.status === 'error' ? tx.result : undefined } isLoading={ isLoading }/>
-          <TxWatchListTags tx={ tx } isLoading={ isLoading }/>
-        </HStack>
-        <TxAdditionalInfo tx={ tx } isMobile isLoading={ isLoading }/>
-      </Flex>
       <Flex
-        mt={ 2 }
         alignItems="center"
         width="100%"
         justifyContent="space-between"
-        mb={ 6 }
+        mb={ 1.5 }
+        gap={ 2 }
       >
-        <TxEntity
-          isLoading={ isLoading }
-          hash={ tx.hash }
-          fontWeight="700"
-          truncation="constant_long"
-        />
+        <Flex alignItems="center" gap={ 2 } flexWrap="wrap">
+          <Text color="text.secondary" fontSize="xs" fontWeight="500">Txn</Text>
+          <TxEntity
+            isLoading={ isLoading }
+            hash={ tx.hash }
+            fontWeight="600"
+            textStyle="xs"
+            truncation="constant_long"
+            noIcon
+          />
+        </Flex>
         <TimeAgoWithTooltip
           timestamp={ tx.timestamp }
           enableIncrement
           isLoading={ isLoading }
           color="text.secondary"
-          fontWeight="400"
-          fontSize="sm"
-          ml={ 3 }
+          textStyle="xs"
+          flexShrink={ 0 }
         />
       </Flex>
-      <AddressFromTo
-        from={ tx.from }
-        to={ dataTo }
-        isLoading={ isLoading }
-        fontSize="sm"
-        fontWeight="500"
-        mb={ 3 }
-      />
-      { !config.UI.views.tx.hiddenFields?.value && (
-        <Skeleton loading={ isLoading } mb={ 2 } fontSize="sm" w="fit-content">
-          <Text as="span">Value </Text>
-          <Text as="span" color="text.secondary">{ getValueWithUnit(tx.value).dp(5).toFormat() } { currencyUnits.ether }</Text>
-        </Skeleton>
-      ) }
-      { !config.UI.views.tx.hiddenFields?.tx_fee && (
-        <Skeleton loading={ isLoading } fontSize="sm" w="fit-content" display="flex" whiteSpace="pre">
-          <Text as="span">Fee </Text>
-          <TxFee tx={ tx } accuracy={ 5 } color="text.secondary"/>
-        </Skeleton>
-      ) }
+      <HStack flexWrap="wrap" gap={ 1.5 } mb={ 2.5 }>
+        <TxType types={ tx.transaction_types } isLoading={ isLoading }/>
+        <TxStatus status={ tx.status } errorText={ tx.status === 'error' ? tx.result : undefined } isLoading={ isLoading }/>
+        { hasInference && (
+          <Badge colorPalette="purple" loading={ isLoading } textStyle="xs" px={ 1.5 } py={ 0.5 } minH="5">
+            Inference
+          </Badge>
+        ) }
+        <TxWatchListTags tx={ tx } isLoading={ isLoading }/>
+      </HStack>
+      <Box textStyle="xs">
+        <AddressFromTo
+          from={ tx.from }
+          to={ dataTo }
+          isLoading={ isLoading }
+          noCopy
+          noIcon
+        />
+      </Box>
     </Box>
   );
 };

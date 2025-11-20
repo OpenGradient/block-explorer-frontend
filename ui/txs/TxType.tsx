@@ -29,27 +29,27 @@ const TxType = ({ types, isLoading }: Props) => {
 
   switch (typeToShow) {
     case 'contract_call':
-      label = 'Contract call';
+      label = 'Call';
       colorPalette = 'blue';
       break;
     case 'blob_transaction':
-      label = 'Blob txn';
+      label = 'Blob';
       colorPalette = 'yellow';
       break;
     case 'contract_creation':
-      label = 'Contract creation';
+      label = 'Create';
       colorPalette = 'blue';
       break;
     case 'token_transfer':
-      label = 'Token transfer';
+      label = 'Transfer';
       colorPalette = 'orange';
       break;
     case 'token_creation':
-      label = 'Token creation';
+      label = 'Token';
       colorPalette = 'orange';
       break;
     case 'coin_transfer':
-      label = 'Coin transfer';
+      label = 'Transfer';
       colorPalette = 'orange';
       break;
     case 'rootstock_remasc':
@@ -61,13 +61,20 @@ const TxType = ({ types, isLoading }: Props) => {
       colorPalette = 'blue';
       break;
     default:
-      label = 'Transaction';
+      label = 'Txn';
       colorPalette = 'purple';
 
   }
 
   return (
-    <Badge colorPalette={ colorPalette } loading={ isLoading }>
+    <Badge
+      colorPalette={ colorPalette }
+      loading={ isLoading }
+      textStyle="xs"
+      px={ 1.5 }
+      py={ 0.5 }
+      minH="5"
+    >
       { label }
     </Badge>
   );

@@ -17,7 +17,7 @@ const INDICATORS: Array<TChainIndicator> = [
     valueMicroservice: (stats) => stats.yesterday_transactions?.value === null ?
       'N/A' :
       Number(stats.yesterday_transactions?.value).toLocaleString(undefined, { maximumFractionDigits: 2, notation: 'compact' }),
-    icon: <IconSvg name="transactions" boxSize={ 6 } bgColor="#56ACD1" borderRadius="base" color="white"/>,
+    icon: <IconSvg name="transactions" boxSize={ 6 } bgColor="#56ACD1" borderRadius="none" color="white"/>,
     hint: `Number of transactions yesterday (0:00 - 23:59 UTC). The chart displays daily transactions for the past 30 days.`,
     hintMicroservice: (stats) => stats.daily_new_transactions?.info?.description,
   },
@@ -29,7 +29,7 @@ const INDICATORS: Array<TChainIndicator> = [
     valueMicroservice: (stats) => stats.yesterday_operational_transactions?.value === null ?
       'N/A' :
       Number(stats.yesterday_operational_transactions?.value).toLocaleString(undefined, { maximumFractionDigits: 2, notation: 'compact' }),
-    icon: <IconSvg name="transactions" boxSize={ 6 } bgColor="#56ACD1" borderRadius="base" color="white"/>,
+    icon: <IconSvg name="transactions" boxSize={ 6 } bgColor="#56ACD1" borderRadius="none" color="white"/>,
     hint: `Number of operational transactions yesterday (0:00 - 23:59 UTC). The chart displays daily operational transactions for the past 30 days.`,
     hintMicroservice: (stats) => stats.daily_new_operational_transactions?.info?.description,
   },
@@ -59,7 +59,7 @@ const INDICATORS: Array<TChainIndicator> = [
     value: (stats) => stats.market_cap === null ?
       '$N/A' :
       '$' + Number(stats.market_cap).toLocaleString(undefined, { maximumFractionDigits: 2, notation: 'compact' }),
-    icon: <IconSvg name="globe" boxSize={ 6 } bgColor="#6A5DCC" borderRadius="base" color="white"/>,
+    icon: <IconSvg name="globe" boxSize={ 6 } bgColor="#6A5DCC" borderRadius="none" color="white"/>,
     // eslint-disable-next-line max-len
     hint: 'The total market value of a cryptocurrency\'s circulating supply. It is analogous to the free-float capitalization in the stock market. Market Cap = Current Price x Circulating Supply.',
   },
@@ -69,7 +69,7 @@ const INDICATORS: Array<TChainIndicator> = [
     value: (stats) => stats.tvl === null ?
       '$N/A' :
       '$' + Number(stats.tvl).toLocaleString(undefined, { maximumFractionDigits: 2, notation: 'compact' }),
-    icon: <IconSvg name="lock" boxSize={ 6 } bgColor="#517FDB" borderRadius="base" color="white"/>,
+    icon: <IconSvg name="lock" boxSize={ 6 } bgColor="#517FDB" borderRadius="none" color="white"/>,
     hint: 'Total value of digital assets locked or staked in a chain',
   },
 ];

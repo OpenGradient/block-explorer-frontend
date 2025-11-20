@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import React from 'react';
 
 import { route } from 'nextjs-routes';
@@ -34,7 +34,7 @@ const LatestTransactions = () => {
     return (
       <>
         <SocketNewItemsNotice borderBottomRadius={ 0 } url={ txsUrl } num={ num } alert={ socketAlert } isLoading={ isPlaceholderData }/>
-        <Box mb={ 3 } display={{ base: 'block', lg: 'none' }}>
+        <Box display={{ base: 'block', lg: 'none' }} width="100%">
           { data.slice(0, txsCount).map(((tx, index) => (
             <LatestTxsItemMobile
               key={ tx.hash + (isPlaceholderData ? index : '') }
@@ -44,7 +44,7 @@ const LatestTransactions = () => {
           ))) }
         </Box>
         <AddressHighlightProvider>
-          <Box mb={ 3 } display={{ base: 'none', lg: 'block' }}>
+          <Box display={{ base: 'none', lg: 'block' }} width="100%">
             { data.slice(0, txsCount).map(((tx, index) => (
               <LatestTxsItem
                 key={ tx.hash + (isPlaceholderData ? index : '') }
@@ -54,9 +54,27 @@ const LatestTransactions = () => {
             ))) }
           </Box>
         </AddressHighlightProvider>
-        <Flex justifyContent="center">
-          <Link textStyle="sm" href={ txsUrl }>View all transactions</Link>
-        </Flex>
+        <Box mt={ 4 }>
+          <Link
+            textStyle="sm"
+            href={ txsUrl }
+            color={{ _light: 'blue.600', _dark: 'blue.300' }}
+            fontWeight={ 500 }
+            px={ 4 }
+            py={ 2 }
+            width="100%"
+            display="block"
+            textAlign="center"
+            transition="all 0.2s"
+            _hover={{
+              textDecoration: 'none',
+              bg: { _light: 'blue.50', _dark: 'blue.900' },
+              color: { _light: 'blue.700', _dark: 'blue.200' },
+            }}
+          >
+            View all transactions
+          </Link>
+        </Box>
       </>
     );
   }

@@ -44,7 +44,7 @@ const SocketNewItemsNotice = chakra(({ children, className, url, num, alert, typ
     }
 
     if (!num) {
-      return `scanning new ${ name }s...`;
+      return `🔍 Monitoring new ${ name }s...`;
     }
 
     return (
@@ -58,10 +58,13 @@ const SocketNewItemsNotice = chakra(({ children, className, url, num, alert, typ
   const content = !isLoading ? (
     <Alert
       className={ className }
-      status="warning_table"
+      status="info"
+      bgColor={{ _light: 'blue.50', _dark: 'blue.900' }}
+      color={{ _light: 'blue.700', _dark: 'blue.200' }}
       px={ 4 }
       py="6px"
       fontSize="sm"
+      borderRadius={ 0 }
     >
       { alertContent }
     </Alert>

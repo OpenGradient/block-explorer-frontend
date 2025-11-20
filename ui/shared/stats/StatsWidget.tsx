@@ -58,23 +58,38 @@ const StatsWidget = ({
       <Flex
         className={ className }
         alignItems="center"
-        bgColor={ isLoading ? { _light: 'blackAlpha.50', _dark: 'whiteAlpha.50' } : { _light: 'gray.50', _dark: 'whiteAlpha.100' } }
-        p={ 3 }
-        borderRadius="base"
+        bgColor={ isLoading ? { _light: 'blackAlpha.50', _dark: 'whiteAlpha.50' } : { _light: 'rgba(255, 255, 255, 0.6)', _dark: 'rgba(255, 255, 255, 0.05)' } }
+        backdropFilter={ isLoading ? 'none' : 'blur(10px)' }
+        p={ 4 }
+        border="1px solid"
+        borderColor={{ _light: 'rgba(102, 126, 234, 0.15)', _dark: 'rgba(255, 255, 255, 0.1)' }}
         justifyContent="space-between"
-        columnGap={ 2 }
+        columnGap={ 3 }
         w="100%"
+        transition="all 0.2s ease"
+        _hover={{
+          borderColor: { _light: 'rgba(102, 126, 234, 0.3)', _dark: 'rgba(255, 255, 255, 0.2)' },
+          transform: 'translateY(-2px)',
+          boxShadow: { _light: '0 4px 12px rgba(102, 126, 234, 0.1)', _dark: '0 4px 12px rgba(0, 0, 0, 0.3)' },
+        }}
+        cursor={ href ? 'pointer' : 'default' }
       >
         { icon && (
-          <IconSvg
-            name={ icon }
-            p={ 2 }
-            boxSize="40px"
-            isLoading={ isLoading }
-            borderRadius="base"
-            display={{ base: 'none', lg: 'block' }}
+          <Box
+            p={ 2.5 }
+            bg={{ _light: 'rgba(102, 126, 234, 0.1)', _dark: 'rgba(66, 153, 225, 0.15)' }}
+            display={{ base: 'none', lg: 'flex' }}
             flexShrink={ 0 }
-          />
+            alignItems="center"
+            justifyContent="center"
+          >
+            <IconSvg
+              name={ icon }
+              boxSize="24px"
+              isLoading={ isLoading }
+              color={{ _light: 'blue.600', _dark: 'blue.400' }}
+            />
+          </Box>
         ) }
         <Box w={{ base: '100%', lg: icon ? 'calc(100% - 48px)' : '100%' }}>
           <Skeleton
@@ -111,7 +126,7 @@ const StatsWidget = ({
           </Skeleton>
         </Box>
         { typeof hint === 'string' ? (
-          <Skeleton loading={ isLoading } alignSelf="center" borderRadius="base">
+          <Skeleton loading={ isLoading } alignSelf="center" borderRadius="none">
             <Hint label={ hint } boxSize={ 6 } color={{ _light: 'gray.600', _dark: 'gray.400' }}/>
           </Skeleton>
         ) : hint }

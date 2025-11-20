@@ -1,10 +1,9 @@
-import { Box, Flex, Grid } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 
 import type { Block } from 'types/api/block';
 
 import config from 'configs/app';
-import getBlockTotalReward from 'lib/block/getBlockTotalReward';
 import getNetworkValidatorTitle from 'lib/networks/getNetworkValidatorTitle';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { Tooltip } from 'toolkit/chakra/tooltip';
@@ -20,27 +19,28 @@ type Props = {
 };
 
 const LatestBlocksItem = ({ block, isLoading, animation }: Props) => {
-  const totalReward = getBlockTotalReward(block);
   return (
     <Box
       animation={ animation }
-      borderRadius="md"
-      border="1px solid"
-      borderColor="border.divider"
-      p={ 3 }
+      py={ 3 }
+      px={{ base: 4, lg: 6 }}
+      width="100%"
+      transition="all 0.15s ease"
+      _hover={{
+        bg: { _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(255, 255, 255, 0.03)' },
+      }}
     >
-      <Flex alignItems="center" overflow="hidden" w="100%" mb={ 3 }>
+      <Flex alignItems="center" justifyContent="space-between" mb={ 2 }>
         <BlockEntity
           isLoading={ isLoading }
           number={ block.height }
           tailLength={ 2 }
-          textStyle="xl"
-          fontWeight={ 500 }
-          mr="auto"
+          textStyle="sm"
+          fontWeight={ 600 }
         />
         { block.celo?.is_epoch_block && (
           <Tooltip content={ `Finalized epoch #${ block.celo.epoch_number }` }>
-            <IconSvg name="checkered_flag" boxSize={ 5 } p="1px" ml={ 2 } isLoading={ isLoading } flexShrink={ 0 }/>
+            <IconSvg name="checkered_flag" boxSize={ 4 } p="1px" isLoading={ isLoading } flexShrink={ 0 }/>
           </Tooltip>
         ) }
         <TimeAgoWithTooltip
@@ -48,36 +48,35 @@ const LatestBlocksItem = ({ block, isLoading, animation }: Props) => {
           enableIncrement={ !isLoading }
           isLoading={ isLoading }
           color="text.secondary"
-          display="inline-block"
-          textStyle="sm"
+          textStyle="xs"
           flexShrink={ 0 }
-          ml={ 2 }
         />
       </Flex>
-      <Grid gridGap={ 2 } templateColumns="auto minmax(0, 1fr)" textStyle="sm">
-        <Skeleton loading={ isLoading }>Txn</Skeleton>
-        <Skeleton loading={ isLoading } color="text.secondary"><span>{ block.transaction_count }</span></Skeleton>
-
-        { !config.features.rollup.isEnabled && !config.UI.views.block.hiddenFields?.total_reward && (
-          <>
-            <Skeleton loading={ isLoading }>Reward</Skeleton>
-            <Skeleton loading={ isLoading } color="text.secondary"><span>{ totalReward.dp(10).toFixed() }</span></Skeleton>
-          </>
-        ) }
-
+      <Flex alignItems="center" gap={ 4 } textStyle="xs">
+        <Skeleton loading={ isLoading } textStyle="xs" color="text.secondary">
+          <Text as="span" fontWeight={ 500 }>Txn</Text>
+          <Text as="span" ml={ 1.5 } fontWeight={ 600 } color="text.primary">
+            { block.transaction_count }
+          </Text>
+        </Skeleton>
         { !config.features.rollup.isEnabled && !config.UI.views.block.hiddenFields?.miner && (
-          <>
-            <Skeleton loading={ isLoading } textTransform="capitalize">{ getNetworkValidatorTitle() }</Skeleton>
-            <AddressEntity
-              address={ block.miner }
-              isLoading={ isLoading }
-              noIcon
-              noCopy
-              truncation="constant"
-            />
-          </>
+          <Skeleton loading={ isLoading } textStyle="xs">
+            <Text as="span" color="text.secondary" textTransform="capitalize" fontWeight={ 500 }>
+              { getNetworkValidatorTitle() }
+            </Text>
+            <Box as="span" ml={ 1.5 } display="inline-block">
+              <AddressEntity
+                address={ block.miner }
+                isLoading={ isLoading }
+                noIcon
+                noCopy
+                truncation="constant"
+                textStyle="xs"
+              />
+            </Box>
+          </Skeleton>
         ) }
-      </Grid>
+      </Flex>
     </Box>
   );
 };

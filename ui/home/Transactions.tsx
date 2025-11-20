@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/react';
 import React from 'react';
 
 import config from 'configs/app';
@@ -25,15 +26,36 @@ const TransactionsHome = () => {
     ].filter(Boolean);
     return (
       <>
-        <Heading level="3" mb={ 3 }>Transactions</Heading>
-        <AdaptiveTabs tabs={ tabs } unmountOnExit={ false } listProps={{ mb: 3 }}/>
+        <Box px={{ base: 4, lg: 6 }} pt={{ base: 4, lg: 6 }} pb={ 4 }>
+          <Heading
+            level="3"
+            fontSize={{ base: 'xl', lg: '2xl' }}
+            fontWeight={ 700 }
+            letterSpacing="-0.02em"
+            mb={ 4 }
+          >
+            Transactions
+          </Heading>
+        </Box>
+        <Box px={{ base: 4, lg: 6 }}>
+          <AdaptiveTabs tabs={ tabs } unmountOnExit={ false }/>
+        </Box>
       </>
     );
   }
 
   return (
     <>
-      <Heading level="3" mb={ 3 }>Latest transactions</Heading>
+      <Box px={{ base: 4, lg: 6 }} pt={{ base: 4, lg: 6 }} pb={ 4 }>
+        <Heading
+          level="3"
+          fontSize={{ base: 'xl', lg: '2xl' }}
+          fontWeight={ 700 }
+          letterSpacing="-0.02em"
+        >
+          Latest transactions
+        </Heading>
+      </Box>
       <LatestTxs/>
     </>
   );

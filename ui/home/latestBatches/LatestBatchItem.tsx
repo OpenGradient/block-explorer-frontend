@@ -21,7 +21,7 @@ const LatestBatchItem = ({ number, timestamp, txCount, status, isLoading, animat
   return (
     <Box
       animation={ animation }
-      borderRadius="md"
+      borderRadius="none"
       border="1px solid"
       borderColor="border.divider"
       p={ 3 }

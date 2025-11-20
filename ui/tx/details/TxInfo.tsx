@@ -161,9 +161,8 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
         <Flex flexWrap="nowrap" alignItems="center" overflow="hidden">
           { data.status === null && <Spinner mr={ 2 } size="sm" flexShrink={ 0 }/> }
           <Skeleton loading={ isLoading } overflow="hidden">
-            <HashStringShortenDynamic hash={ data.hash }/>
+            <Text>{ data.hash.slice(0, 6) }...{ data.hash.slice(-6) }</Text>
           </Skeleton>
-          <CopyToClipboard text={ data.hash } isLoading={ isLoading }/>
           { config.features.metasuites.isEnabled && (
             <>
               <TextSeparator color="gray.500" flexShrink={ 0 } display="none" id="meta-suites__tx-explorer-separator"/>
@@ -432,10 +431,13 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
         From
       </DetailedInfo.ItemLabel>
       <DetailedInfo.ItemValue columnGap={ 3 }>
-        <AddressEntity
-          address={ data.from }
-          isLoading={ isLoading }
-        />
+        <Box textStyle="xs">
+          <AddressEntity
+            address={ data.from }
+            isLoading={ isLoading }
+            noCopy
+          />
+        </Box>
         { data.from.name && <Text>{ data.from.name }</Text> }
         { addressFromTags.length > 0 && (
           <Flex columnGap={ 3 }>
@@ -458,21 +460,27 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
           <>
             { data.to && data.to.hash ? (
               <Flex flexWrap="nowrap" alignItems="center" maxW="100%">
-                <AddressEntity
-                  address={ toAddress }
-                  isLoading={ isLoading }
-                />
+                <Box textStyle="xs">
+                  <AddressEntity
+                    address={ toAddress }
+                    isLoading={ isLoading }
+                    noCopy
+                  />
+                </Box>
                 { executionSuccessBadge }
                 { executionFailedBadge }
               </Flex>
             ) : (
               <Flex width="100%" whiteSpace="pre" alignItems="center" flexShrink={ 0 }>
                 <span>[Contract </span>
-                <AddressEntity
-                  address={ toAddress }
-                  isLoading={ isLoading }
-                  noIcon
-                />
+                <Box textStyle="xs">
+                  <AddressEntity
+                    address={ toAddress }
+                    isLoading={ isLoading }
+                    noIcon
+                    noCopy
+                  />
+                </Box>
                 <span>created]</span>
                 { executionSuccessBadge }
                 { executionFailedBadge }
@@ -820,7 +828,7 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
           { data.l1_fee && (
             <>
               <DetailedInfo.ItemLabel
-                // eslint-disable-next-line max-len
+
                 hint={ `L1 Data Fee which is used to cover the L1 "security" cost from the batch submission mechanism. In combination with L2 execution fee, L1 fee makes the total amount of fees that a transaction pays.` }
                 isLoading={ isLoading }
               >

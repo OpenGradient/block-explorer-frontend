@@ -3,23 +3,18 @@ import {
   Flex,
   HStack,
   Text,
-  Grid,
 } from '@chakra-ui/react';
 import React from 'react';
 
 import type { Transaction } from 'types/api/transaction';
 
-import config from 'configs/app';
-import getValueWithUnit from 'lib/getValueWithUnit';
-import { currencyUnits } from 'lib/units';
-import { Skeleton } from 'toolkit/chakra/skeleton';
+import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
+import { Badge } from 'toolkit/chakra/badge';
 import AddressFromTo from 'ui/shared/address/AddressFromTo';
 import TxEntity from 'ui/shared/entities/tx/TxEntity';
 import TxStatus from 'ui/shared/statusTag/TxStatus';
 import TimeAgoWithTooltip from 'ui/shared/TimeAgoWithTooltip';
-import TxFee from 'ui/shared/tx/TxFee';
 import TxWatchListTags from 'ui/shared/tx/TxWatchListTags';
-import TxAdditionalInfo from 'ui/txs/TxAdditionalInfo';
 import TxType from 'ui/txs/TxType';
 
 type Props = {
@@ -29,73 +24,64 @@ type Props = {
 
 const LatestTxsItem = ({ tx, isLoading }: Props) => {
   const dataTo = tx.to ? tx.to : tx.created_contract;
-  const columnNum = config.UI.views.tx.hiddenFields?.value && config.UI.views.tx.hiddenFields?.tx_fee ? 2 : 3;
+  const hasInference = tx.to?.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub;
 
   return (
-    <Grid
-      gridTemplateColumns={{
-        lg: columnNum === 2 ? '3fr minmax(auto, 180px)' : '3fr minmax(auto, 180px) 170px',
-        xl: columnNum === 2 ? '3fr minmax(auto, 250px)' : '3fr minmax(auto, 275px) 170px',
-      }}
-      gridGap={ 8 }
+    <Box
+      py={ 5 }
+      px={{ base: 4, lg: 6 }}
       width="100%"
-      minW="700px"
-      borderBottom="1px solid"
-      borderColor="border.divider"
-      p={ 4 }
-      display={{ base: 'none', lg: 'grid' }}
+      transition="all 0.15s ease"
+      _hover={{
+        bg: { _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(255, 255, 255, 0.03)' },
+      }}
+      display={{ base: 'none', lg: 'block' }}
     >
-      <Flex overflow="hidden" w="100%">
-        <TxAdditionalInfo tx={ tx } isLoading={ isLoading } my="3px"/>
-        <Box ml={ 3 } w="calc(100% - 40px)">
-          <HStack flexWrap="wrap" my="3px">
-            <TxType types={ tx.transaction_types } isLoading={ isLoading }/>
-            <TxStatus status={ tx.status } errorText={ tx.status === 'error' ? tx.result : undefined } isLoading={ isLoading }/>
-            <TxWatchListTags tx={ tx } isLoading={ isLoading }/>
-          </HStack>
-          <Flex
-            alignItems="center"
-            mt="7px"
-            mb="3px"
-          >
-            <TxEntity
-              isLoading={ isLoading }
-              hash={ tx.hash }
-              fontWeight="700"
-            />
-            <TimeAgoWithTooltip
-              timestamp={ tx.timestamp }
-              enableIncrement
-              isLoading={ isLoading }
-              color="text.secondary"
-              textStyle="sm"
-              flexShrink={ 0 }
-              ml={ 2 }
-            />
-          </Flex>
+      <Flex gap={ 4 } alignItems="flex-start" flexWrap="wrap">
+        <Flex flex={ 1 } minW="0" overflow="hidden" gap={ 2.5 }>
+          <Box flex={ 1 } minW="0">
+            <Flex alignItems="center" gap={ 2 } flexWrap="wrap" mb={ 1.5 }>
+              <Text color="text.secondary" fontSize="xs" fontWeight="500">Txn</Text>
+              <TxEntity
+                isLoading={ isLoading }
+                hash={ tx.hash }
+                fontWeight="600"
+                textStyle="xs"
+                noIcon
+              />
+              <TimeAgoWithTooltip
+                timestamp={ tx.timestamp }
+                enableIncrement
+                isLoading={ isLoading }
+                color="text.secondary"
+                textStyle="xs"
+                flexShrink={ 0 }
+              />
+            </Flex>
+            <HStack flexWrap="wrap" gap={ 1.5 }>
+              <TxType types={ tx.transaction_types } isLoading={ isLoading }/>
+              <TxStatus status={ tx.status } errorText={ tx.status === 'error' ? tx.result : undefined } isLoading={ isLoading }/>
+              { hasInference && (
+                <Badge colorPalette="purple" loading={ isLoading } textStyle="xs" px={ 1.5 } py={ 0.5 } minH="5">
+                  Inference
+                </Badge>
+              ) }
+              <TxWatchListTags tx={ tx } isLoading={ isLoading }/>
+            </HStack>
+          </Box>
+        </Flex>
+        <Box flexShrink={ 0 } minW="0" flex="0 0 auto" textStyle="xs">
+          <AddressFromTo
+            from={ tx.from }
+            to={ dataTo }
+            isLoading={ isLoading }
+            mode="compact"
+            noCopy
+            noIcon
+          />
         </Box>
       </Flex>
-      <AddressFromTo
-        from={ tx.from }
-        to={ dataTo }
-        isLoading={ isLoading }
-        mode="compact"
-      />
-      <Flex flexDir="column" rowGap={ 3 }>
-        { !config.UI.views.tx.hiddenFields?.value && (
-          <Skeleton loading={ isLoading } textStyle="md">
-            <Text as="span" whiteSpace="pre">Value </Text>
-            <Text as="span" color="text.secondary">{ getValueWithUnit(tx.value).dp(5).toFormat() } { currencyUnits.ether }</Text>
-          </Skeleton>
-        ) }
-        { !config.UI.views.tx.hiddenFields?.tx_fee && (
-          <Skeleton loading={ isLoading } display="flex" whiteSpace="pre" textStyle="md">
-            <Text as="span">Fee </Text>
-            <TxFee tx={ tx } accuracy={ 5 } color="text.secondary"/>
-          </Skeleton>
-        ) }
-      </Flex>
-    </Grid>
+    </Box>
   );
 };
 
