@@ -46,7 +46,7 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
                 isLoading={ isLoading }
                 hash={ tx.hash }
                 fontWeight="600"
-                textStyle="xs"
+                textStyle="sm"
                 noIcon
               />
               <TimeAgoWithTooltip
