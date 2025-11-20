@@ -111,21 +111,6 @@ const Home = () => {
           <Box
             width={{ base: '100%', lg: '280px' }}
             flexShrink={ 0 }
-            position="relative"
-            _before={{
-              content: '""',
-              position: 'absolute',
-              inset: 0,
-              padding: '1px',
-              background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 50%, rgba(79, 172, 254, 0.1) 100%)',
-              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-              WebkitMaskComposite: 'xor',
-              maskComposite: 'exclude',
-              _dark: {
-                background: 'linear-gradient(135deg, rgba(66, 153, 225, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(79, 172, 254, 0.15) 100%)',
-              },
-              pointerEvents: 'none',
-            }}
           >
             <Box
               bg={{ _light: 'white', _dark: 'rgba(26, 32, 44, 0.6)' }}

@@ -1,5 +1,5 @@
 import type { ConditionalValue } from '@chakra-ui/react';
-import { Flex, Grid, chakra, useBreakpointValue } from '@chakra-ui/react';
+import { Flex, Text, chakra, useBreakpointValue } from '@chakra-ui/react';
 import React from 'react';
 
 import type { AddressParam } from 'types/api/addressParams';
@@ -7,9 +7,6 @@ import type { AddressParam } from 'types/api/addressParams';
 import type { EntityProps } from 'ui/shared/entities/address/AddressEntity';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import AddressEntityWithTokenFilter from 'ui/shared/entities/address/AddressEntityWithTokenFilter';
-
-import AddressFromToIcon from './AddressFromToIcon';
-import { getTxCourseType } from './utils';
 
 type Mode = 'compact' | 'long';
 
@@ -23,9 +20,10 @@ interface Props {
   tokenHash?: string;
   truncation?: EntityProps['truncation'];
   noIcon?: boolean;
+  noCopy?: boolean;
 }
 
-const AddressFromTo = ({ from, to, current, mode: modeProp, className, isLoading, tokenHash = '', noIcon }: Props) => {
+const AddressFromTo = ({ from, to, current, mode: modeProp, className, isLoading, tokenHash = '', noIcon, noCopy }: Props) => {
   const mode = useBreakpointValue(
     {
       base: (typeof modeProp === 'object' && 'base' in modeProp ? modeProp.base : modeProp),
@@ -38,75 +36,72 @@ const AddressFromTo = ({ from, to, current, mode: modeProp, className, isLoading
 
   if (mode === 'compact') {
     return (
-      <Flex className={ className } flexDir="column" rowGap={ 3 }>
+      <Flex className={ className } flexDir="column" rowGap={ 2 }>
         <Flex alignItems="center" columnGap={ 2 }>
-          <AddressFromToIcon
-            isLoading={ isLoading }
-            type={ getTxCourseType(from.hash, to?.hash, current) }
-            transform="rotate(90deg)"
-          />
+          <Text color="text.secondary" fontSize="xs" fontWeight="500">From</Text>
           <Entity
             address={ from }
             isLoading={ isLoading }
             noLink={ current === from.hash }
-            noCopy={ current === from.hash }
+            noCopy={ noCopy ?? (current === from.hash) }
             noIcon={ noIcon }
             tokenHash={ tokenHash }
             truncation="constant"
-            maxW="calc(100% - 28px)"
+            maxW="100%"
             w="min-content"
           />
         </Flex>
         { to && (
-          <Entity
-            address={ to }
-            isLoading={ isLoading }
-            noLink={ current === to.hash }
-            noCopy={ current === to.hash }
-            noIcon={ noIcon }
-            tokenHash={ tokenHash }
-            truncation="constant"
-            maxW="calc(100% - 28px)"
-            w="min-content"
-            ml="28px"
-          />
+          <Flex alignItems="center" columnGap={ 2 }>
+            <Text color="text.secondary" fontSize="xs" fontWeight="500">To</Text>
+            <Entity
+              address={ to }
+              isLoading={ isLoading }
+              noLink={ current === to.hash }
+              noCopy={ noCopy ?? (current === to.hash) }
+              noIcon={ noIcon }
+              tokenHash={ tokenHash }
+              truncation="constant"
+              maxW="100%"
+              w="min-content"
+            />
+          </Flex>
         ) }
       </Flex>
     );
   }
 
   const isOutgoing = current === from.hash;
-  const iconSize = 20;
 
   return (
-    <Grid className={ className } alignItems="center" gridTemplateColumns={ `minmax(auto, min-content) ${ iconSize }px minmax(auto, min-content)` }>
-      <Entity
-        address={ from }
-        isLoading={ isLoading }
-        noLink={ isOutgoing }
-        noCopy={ isOutgoing }
-        noIcon={ noIcon }
-        tokenHash={ tokenHash }
-        truncation="constant"
-        mr={ isOutgoing ? 4 : 2 }
-      />
-      <AddressFromToIcon
-        isLoading={ isLoading }
-        type={ getTxCourseType(from.hash, to?.hash, current) }
-      />
-      { to && (
+    <Flex className={ className } alignItems="center" columnGap={ 3 } flexWrap="wrap">
+      <Flex alignItems="center" columnGap={ 2 }>
+        <Text color="text.secondary" fontSize="xs" fontWeight="500">From</Text>
         <Entity
-          address={ to }
+          address={ from }
           isLoading={ isLoading }
-          noLink={ current === to.hash }
-          noCopy={ current === to.hash }
+          noLink={ isOutgoing }
+          noCopy={ noCopy ?? isOutgoing }
           noIcon={ noIcon }
           tokenHash={ tokenHash }
           truncation="constant"
-          ml={ 3 }
         />
+      </Flex>
+      { to && (
+        <Flex alignItems="center" columnGap={ 2 }>
+          <Text color="text.secondary" fontSize="xs" fontWeight="500">To</Text>
+          <Entity
+            address={ to }
+            isLoading={ isLoading }
+            noLink={ current === to.hash }
+            noCopy={ noCopy ?? (current === to.hash) }
+            noIcon={ noIcon }
+            tokenHash={ tokenHash }
+            truncation="constant"
+          />
+        </Flex>
       ) }
-    </Grid>
+    </Flex>
   );
 };
 

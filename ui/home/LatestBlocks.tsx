@@ -1,4 +1,4 @@
-import { chakra, Box, Flex, Text } from '@chakra-ui/react';
+import { chakra, Box, Text } from '@chakra-ui/react';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 
@@ -84,25 +84,36 @@ const LatestBlocks = () => {
       <>
         <Box width="100%">
           { dataToShow.map(((block, index) => (
-            <LatestBlocksItem
-              key={ block.height + (isPlaceholderData ? String(index) : '') }
-              block={ block }
-              isLoading={ isPlaceholderData }
-              animation={ initialList.getAnimationProp(block) }
-            />
+            <Box key={ block.height + (isPlaceholderData ? String(index) : '') } mb={ 2 }>
+              <LatestBlocksItem
+                block={ block }
+                isLoading={ isPlaceholderData }
+                animation={ initialList.getAnimationProp(block) }
+              />
+            </Box>
           ))) }
         </Box>
-        <Flex justifyContent="center">
+        <Box mt={ 4 }>
           <Link
             textStyle="sm"
             href={ route({ pathname: '/blocks' }) }
             color={{ _light: 'blue.600', _dark: 'blue.300' }}
             fontWeight={ 500 }
-            _hover={{ textDecoration: 'underline' }}
+            px={ 4 }
+            py={ 2 }
+            width="100%"
+            display="block"
+            textAlign="center"
+            transition="all 0.2s"
+            _hover={{
+              textDecoration: 'none',
+              bg: { _light: 'blue.50', _dark: 'blue.900' },
+              color: { _light: 'blue.700', _dark: 'blue.200' },
+            }}
           >
             View all blocks
           </Link>
-        </Flex>
+        </Box>
       </>
     );
   }
