@@ -116,7 +116,6 @@ const SearchBarInput = (
         <Center
           boxSize="20px"
           mr={ 2 }
-          borderRadius="sm"
           borderWidth="1px"
           borderColor="gray.500"
           color="gray.500"
@@ -135,7 +134,6 @@ const SearchBarInput = (
       onBlur={ onBlur }
       w="100%"
       backgroundColor={{ _light: 'white', _dark: 'black' }}
-      borderRadius={{ base: isHomepage ? 'base' : 'none', lg: 'base' }}
       position={{ base: isHomepage ? 'static' : 'absolute', lg: 'relative' }}
       top={{ base: isHomepage ? 0 : 55, lg: 0 }}
       left="0"
@@ -163,8 +161,18 @@ const SearchBarInput = (
           border={ isHomepage ? 'none' : '2px solid' }
           borderColor={{ _light: 'blackAlpha.100', _dark: 'whiteAlpha.200' }}
           color={{ _light: 'black', _dark: 'white' }}
-          _hover={{ borderColor: 'input.border.hover' }}
-          _focusWithin={{ _placeholder: { color: 'gray.300' }, borderColor: 'input.border.focus', _hover: { borderColor: 'input.border.focus' } }}
+          bg={ isHomepage ? 'transparent' : undefined }
+          fontSize={{ base: 'sm', md: 'md' }}
+          py={ isHomepage ? 3 : undefined }
+          _hover={ isHomepage ? {} : { borderColor: 'input.border.hover' } }
+          _focusWithin={ isHomepage ?
+            { _placeholder: { color: 'gray.400' }, outline: 'none' } :
+            { _placeholder: { color: 'gray.300' }, borderColor: 'input.border.focus', _hover: { borderColor: 'input.border.focus' } }
+          }
+          _placeholder={{
+            color: isHomepage ? { _light: 'gray.500', _dark: 'gray.400' } : undefined,
+            opacity: isHomepage ? 0.7 : undefined,
+          }}
         />
       </InputGroup>
     </chakra.form>

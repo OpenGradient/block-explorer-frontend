@@ -34,7 +34,7 @@ const LatestTransactions = () => {
     return (
       <>
         <SocketNewItemsNotice borderBottomRadius={ 0 } url={ txsUrl } num={ num } alert={ socketAlert } isLoading={ isPlaceholderData }/>
-        <Box mb={ 3 } display={{ base: 'block', lg: 'none' }}>
+        <Box display={{ base: 'block', lg: 'none' }} width="100%">
           { data.slice(0, txsCount).map(((tx, index) => (
             <LatestTxsItemMobile
               key={ tx.hash + (isPlaceholderData ? index : '') }
@@ -44,7 +44,7 @@ const LatestTransactions = () => {
           ))) }
         </Box>
         <AddressHighlightProvider>
-          <Box mb={ 3 } display={{ base: 'none', lg: 'block' }}>
+          <Box display={{ base: 'none', lg: 'block' }} width="100%">
             { data.slice(0, txsCount).map(((tx, index) => (
               <LatestTxsItem
                 key={ tx.hash + (isPlaceholderData ? index : '') }
@@ -55,7 +55,15 @@ const LatestTransactions = () => {
           </Box>
         </AddressHighlightProvider>
         <Flex justifyContent="center">
-          <Link textStyle="sm" href={ txsUrl }>View all transactions</Link>
+          <Link
+            textStyle="sm"
+            href={ txsUrl }
+            color={{ _light: 'blue.600', _dark: 'blue.300' }}
+            fontWeight={ 500 }
+            _hover={{ textDecoration: 'underline' }}
+          >
+            View all transactions
+          </Link>
         </Flex>
       </>
     );

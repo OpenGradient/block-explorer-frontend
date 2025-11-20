@@ -1,4 +1,4 @@
-import { chakra, Box, Flex, Text, VStack } from '@chakra-ui/react';
+import { chakra, Box, Flex, Text } from '@chakra-ui/react';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 
@@ -11,14 +11,12 @@ import config from 'configs/app';
 import useApiQuery, { getResourceKey } from 'lib/api/useApiQuery';
 import useInitialList from 'lib/hooks/useInitialList';
 import useIsMobile from 'lib/hooks/useIsMobile';
-import { nbsp } from 'lib/html-entities';
 import useSocketChannel from 'lib/socket/useSocketChannel';
 import useSocketMessage from 'lib/socket/useSocketMessage';
 import { BLOCK } from 'stubs/block';
 import { HOMEPAGE_STATS } from 'stubs/stats';
 import { Heading } from 'toolkit/chakra/heading';
 import { Link } from 'toolkit/chakra/link';
-import { Skeleton } from 'toolkit/chakra/skeleton';
 
 import LatestBlocksItem from './LatestBlocksItem';
 
@@ -27,9 +25,9 @@ const LatestBlocks = () => {
   // const blocksMaxCount = isMobile ? 2 : 3;
   let blocksMaxCount: number;
   if (config.features.rollup.isEnabled || config.UI.views.block.hiddenFields?.total_reward) {
-    blocksMaxCount = isMobile ? 4 : 5;
+    blocksMaxCount = isMobile ? 6 : 10;
   } else {
-    blocksMaxCount = isMobile ? 2 : 3;
+    blocksMaxCount = isMobile ? 4 : 8;
   }
   const { data, isPlaceholderData, isError } = useApiQuery('homepage_blocks', {
     queryOptions: {
@@ -84,7 +82,7 @@ const LatestBlocks = () => {
 
     content = (
       <>
-        <VStack gap={ 2 } mb={ 3 } overflow="hidden" alignItems="stretch">
+        <Box width="100%">
           { dataToShow.map(((block, index) => (
             <LatestBlocksItem
               key={ block.height + (isPlaceholderData ? String(index) : '') }
@@ -93,9 +91,17 @@ const LatestBlocks = () => {
               animation={ initialList.getAnimationProp(block) }
             />
           ))) }
-        </VStack>
+        </Box>
         <Flex justifyContent="center">
-          <Link textStyle="sm" href={ route({ pathname: '/blocks' }) }>View all blocks</Link>
+          <Link
+            textStyle="sm"
+            href={ route({ pathname: '/blocks' }) }
+            color={{ _light: 'blue.600', _dark: 'blue.300' }}
+            fontWeight={ 500 }
+            _hover={{ textDecoration: 'underline' }}
+          >
+            View all blocks
+          </Link>
         </Flex>
       </>
     );
@@ -103,24 +109,24 @@ const LatestBlocks = () => {
 
   return (
     <Box width={{ base: '100%', lg: '280px' }} flexShrink={ 0 }>
-      <Heading level="3">Latest blocks</Heading>
-      { statsQueryResult.data?.network_utilization_percentage !== undefined && (
-        <Skeleton loading={ statsQueryResult.isPlaceholderData } mt={ 2 } display="inline-block" textStyle="sm">
-          <Text as="span">
-            Network utilization:{ nbsp }
-          </Text>
-          <Text as="span" color="blue.400" fontWeight={ 700 }>
-            { statsQueryResult.data?.network_utilization_percentage.toFixed(2) }%
-          </Text>
-        </Skeleton>
-      ) }
-      { statsQueryResult.data?.celo && (
-        <Box whiteSpace="pre-wrap" textStyle="sm" mt={ 2 }>
-          <span>Current epoch: </span>
-          <chakra.span fontWeight={ 700 }>#{ statsQueryResult.data.celo.epoch_number }</chakra.span>
-        </Box>
-      ) }
-      <Box mt={ 3 }>
+      <Box px={{ base: 4, lg: 6 }} pt={{ base: 4, lg: 6 }} pb={ 4 }>
+        <Heading
+          level="3"
+          fontSize={{ base: 'xl', lg: '2xl' }}
+          fontWeight={ 700 }
+          letterSpacing="-0.02em"
+          mb={ statsQueryResult.data?.celo ? 2 : 0 }
+        >
+          Latest blocks
+        </Heading>
+        { statsQueryResult.data?.celo && (
+          <Box whiteSpace="pre-wrap" textStyle="sm" mt={ 2 }>
+            <span>Current epoch: </span>
+            <chakra.span fontWeight={ 700 }>#{ statsQueryResult.data.celo.epoch_number }</chakra.span>
+          </Box>
+        ) }
+      </Box>
+      <Box>
         { content }
       </Box>
     </Box>
