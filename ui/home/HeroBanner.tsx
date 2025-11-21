@@ -11,7 +11,6 @@ import UserProfileDesktop from 'ui/snippets/user/profile/UserProfileDesktop';
 import UserWalletDesktop from 'ui/snippets/user/wallet/UserWalletDesktop';
 
 export const BACKGROUND_DEFAULT = { _light: 'gray.900', _dark: 'gray.800' };
-const TEXT_COLOR_DEFAULT = 'white';
 const BORDER_DEFAULT = 'none';
 
 const HeroBanner = () => {
@@ -23,27 +22,13 @@ const HeroBanner = () => {
 
   const hasConfigBackground = Boolean(configBackgroundLight);
 
-  // Bright cyan-based gradient matching OpenGradient branding
-  const premiumGradientLight = 'linear-gradient(135deg, #00d4ff 0%, #00a3cc 25%, #0066ff 50%, #00d4ff 75%, #00ffff 100%)';
-  const premiumGradientDark = 'linear-gradient(135deg, #001a33 0%, #003366 25%, #004080 50%, #001a33 75%, #002244 100%)';
+  // Gradient with #5178c7
+  const premiumGradientLight = 'linear-gradient(135deg, #5178c7 0%, #6b8fd4 50%, #5178c7 100%)';
+  const premiumGradientDark = 'linear-gradient(135deg, #2d4a7a 0%, #5178c7 50%, #2d4a7a 100%)';
 
   const backgroundValue = hasConfigBackground ?
     { _light: configBackgroundLight, _dark: configBackgroundDark } :
     { _light: premiumGradientLight, _dark: premiumGradientDark };
-
-  const textColor = {
-    _light:
-      // light mode
-      config.UI.homepage.heroBanner?.text_color?.[0] ||
-      config.UI.homepage.plate.textColor ||
-      TEXT_COLOR_DEFAULT,
-    // dark mode
-    _dark:
-      config.UI.homepage.heroBanner?.text_color?.[1] ||
-      config.UI.homepage.heroBanner?.text_color?.[0] ||
-      config.UI.homepage.plate.textColor ||
-      TEXT_COLOR_DEFAULT,
-  };
 
   const border = {
     _light:
@@ -70,10 +55,10 @@ const HeroBanner = () => {
         left: 0,
         right: 0,
         bottom: 0,
-        background: 'radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(0, 102, 255, 0.4) 0%, transparent 50%)',
+        background: 'radial-gradient(circle at 20% 50%, rgba(81, 120, 199, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(81, 120, 199, 0.4) 0%, transparent 50%)',
         pointerEvents: 'none',
         _dark: {
-          background: 'radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.25) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(0, 102, 255, 0.25) 0%, transparent 50%)',
+          background: 'radial-gradient(circle at 20% 50%, rgba(81, 120, 199, 0.25) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(81, 120, 199, 0.25) 0%, transparent 50%)',
         },
       }}
     >
@@ -89,27 +74,29 @@ const HeroBanner = () => {
       >
         <Box flexGrow={ 1 } minW={ 0 } w="100%">
           <VStack
-            gap={{ base: 3, md: 4, lg: 4 }}
-            alignItems="center"
+            gap={{ base: 5, md: 6, lg: 6 }}
+            alignItems="flex-start"
             mb={ 0 }
           >
             <Flex
-              justifyContent="center"
-              alignItems={{ base: 'flex-start', lg: 'center' }}
+              justifyContent="flex-start"
+              alignItems={{ base: 'flex-start', lg: 'flex-start' }}
               columnGap={ 4 }
               flexDirection={{ base: 'column', lg: 'row' }}
               width="100%"
               gap={{ base: 3, lg: 4 }}
             >
-              <VStack gap={ 2 } alignItems="center" flex={ 1 }>
+              <VStack gap={ 2 } alignItems="flex-start" flex={ 1 } px={{ base: 2, md: 4, lg: 6 }}>
                 <Heading
                   as="h1"
                   fontSize={{ base: '28px', md: '32px', lg: '34px', xl: '38px' }}
-                  lineHeight={{ base: '1.2', lg: '1.1' }}
-                  fontWeight={ 700 }
-                  color={ textColor }
-                  letterSpacing="-0.03em"
-                  textAlign="center"
+                  lineHeight="1.1"
+                  fontWeight={ 500 }
+                  color={{ _light: 'rgba(255, 255, 255, 0.98)', _dark: 'rgba(255, 255, 255, 0.98)' }}
+                  letterSpacing="-0.02em"
+                  textAlign="left"
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                  textShadow="0 2px 8px rgba(81, 120, 199, 0.3)"
                 >
                   {
                     config.meta.seo.enhancedDataEnabled ?
@@ -132,7 +119,8 @@ const HeroBanner = () => {
               w="100%"
               maxW={{ base: '100%', lg: '900px', xl: '1000px' }}
               display="flex"
-              justifyContent="center"
+              justifyContent="flex-start"
+              px={{ base: 2, md: 4, lg: 6 }}
             >
               <SearchBar isHomepage/>
             </Box>
