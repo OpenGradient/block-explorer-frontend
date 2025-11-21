@@ -45,19 +45,7 @@ const TransactionsHome = () => {
   }
 
   return (
-    <>
-      <Box px={{ base: 4, lg: 6 }} pt={{ base: 4, lg: 6 }} pb={ 4 }>
-        <Heading
-          level="3"
-          fontSize={{ base: 'xl', lg: '2xl' }}
-          fontWeight={ 700 }
-          letterSpacing="-0.02em"
-        >
-          Latest transactions
-        </Heading>
-      </Box>
-      <LatestTxs/>
-    </>
+    <LatestTxs/>
   );
 };
 

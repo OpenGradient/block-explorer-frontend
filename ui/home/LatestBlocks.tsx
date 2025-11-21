@@ -99,7 +99,7 @@ const LatestBlocks = () => {
         <Box mt={ 2 } px={{ base: 3, lg: 4 }} pb={{ base: 3, lg: 4 }}>
           <Link
             href={ route({ pathname: '/blocks' }) }
-            fontSize={{ base: '10px', lg: '11px' }}
+            fontSize={{ base: '14px', lg: '15px' }}
             fontWeight={ 500 }
             letterSpacing="0.05em"
             textTransform="uppercase"
@@ -124,9 +124,9 @@ const LatestBlocks = () => {
 
   return (
     <Box width={{ base: '100%', lg: '280px' }} flexShrink={ 0 }>
-      <Box px={{ base: 3, lg: 4 }} pt={{ base: 3, lg: 4 }} pb={ 3 }>
+      <Box px={{ base: 3, lg: 4 }} pt={{ base: 3, lg: 5 }} pb={ 5 }>
         <Text
-          fontSize={{ base: '10px', lg: '11px' }}
+          fontSize={{ base: '14px', lg: '22px' }}
           fontWeight={ 500 }
           letterSpacing="0.05em"
           textTransform="uppercase"
@@ -140,7 +140,7 @@ const LatestBlocks = () => {
           <Box whiteSpace="pre-wrap" mt={ 2 }>
             <Text
               as="span"
-              fontSize={{ base: '10px', lg: '11px' }}
+              fontSize={{ base: '14px', lg: '15px' }}
               fontWeight={ 500 }
               letterSpacing="0.05em"
               color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
@@ -149,7 +149,7 @@ const LatestBlocks = () => {
               Current epoch:{ ' ' }
             </Text>
             <chakra.span
-              fontSize={{ base: '10px', lg: '11px' }}
+              fontSize={{ base: '14px', lg: '15px' }}
               fontWeight={ 500 }
               letterSpacing="0.05em"
               color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}

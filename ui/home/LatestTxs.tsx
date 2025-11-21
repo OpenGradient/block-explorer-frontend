@@ -25,13 +25,15 @@ const LatestTransactions = () => {
 
   const { num, socketAlert } = useNewTxsSocket();
 
+  let content;
+
   if (isError) {
-    return <Text mt={ 4 }>No data. Please reload the page.</Text>;
+    content = <Text>No data. Please reload the page.</Text>;
   }
 
   if (data) {
     const txsUrl = route({ pathname: '/txs' });
-    return (
+    content = (
       <>
         <SocketNewItemsNotice borderBottomRadius={ 0 } url={ txsUrl } num={ num } alert={ socketAlert } isLoading={ isPlaceholderData }/>
         <Box display={{ base: 'block', lg: 'none' }} width="100%">
@@ -67,7 +69,7 @@ const LatestTransactions = () => {
         <Box mt={ 2 } px={{ base: 3, lg: 4 }} pb={{ base: 3, lg: 4 }}>
           <Link
             href={ txsUrl }
-            fontSize={{ base: '10px', lg: '11px' }}
+            fontSize={{ base: '14px', lg: '15px' }}
             fontWeight={ 500 }
             letterSpacing="0.05em"
             textTransform="uppercase"
@@ -90,7 +92,25 @@ const LatestTransactions = () => {
     );
   }
 
-  return null;
+  return (
+    <Box width="100%">
+      <Box px={{ base: 3, lg: 4 }} pt={{ base: 3, lg: 5 }} pb={ 5 }>
+        <Text
+          fontSize={{ base: '14px', lg: '22px' }}
+          fontWeight={ 500 }
+          letterSpacing="0.05em"
+          textTransform="uppercase"
+          color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+          fontFamily="system-ui, -apple-system, sans-serif"
+        >
+          Latest transactions
+        </Text>
+      </Box>
+      <Box>
+        { content }
+      </Box>
+    </Box>
+  );
 };
 
 export default LatestTransactions;
