@@ -126,7 +126,7 @@ const LatestBlocks = () => {
     <Box width={{ base: '100%', lg: '280px' }} flexShrink={ 0 }>
       <Box px={{ base: 3, lg: 4 }} pt={{ base: 3, lg: 5 }} pb={ 5 }>
         <Text
-          fontSize={{ base: '14px', lg: '20px' }}
+          fontSize={{ base: '14px', lg: '18px' }}
           fontWeight={ 500 }
           letterSpacing="0.05em"
           textTransform="uppercase"
