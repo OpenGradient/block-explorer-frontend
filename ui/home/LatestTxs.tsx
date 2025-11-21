@@ -96,7 +96,7 @@ const LatestTransactions = () => {
     <Box width="100%">
       <Box px={{ base: 3, lg: 4 }} pt={{ base: 3, lg: 5 }} pb={ 5 }>
         <Text
-          fontSize={{ base: '14px', lg: '22px' }}
+          fontSize={{ base: '14px', lg: '20px' }}
           fontWeight={ 500 }
           letterSpacing="0.05em"
           textTransform="uppercase"
