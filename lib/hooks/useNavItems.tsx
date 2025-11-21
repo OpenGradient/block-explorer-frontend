@@ -202,26 +202,26 @@ export default function useNavItems(): ReturnType {
       ].filter(Boolean);
     }
 
-    const tokensNavItems = [
-      {
-        text: 'Tokens',
-        nextRoute: { pathname: '/tokens' as const },
-        icon: 'token',
-        isActive: pathname === '/tokens' || pathname.startsWith('/token/'),
-      },
-      {
-        text: 'Token transfers',
-        nextRoute: { pathname: '/token-transfers' as const },
-        icon: 'token-transfers',
-        isActive: pathname === '/token-transfers',
-      },
-      config.features.pools.isEnabled && {
-        text: 'DEX tracker',
-        nextRoute: { pathname: '/pools' as const },
-        icon: 'dex-tracker',
-        isActive: pathname === '/pools' || pathname.startsWith('/pool/'),
-      },
-    ].filter(Boolean);
+    // const tokensNavItems = [
+    //   {
+    //     text: 'Tokens',
+    //     nextRoute: { pathname: '/tokens' as const },
+    //     icon: 'token',
+    //     isActive: pathname === '/tokens' || pathname.startsWith('/token/'),
+    //   },
+    //   {
+    //     text: 'Token transfers',
+    //     nextRoute: { pathname: '/token-transfers' as const },
+    //     icon: 'token-transfers',
+    //     isActive: pathname === '/token-transfers',
+    //   },
+    //   config.features.pools.isEnabled && {
+    //     text: 'DEX tracker',
+    //     nextRoute: { pathname: '/pools' as const },
+    //     icon: 'dex-tracker',
+    //     isActive: pathname === '/pools' || pathname.startsWith('/pool/'),
+    //   },
+    // ].filter(Boolean);
 
     const otherNavItems: Array<NavItem> | Array<Array<NavItem>> = [
       {
@@ -260,12 +260,12 @@ export default function useNavItems(): ReturnType {
         icon: 'opengradient/workflow',
         isActive: pathname.startsWith('/workflows'),
       },
-      {
-        text: 'Tokens',
-        icon: 'token',
-        isActive: tokensNavItems.flat().some(item => isInternalItem(item) && item.isActive),
-        subItems: tokensNavItems,
-      },
+      // {
+      //   text: 'Tokens',
+      //   icon: 'token',
+      //   isActive: tokensNavItems.flat().some(item => isInternalItem(item) && item.isActive),
+      //   subItems: tokensNavItems,
+      // },
       config.features.marketplace.isEnabled ? {
         text: 'DApps',
         nextRoute: { pathname: '/apps' as const },
