@@ -67,7 +67,7 @@ const Stats = () => {
   const metrics = [
     {
       label: 'Models Hosted',
-      value: '432',
+      value: '435',
       href: 'https://hub.opengradient.ai',
       external: true,
     },
@@ -83,7 +83,7 @@ const Stats = () => {
       value: '16',
     },
     {
-      label: 'Validators',
+      label: 'Blockchain Validators',
       value: '4',
     },
   ];
