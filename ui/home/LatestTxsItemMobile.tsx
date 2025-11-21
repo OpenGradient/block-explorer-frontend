@@ -41,7 +41,7 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
         alignItems="center"
         width="100%"
         justifyContent="space-between"
-        mb={ 1.5 }
+        mb={ 3 }
         gap={ 2 }
       >
         <Flex alignItems="center" gap={ 2 } flexWrap="wrap">

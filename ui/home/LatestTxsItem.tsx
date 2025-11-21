@@ -40,7 +40,7 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
       <Flex gap={ 4 } alignItems="flex-start" flexWrap="wrap">
         <Flex flex={ 1 } minW="0" overflow="hidden" gap={ 2.5 }>
           <Box flex={ 1 } minW="0">
-            <Flex alignItems="center" gap={ 2 } flexWrap="wrap" mb={ 1.5 }>
+            <Flex alignItems="center" gap={ 2 } flexWrap="wrap" mb={ 3 }>
               <Text color="text.secondary" fontSize="xs" fontWeight="500">Txn</Text>
               <TxEntity
                 isLoading={ isLoading }
@@ -60,12 +60,12 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
             </Flex>
             <HStack flexWrap="wrap" gap={ 1.5 }>
               <TxType types={ tx.transaction_types } isLoading={ isLoading }/>
-              <TxStatus status={ tx.status } errorText={ tx.status === 'error' ? tx.result : undefined } isLoading={ isLoading }/>
               { hasInference && (
                 <Badge colorPalette="purple" loading={ isLoading } textStyle="xs" px={ 1.5 } py={ 0.5 } minH="5">
-                  Inference
+                  Model Inference
                 </Badge>
               ) }
+              <TxStatus status={ tx.status } errorText={ tx.status === 'error' ? tx.result : undefined } isLoading={ isLoading }/>
               <TxWatchListTags tx={ tx } isLoading={ isLoading }/>
             </HStack>
           </Box>
