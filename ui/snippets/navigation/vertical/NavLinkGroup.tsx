@@ -27,7 +27,7 @@ const NavLinkGroup = ({ item }: Props) => {
       width="240px"
       borderRadius="none"
       border="1px solid"
-      borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.200' }}
+      borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' }}
       bgColor={{ _light: 'white', _dark: 'gray.900' }}
       p={ 1 }
     >
@@ -41,7 +41,7 @@ const NavLinkGroup = ({ item }: Props) => {
               mb: 1,
               pb: 1,
               borderBottomWidth: '1px',
-              borderColor: { _light: 'gray.200', _dark: 'whiteAlpha.200' },
+              borderColor: { _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' },
             }}
           >
             { subItem.map(subSubItem => <NavLink key={ subSubItem.text } item={ subSubItem } isCollapsed={ false }/>) }
@@ -79,18 +79,17 @@ const NavLinkGroup = ({ item }: Props) => {
           position="relative"
           cursor="pointer"
           bgColor={ item.isActive ?
-            { _light: 'gray.100', _dark: 'whiteAlpha.100' } :
+            { _light: 'rgba(0, 0, 0, 0.03)', _dark: 'rgba(255, 255, 255, 0.05)' } :
             'transparent'
           }
           color={ item.isActive ?
-            { _light: 'gray.900', _dark: 'white' } :
-            { _light: 'gray.700', _dark: 'gray.300' }
+            { _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.95)' } :
+            { _light: 'rgba(0, 0, 0, 0.6)', _dark: 'rgba(255, 255, 255, 0.7)' }
           }
+          transition="opacity 0.2s ease"
           _hover={{
-            bgColor: { _light: 'gray.50', _dark: 'whiteAlpha.50' },
-            color: item.isActive ?
-              { _light: 'gray.900', _dark: 'white' } :
-              { _light: 'gray.900', _dark: 'gray.100' },
+            opacity: 0.7,
+            bgColor: 'transparent',
           }}
         >
           <HStack gap={ 0 } overflow="hidden" w="100%" alignItems="center">

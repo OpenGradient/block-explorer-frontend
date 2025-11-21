@@ -19,10 +19,12 @@ export default function useNavLinkStyleProps({ isActive }: Props) {
     },
     textProps: {
       variant: 'inherit',
-      fontSize: 'sm',
+      fontSize: { base: '14px', lg: '15px' },
       fontWeight: isActive ? 500 : 400,
-      lineHeight: '20px',
+      lineHeight: '1.2',
       opacity: 1,
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      letterSpacing: '0.01em',
     },
   };
 }

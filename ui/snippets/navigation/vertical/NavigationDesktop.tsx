@@ -23,7 +23,7 @@ const NavigationDesktop = () => {
       flexDirection="column"
       alignItems="stretch"
       borderRight="1px solid"
-      borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.200' }}
+      borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' }}
       bgColor={{ _light: 'white', _dark: 'gray.900' }}
       px={ 6 }
       py={ 8 }
@@ -40,7 +40,7 @@ const NavigationDesktop = () => {
         mb={ 8 }
         pb={ 6 }
         borderBottom="1px solid"
-        borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.200' }}
+        borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' }}
       >
         <NetworkLogo isCollapsed={ false }/>
         { Boolean(config.UI.navigation.featuredNetworks) && <NetworkMenu isCollapsed={ false }/> }
@@ -61,7 +61,7 @@ const NavigationDesktop = () => {
         <Box
           as="nav"
           borderTop="1px solid"
-          borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.200' }}
+          borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' }}
           w="100%"
           mt={ 6 }
           pt={ 6 }

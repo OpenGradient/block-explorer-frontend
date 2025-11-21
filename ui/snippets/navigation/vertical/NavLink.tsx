@@ -8,7 +8,7 @@ import { route } from 'nextjs-routes';
 import { isInternalItem } from 'lib/hooks/useNavItems';
 import { Link } from 'toolkit/chakra/link';
 
-import LightningLabel, { LIGHTNING_LABEL_CLASS_NAME } from '../LightningLabel';
+import LightningLabel from '../LightningLabel';
 import NavLinkIcon from '../NavLinkIcon';
 import useNavLinkStyleProps from '../useNavLinkStyleProps';
 import { checkRouteHighlight } from '../utils';
@@ -22,19 +22,8 @@ type Props = {
 
 const NavLink = ({ item, onClick, isDisabled }: Props) => {
   const isInternalLink = isInternalItem(item);
-
   const styleProps = useNavLinkStyleProps({ isExpanded: true, isCollapsed: false, isActive: isInternalLink && item.isActive });
-
   const isHighlighted = checkRouteHighlight(item);
-
-  let hoverColor: string | { _light: string; _dark: string };
-  if (isDisabled) {
-    hoverColor = 'inherit';
-  } else if (isInternalLink && item.isActive) {
-    hoverColor = { _light: 'gray.900', _dark: 'white' };
-  } else {
-    hoverColor = { _light: 'gray.900', _dark: 'gray.100' };
-  }
 
   return (
     <Box as="li" listStyleType="none" w="100%">
@@ -49,18 +38,17 @@ const NavLink = ({ item, onClick, isDisabled }: Props) => {
         whiteSpace="nowrap"
         onClick={ onClick }
         bgColor={ isInternalLink && item.isActive ?
-          { _light: 'gray.100', _dark: 'whiteAlpha.100' } :
+          { _light: 'rgba(0, 0, 0, 0.03)', _dark: 'rgba(255, 255, 255, 0.05)' } :
           'transparent'
         }
         color={ isInternalLink && item.isActive ?
-          { _light: 'gray.900', _dark: 'white' } :
-          { _light: 'gray.700', _dark: 'gray.300' }
+          { _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.95)' } :
+          { _light: 'rgba(0, 0, 0, 0.6)', _dark: 'rgba(255, 255, 255, 0.7)' }
         }
+        transition="opacity 0.2s ease"
         _hover={{
-          bgColor: isDisabled ? 'transparent' : { _light: 'gray.50', _dark: 'whiteAlpha.50' },
-          [`& *:not(.${ LIGHTNING_LABEL_CLASS_NAME }, .${ LIGHTNING_LABEL_CLASS_NAME } *)`]: {
-            color: hoverColor,
-          },
+          opacity: isDisabled ? 1 : 0.7,
+          bgColor: 'transparent',
         }}
       >
         <HStack gap={ 0 } overflow="hidden" w="100%" alignItems="center">
