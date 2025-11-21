@@ -9,7 +9,6 @@ import useIsMobile from 'lib/hooks/useIsMobile';
 import { Input } from 'toolkit/chakra/input';
 import { InputGroup } from 'toolkit/chakra/input-group';
 import ClearButton from 'ui/shared/ClearButton';
-import IconSvg from 'ui/shared/IconSvg';
 interface Props extends Omit<HTMLChakraProps<'form'>, 'onChange'> {
   onChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -101,13 +100,7 @@ const SearchBarInput = (
 
   const transformMobile = scrollDirection !== 'down' ? 'translateY(0)' : 'translateY(-100%)';
 
-  const startElement = (
-    <IconSvg
-      name="search"
-      boxSize={ isHomepage ? { base: 5, md: 6 } : 5 }
-      mx={ isHomepage ? { base: 3, md: 4 } : 2 }
-    />
-  );
+  const startElement = undefined;
 
   const endElement = (
     <>
@@ -155,7 +148,7 @@ const SearchBarInput = (
         endElement={ endElement }
       >
         <Input
-          size={ isHomepage ? 'lg' : 'md' }
+          size={ isHomepage ? 'md' : 'md' }
           placeholder={ isMobile ? 'Search by address / ... ' : 'Search by address / txn hash / block / token... ' }
           value={ value }
           onChange={ handleChange }
@@ -168,35 +161,25 @@ const SearchBarInput = (
             undefined
           }
           backdropFilter={ isHomepage ? 'blur(10px)' : 'none' }
-          fontSize={{ base: 'sm', md: 'md', lg: isHomepage ? 'md' : 'md' }}
-          py={ isHomepage ? { base: 4, md: 5 } : undefined }
-          px={ isHomepage ? { base: 4, md: 5 } : undefined }
+          fontSize={{ base: 'xs', md: 'xs', lg: isHomepage ? 'xs' : 'sm' }}
+          py={ isHomepage ? { base: 3, md: 3.5 } : undefined }
+          px={ isHomepage ? { base: 3, md: 4 } : undefined }
           borderRadius={ isHomepage ? 'xl' : undefined }
           boxShadow={ isHomepage ?
             { _light: '0 4px 20px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05)', _dark: '0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1)' } :
             undefined
           }
-          _hover={ isHomepage ?
-            {
-              boxShadow: { _light: '0 6px 24px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.08)', _dark: '0 6px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.15)' },
-              transform: 'translateY(-1px)',
-            } :
-            { borderColor: 'input.border.hover' }
-          }
+          _hover={{}}
           _focusWithin={ isHomepage ?
             {
-              _placeholder: { color: 'gray.400' },
               outline: 'none',
-              boxShadow: { _light: '0 8px 28px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(0, 212, 255, 0.3)', _dark: '0 8px 28px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(0, 212, 255, 0.4)' },
-              transform: 'translateY(-1px)',
             } :
-            { _placeholder: { color: 'gray.300' }, borderColor: 'input.border.focus', _hover: { borderColor: 'input.border.focus' } }
+            { outline: 'none' }
           }
-          transition="all 0.2s ease"
           _placeholder={{
             color: isHomepage ? { _light: 'gray.500', _dark: 'gray.400' } : undefined,
             opacity: isHomepage ? 0.8 : undefined,
-            fontSize: isHomepage ? { base: 'sm', md: 'md' } : undefined,
+            fontSize: isHomepage ? { base: 'xs', md: 'sm' } : undefined,
           }}
         />
       </InputGroup>

@@ -61,8 +61,8 @@ const HeroBanner = () => {
         { background: backgroundValue } :
         { background: backgroundValue }) }
       border={ border }
-      p={{ base: 6, md: 8, lg: 12, xl: 16 }}
-      mb={{ base: 6, lg: 8 }}
+      p={{ base: 4, md: 5, lg: 6, xl: 8 }}
+      mb={{ base: 4, lg: 5 }}
       _before={{
         content: '""',
         position: 'absolute',
@@ -81,34 +81,35 @@ const HeroBanner = () => {
         position="relative"
         zIndex={ 1 }
         direction={{ base: 'column', lg: 'row' }}
-        columnGap={{ base: 0, lg: 8, xl: 12 }}
-        rowGap={{ base: 6, lg: 0 }}
+        columnGap={{ base: 0, lg: 4, xl: 6 }}
+        rowGap={{ base: 4, lg: 0 }}
         alignItems={{ base: 'stretch', lg: 'center' }}
         maxW={{ base: '100%', xl: '1400px' }}
         mx="auto"
       >
         <Box flexGrow={ 1 } minW={ 0 } w="100%">
           <VStack
-            gap={{ base: 4, md: 5, lg: 6 }}
-            alignItems={{ base: 'stretch', lg: 'flex-start' }}
+            gap={{ base: 3, md: 4, lg: 4 }}
+            alignItems="center"
             mb={ 0 }
           >
             <Flex
-              justifyContent="space-between"
+              justifyContent="center"
               alignItems={{ base: 'flex-start', lg: 'center' }}
               columnGap={ 4 }
               flexDirection={{ base: 'column', lg: 'row' }}
               width="100%"
               gap={{ base: 3, lg: 4 }}
             >
-              <VStack gap={ 2 } alignItems={{ base: 'stretch', lg: 'flex-start' }} flex={ 1 }>
+              <VStack gap={ 2 } alignItems="center" flex={ 1 }>
                 <Heading
                   as="h1"
-                  fontSize={{ base: '32px', md: '40px', lg: '50px', xl: '54px' }}
+                  fontSize={{ base: '28px', md: '32px', lg: '34px', xl: '38px' }}
                   lineHeight={{ base: '1.2', lg: '1.1' }}
                   fontWeight={ 700 }
                   color={ textColor }
                   letterSpacing="-0.03em"
+                  textAlign="center"
                 >
                   {
                     config.meta.seo.enhancedDataEnabled ?
@@ -130,6 +131,8 @@ const HeroBanner = () => {
             <Box
               w="100%"
               maxW={{ base: '100%', lg: '900px', xl: '1000px' }}
+              display="flex"
+              justifyContent="center"
             >
               <SearchBar isHomepage/>
             </Box>
