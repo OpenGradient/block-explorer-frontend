@@ -29,11 +29,11 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
   return (
     <Box
       width="100%"
-      py={ 5 }
-      px={{ base: 4, lg: 6 }}
-      transition="all 0.15s ease"
+      py={{ base: 3, lg: 4 }}
+      px={{ base: 3, lg: 4 }}
+      transition="opacity 0.2s ease"
       _hover={{
-        bg: { _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(255, 255, 255, 0.03)' },
+        opacity: 0.7,
       }}
       display={{ base: 'block', lg: 'none' }}
     >

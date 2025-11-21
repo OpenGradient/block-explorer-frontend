@@ -15,7 +15,6 @@ import useSocketChannel from 'lib/socket/useSocketChannel';
 import useSocketMessage from 'lib/socket/useSocketMessage';
 import { BLOCK } from 'stubs/block';
 import { HOMEPAGE_STATS } from 'stubs/stats';
-import { Heading } from 'toolkit/chakra/heading';
 import { Link } from 'toolkit/chakra/link';
 
 import LatestBlocksItem from './LatestBlocksItem';
@@ -84,7 +83,11 @@ const LatestBlocks = () => {
       <>
         <Box width="100%">
           { dataToShow.map(((block, index) => (
-            <Box key={ block.height + (isPlaceholderData ? String(index) : '') } mb={ 2 }>
+            <Box
+              key={ block.height + (isPlaceholderData ? String(index) : '') }
+              borderBottom={ index < dataToShow.length - 1 ? '1px solid' : 'none' }
+              borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' }}
+            >
               <LatestBlocksItem
                 block={ block }
                 isLoading={ isPlaceholderData }
@@ -93,22 +96,23 @@ const LatestBlocks = () => {
             </Box>
           ))) }
         </Box>
-        <Box mt={ 4 }>
+        <Box mt={ 2 } px={{ base: 3, lg: 4 }} pb={{ base: 3, lg: 4 }}>
           <Link
-            textStyle="sm"
             href={ route({ pathname: '/blocks' }) }
-            color={{ _light: 'blue.600', _dark: 'blue.300' }}
+            fontSize={{ base: '10px', lg: '11px' }}
             fontWeight={ 500 }
-            px={ 4 }
-            py={ 2 }
+            letterSpacing="0.05em"
+            textTransform="uppercase"
+            color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+            fontFamily="system-ui, -apple-system, sans-serif"
             width="100%"
             display="block"
             textAlign="center"
-            transition="all 0.2s"
+            py={ 2 }
+            transition="opacity 0.2s ease"
             _hover={{
               textDecoration: 'none',
-              bg: { _light: 'blue.50', _dark: 'blue.900' },
-              color: { _light: 'blue.700', _dark: 'blue.200' },
+              opacity: 0.7,
             }}
           >
             View all blocks
@@ -120,20 +124,39 @@ const LatestBlocks = () => {
 
   return (
     <Box width={{ base: '100%', lg: '280px' }} flexShrink={ 0 }>
-      <Box px={{ base: 4, lg: 6 }} pt={{ base: 4, lg: 6 }} pb={ 4 }>
-        <Heading
-          level="3"
-          fontSize={{ base: 'xl', lg: '2xl' }}
-          fontWeight={ 700 }
-          letterSpacing="-0.02em"
+      <Box px={{ base: 3, lg: 4 }} pt={{ base: 3, lg: 4 }} pb={ 3 }>
+        <Text
+          fontSize={{ base: '10px', lg: '11px' }}
+          fontWeight={ 500 }
+          letterSpacing="0.05em"
+          textTransform="uppercase"
+          color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+          fontFamily="system-ui, -apple-system, sans-serif"
           mb={ statsQueryResult.data?.celo ? 2 : 0 }
         >
           Latest blocks
-        </Heading>
+        </Text>
         { statsQueryResult.data?.celo && (
-          <Box whiteSpace="pre-wrap" textStyle="sm" mt={ 2 }>
-            <span>Current epoch: </span>
-            <chakra.span fontWeight={ 700 }>#{ statsQueryResult.data.celo.epoch_number }</chakra.span>
+          <Box whiteSpace="pre-wrap" mt={ 2 }>
+            <Text
+              as="span"
+              fontSize={{ base: '10px', lg: '11px' }}
+              fontWeight={ 500 }
+              letterSpacing="0.05em"
+              color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+              fontFamily="system-ui, -apple-system, sans-serif"
+            >
+              Current epoch:{ ' ' }
+            </Text>
+            <chakra.span
+              fontSize={{ base: '10px', lg: '11px' }}
+              fontWeight={ 500 }
+              letterSpacing="0.05em"
+              color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+              fontFamily="system-ui, -apple-system, sans-serif"
+            >
+              #{ statsQueryResult.data.celo.epoch_number }
+            </chakra.span>
           </Box>
         ) }
       </Box>

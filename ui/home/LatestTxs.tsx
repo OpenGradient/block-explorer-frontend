@@ -36,40 +36,51 @@ const LatestTransactions = () => {
         <SocketNewItemsNotice borderBottomRadius={ 0 } url={ txsUrl } num={ num } alert={ socketAlert } isLoading={ isPlaceholderData }/>
         <Box display={{ base: 'block', lg: 'none' }} width="100%">
           { data.slice(0, txsCount).map(((tx, index) => (
-            <LatestTxsItemMobile
+            <Box
               key={ tx.hash + (isPlaceholderData ? index : '') }
-              tx={ tx }
-              isLoading={ isPlaceholderData }
-            />
+              borderBottom={ index < txsCount - 1 ? '1px solid' : 'none' }
+              borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' }}
+            >
+              <LatestTxsItemMobile
+                tx={ tx }
+                isLoading={ isPlaceholderData }
+              />
+            </Box>
           ))) }
         </Box>
         <AddressHighlightProvider>
           <Box display={{ base: 'none', lg: 'block' }} width="100%">
             { data.slice(0, txsCount).map(((tx, index) => (
-              <LatestTxsItem
+              <Box
                 key={ tx.hash + (isPlaceholderData ? index : '') }
-                tx={ tx }
-                isLoading={ isPlaceholderData }
-              />
+                borderBottom={ index < txsCount - 1 ? '1px solid' : 'none' }
+                borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' }}
+              >
+                <LatestTxsItem
+                  tx={ tx }
+                  isLoading={ isPlaceholderData }
+                />
+              </Box>
             ))) }
           </Box>
         </AddressHighlightProvider>
-        <Box mt={ 4 }>
+        <Box mt={ 2 } px={{ base: 3, lg: 4 }} pb={{ base: 3, lg: 4 }}>
           <Link
-            textStyle="sm"
             href={ txsUrl }
-            color={{ _light: 'blue.600', _dark: 'blue.300' }}
+            fontSize={{ base: '10px', lg: '11px' }}
             fontWeight={ 500 }
-            px={ 4 }
-            py={ 2 }
+            letterSpacing="0.05em"
+            textTransform="uppercase"
+            color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+            fontFamily="system-ui, -apple-system, sans-serif"
             width="100%"
             display="block"
             textAlign="center"
-            transition="all 0.2s"
+            py={ 2 }
+            transition="opacity 0.2s ease"
             _hover={{
               textDecoration: 'none',
-              bg: { _light: 'blue.50', _dark: 'blue.900' },
-              color: { _light: 'blue.700', _dark: 'blue.200' },
+              opacity: 0.7,
             }}
           >
             View all transactions
