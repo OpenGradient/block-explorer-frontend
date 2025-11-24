@@ -284,6 +284,11 @@ export default function useNavItems(): ReturnType {
         isActive: otherNavItems.flat().some(item => isInternalItem(item) && item.isActive),
         subItems: otherNavItems,
       },
+      {
+        text: 'Model Hub',
+        url: 'https://hub.opengradient.ai',
+        icon: 'apps',
+      },
     ].filter(Boolean);
 
     const accountNavItems: ReturnType['accountNavItems'] = [
