@@ -249,6 +249,12 @@ export default function useNavItems(): ReturnType {
 
     const mainNavItems: ReturnType['mainNavItems'] = [
       {
+        text: 'Home',
+        nextRoute: { pathname: '/' as const },
+        icon: 'explorer',
+        isActive: pathname === '/',
+      },
+      {
         text: 'Blockchain',
         icon: 'globe-b',
         isActive: blockchainNavItems.flat().some(item => isInternalItem(item) && item.isActive),
