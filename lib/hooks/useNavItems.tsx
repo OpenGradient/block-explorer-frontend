@@ -255,7 +255,7 @@ export default function useNavItems(): ReturnType {
         subItems: blockchainNavItems,
       },
       {
-        text: 'ML Workflows',
+        text: 'AI Workflows',
         nextRoute: { pathname: '/workflows' as const },
         icon: 'opengradient/workflow',
         isActive: pathname.startsWith('/workflows'),
