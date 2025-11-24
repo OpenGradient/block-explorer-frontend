@@ -63,8 +63,8 @@ const WorkflowsActionBar = ({
           options={ SORT_OPTIONS }
           onChange={ onSortChange }
         /> */ }
-        { searchInput }
         { expiredToggle }
+        { searchInput }
       </HStack>
       <ActionBar
         mt={ inTabsSlot ? 0 : -6 }
@@ -74,8 +74,8 @@ const WorkflowsActionBar = ({
         mb={ 4 }
       >
         <HStack gap={ 3 } display={{ base: 'none', lg: 'flex' }}>
-          { searchInput }
           { expiredToggle }
+          { searchInput }
         </HStack>
         { /* <Pagination { ...pagination } ml={ inTabsSlot ? 8 : 'auto' }/> */ }
       </ActionBar>

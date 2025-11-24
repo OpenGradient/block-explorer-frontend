@@ -2,11 +2,12 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
+import dayjs from 'lib/date/dayjs';
 import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
 import { getReadWorkflowResultQueryKey, READ_WORKFLOW_RESULT_PLACEHOLDER_DATA, readWorkflowResult } from 'lib/opengradient/contracts/workflow';
-import { formatTimestamp, getRelativeTime } from 'lib/opengradient/datetime';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
+import { Tooltip } from 'toolkit/chakra/tooltip';
 import Code from 'ui/inferences/layout/Code';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import * as EntityBase from 'ui/shared/entities/base/components';
@@ -27,8 +28,11 @@ const WorkflowsListItem = ({
 }: Props) => {
   const { user, contractAddress, endTime, frequency } = task;
 
-  const prettyEndTime = formatTimestamp(Number(endTime));
-  const relativeEndTime = getRelativeTime(Number(endTime), { addSuffix: true });
+  const endTimeNumber = Number(endTime);
+  const endTimeDate = dayjs.unix(endTimeNumber);
+  const isExpired = endTimeNumber < Math.floor(Date.now() / 1000);
+  const formattedEndTime = endTimeDate.format('MMM DD, YYYY');
+  const fullEndTime = endTimeDate.format('llll');
 
   const { data: workflowResult, error, isPlaceholderData } = useQuery({
     queryKey: getReadWorkflowResultQueryKey(contractAddress),
@@ -39,29 +43,34 @@ const WorkflowsListItem = ({
   const renderLatestResult = () => {
     const modelOutput = workflowResult?.output;
     if (!modelOutput || error) {
-      return;
+      return null;
     }
 
     const { numbers, strings, jsons } = modelOutput;
-    const nameToValues: Array<string> = [];
+    const parts: Array<string> = [];
+
     if (numbers.length > 0) {
-      nameToValues.push(...numbers.map(({ name, values }) => {
+      numbers.forEach(({ name, values }) => {
         const decimalValues = values.map((v) => (Number(v.value) / (10 ** Number(v.decimals))));
-        return `${ name }: ${ JSON.stringify(decimalValues) }`;
-      }));
+        parts.push(`${ name }: ${ JSON.stringify(decimalValues) }`);
+      });
     }
     if (strings.length > 0) {
-      nameToValues.push(...strings.map(({ name, values }) => {
-        return `${ name }: ${ JSON.stringify(values) }`;
-      }));
+      strings.forEach(({ name, values }) => {
+        parts.push(`${ name }: ${ JSON.stringify(values) }`);
+      });
     }
     if (jsons.length > 0) {
-      nameToValues.push(...jsons.map(({ name, value }) => {
-        return `${ name }: ${ JSON.stringify(JSON.parse(value)) }`;
-      }));
+      jsons.forEach(({ name, value }) => {
+        parts.push(`${ name }: ${ JSON.stringify(JSON.parse(value)) }`);
+      });
     }
 
-    return nameToValues.join('\n');
+    if (parts.length === 0) {
+      return null;
+    }
+
+    return parts.join(', ');
   };
 
   return (
@@ -90,7 +99,9 @@ const WorkflowsListItem = ({
 
       <Box>
         <Label value="Latest Result" isLoading={ isPlaceholderData }/>
-        <Code loading={ isPlaceholderData } p={ 4 }>{ renderLatestResult() ?? 'N/A' }</Code>
+        <Code loading={ isPlaceholderData } p={ 2 } fontSize="xs" mt={ 2 } fontFamily="mono">
+          { renderLatestResult() ?? 'N/A' }
+        </Code>
       </Box>
 
       <Box>
@@ -106,9 +117,8 @@ const WorkflowsListItem = ({
                 fontFamily="mono"
                 color="link.default"
                 _hover={{ textDecoration: 'underline' }}
-                truncate
               >
-                { workflowResult.modelCid }
+                { `${ workflowResult.modelCid.slice(0, 8) }...` }
               </Link>
               <EntityBase.Copy
                 text={ workflowResult?.modelCid ?? '' }
@@ -127,8 +137,12 @@ const WorkflowsListItem = ({
 
       <Box>
         <Label value="End Time" isLoading={ isLoading }/>
-        <Skeleton loading={ isLoading }>
-          <Text>{ `${ prettyEndTime } (${ relativeEndTime })` }</Text>
+        <Skeleton loading={ isLoading } mt={ 2 }>
+          <Tooltip content={ fullEndTime }>
+            <Text color={ isExpired ? 'text.secondary' : 'text.primary' } fontSize="sm">
+              { formattedEndTime }
+            </Text>
+          </Tooltip>
         </Skeleton>
       </Box>
     </ListItemMobile>

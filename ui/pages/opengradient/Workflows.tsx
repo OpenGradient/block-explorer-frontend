@@ -122,7 +122,7 @@ const Workflows = () => {
   return (
     <>
       <PageTitle
-        title="Workflows"
+        title="ML Workflows"
         withTextAd
       />
       { actionBar }

@@ -28,12 +28,11 @@ const WorkflowsTable = ({ items, isLoading, top }: Props) => {
     <TableRoot>
       <TableHeaderSticky top={ top ?? ACTION_BAR_HEIGHT_DESKTOP }>
         <TableRow>
-          <TableColumnHeader>Workflow Address</TableColumnHeader>
-          <TableColumnHeader>Latest Result</TableColumnHeader>
-          <TableColumnHeader>Creator Address</TableColumnHeader>
-          <TableColumnHeader>Model CID</TableColumnHeader>
-          <TableColumnHeader w="10%">Frequency</TableColumnHeader>
-          <TableColumnHeader>End Time</TableColumnHeader>
+          <TableColumnHeader w="180px">Workflow Address</TableColumnHeader>
+          <TableColumnHeader w="25%">Latest Result</TableColumnHeader>
+          <TableColumnHeader w="150px">Model CID</TableColumnHeader>
+          <TableColumnHeader w="100px">Frequency</TableColumnHeader>
+          <TableColumnHeader w="140px">End Time</TableColumnHeader>
         </TableRow>
       </TableHeaderSticky>
       <TableBody>
