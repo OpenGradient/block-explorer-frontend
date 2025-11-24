@@ -105,7 +105,7 @@ const WorkflowsListItem = ({
       </Box>
 
       <Box>
-        <Label value="Model CID" isLoading={ isPlaceholderData }/>
+        <Label value="Model" isLoading={ isPlaceholderData }/>
         <Skeleton loading={ isPlaceholderData }>
           { workflowResult?.modelCid ? (
             <Flex gap={ 2 } alignItems="center">
@@ -129,14 +129,14 @@ const WorkflowsListItem = ({
       </Box>
 
       <Box>
-        <Label value="Frequency" isLoading={ isLoading }/>
+        <Label value="Run Frequency" isLoading={ isLoading }/>
         <Skeleton loading={ isLoading }>
           <Text>{ `${ Number(frequency) / 60 }s` }</Text>
         </Skeleton>
       </Box>
 
       <Box>
-        <Label value="End Time" isLoading={ isLoading }/>
+        <Label value="Runs Until" isLoading={ isLoading }/>
         <Skeleton loading={ isLoading } mt={ 2 }>
           <Tooltip content={ fullEndTime }>
             <Text color={ isExpired ? 'text.secondary' : 'text.primary' } fontSize="sm">

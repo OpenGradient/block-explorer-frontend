@@ -30,9 +30,9 @@ const WorkflowsTable = ({ items, isLoading, top }: Props) => {
         <TableRow>
           <TableColumnHeader w="180px">Workflow Address</TableColumnHeader>
           <TableColumnHeader w="25%">Latest Result</TableColumnHeader>
-          <TableColumnHeader w="150px">Model CID</TableColumnHeader>
-          <TableColumnHeader w="100px">Frequency</TableColumnHeader>
-          <TableColumnHeader w="140px">End Time</TableColumnHeader>
+          <TableColumnHeader w="150px">Model</TableColumnHeader>
+          <TableColumnHeader w="100px">Run Frequency</TableColumnHeader>
+          <TableColumnHeader w="140px">Runs Until</TableColumnHeader>
         </TableRow>
       </TableHeaderSticky>
       <TableBody>
