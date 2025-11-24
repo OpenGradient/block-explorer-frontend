@@ -12,7 +12,6 @@ import * as Layout from './components';
 const LayoutWorkflows = ({ children }: Props) => {
   return (
     <Layout.Container>
-      <Layout.TopRow/>
       <Layout.NavBar/>
       <HeaderMobile hideSearchBar/>
       <Layout.MainArea>

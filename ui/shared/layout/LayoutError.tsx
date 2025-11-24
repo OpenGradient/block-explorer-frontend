@@ -12,7 +12,6 @@ import * as Layout from './components';
 const LayoutError = ({ children }: Props) => {
   return (
     <Layout.Container>
-      <Layout.TopRow/>
       <Layout.NavBar/>
       <HeaderMobile/>
       <Layout.MainArea>
