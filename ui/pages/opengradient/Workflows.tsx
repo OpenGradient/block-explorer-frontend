@@ -53,11 +53,30 @@ const Workflows = () => {
   });
 
   const [ searchTerm, setSearchTerm ] = React.useState<string>(q ?? '');
+  const [ showExpired, setShowExpired ] = React.useState<boolean>(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   const filteredTasks = React.useMemo(() => {
-    return (query.data ?? []).filter((t) => t.user.includes(debouncedSearchTerm) || t.contractAddress.includes(debouncedSearchTerm));
-  }, [ query.data, debouncedSearchTerm ]);
+    const now = BigInt(Math.floor(Date.now() / 1000));
+    let tasks = query.data ?? [];
+
+    // Filter by search term
+    tasks = tasks.filter((t) => t.user.includes(debouncedSearchTerm) || t.contractAddress.includes(debouncedSearchTerm));
+
+    // Filter expired schedules unless toggle is on
+    if (!showExpired) {
+      tasks = tasks.filter((t) => t.endTime > now);
+    }
+
+    // Sort by endTime in descending order
+    tasks = [ ...tasks ].sort((a, b) => {
+      if (a.endTime > b.endTime) return -1;
+      if (a.endTime < b.endTime) return 1;
+      return 0;
+    });
+
+    return tasks;
+  }, [ query.data, debouncedSearchTerm, showExpired ]);
 
   const handleSearchTermChange = React.useCallback((value: string) => {
     setSearchTerm(value);
@@ -65,12 +84,18 @@ const Workflows = () => {
 
   const hasMultipleTabs = false;
 
+  const handleShowExpiredChange = React.useCallback((value: boolean) => {
+    setShowExpired(value);
+  }, []);
+
   const actionBar = (
     <WorkflowsActionBar
       key={ tab }
       // filter={ filter }
       searchTerm={ searchTerm }
       onSearchChange={ handleSearchTermChange }
+      showExpired={ showExpired }
+      onShowExpiredChange={ handleShowExpiredChange }
       // sort={ sort }
       // onSortChange={ handleSortChange }
       inTabsSlot={ !isMobile && hasMultipleTabs }

@@ -1,6 +1,7 @@
 import { HStack } from '@chakra-ui/react';
 import React from 'react';
 
+import { Checkbox } from 'toolkit/chakra/checkbox';
 import ActionBar from 'ui/shared/ActionBar';
 import FilterInput from 'ui/shared/filters/FilterInput';
 // import Sort from 'ui/shared/sort/Sort';
@@ -10,6 +11,8 @@ interface Props {
   // pagination: PaginationParams;
   searchTerm: string | undefined;
   onSearchChange: (value: string) => void;
+  showExpired: boolean;
+  onShowExpiredChange: (value: boolean) => void;
   // sort: TokensSortingValue | undefined;
   // onSortChange: () => void;
   // filter: React.ReactNode;
@@ -21,9 +24,14 @@ const WorkflowsActionBar = ({
   // onSortChange,
   searchTerm,
   onSearchChange,
+  showExpired,
+  onShowExpiredChange,
   // filter,
   inTabsSlot,
 }: Props) => {
+  const handleCheckedChange = React.useCallback((details: { checked: string | boolean }) => {
+    onShowExpiredChange(Boolean(details.checked));
+  }, [ onShowExpiredChange ]);
 
   const searchInput = (
     <FilterInput
@@ -33,6 +41,16 @@ const WorkflowsActionBar = ({
       placeholder="User or contract address"
       initialValue={ searchTerm }
     />
+  );
+
+  const expiredToggle = (
+    <Checkbox
+      checked={ showExpired }
+      onCheckedChange={ handleCheckedChange }
+      size="sm"
+    >
+      Show expired
+    </Checkbox>
   );
 
   return (
@@ -46,6 +64,7 @@ const WorkflowsActionBar = ({
           onChange={ onSortChange }
         /> */ }
         { searchInput }
+        { expiredToggle }
       </HStack>
       <ActionBar
         mt={ inTabsSlot ? 0 : -6 }
@@ -56,6 +75,7 @@ const WorkflowsActionBar = ({
       >
         <HStack gap={ 3 } display={{ base: 'none', lg: 'flex' }}>
           { searchInput }
+          { expiredToggle }
         </HStack>
         { /* <Pagination { ...pagination } ml={ inTabsSlot ? 8 : 'auto' }/> */ }
       </ActionBar>

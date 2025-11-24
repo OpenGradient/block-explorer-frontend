@@ -5,6 +5,7 @@ import React from 'react';
 import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
 import { getReadWorkflowResultQueryKey, READ_WORKFLOW_RESULT_PLACEHOLDER_DATA, readWorkflowResult } from 'lib/opengradient/contracts/workflow';
 import { formatTimestamp, getRelativeTime } from 'lib/opengradient/datetime';
+import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import Code from 'ui/inferences/layout/Code';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
@@ -96,8 +97,19 @@ const WorkflowsListItem = ({
         <Label value="Model CID" isLoading={ isPlaceholderData }/>
         <Skeleton loading={ isPlaceholderData }>
           { workflowResult?.modelCid ? (
-            <Flex>
-              <Text truncate>{ workflowResult.modelCid }</Text>
+            <Flex gap={ 2 } alignItems="center">
+              <Link
+                href={ `https://walruscan.com/mainnet/blob/${ workflowResult.modelCid }` }
+                external
+                fontSize="sm"
+                fontWeight={ 600 }
+                fontFamily="mono"
+                color="link.default"
+                _hover={{ textDecoration: 'underline' }}
+                truncate
+              >
+                { workflowResult.modelCid }
+              </Link>
               <EntityBase.Copy
                 text={ workflowResult?.modelCid ?? '' }
               />
