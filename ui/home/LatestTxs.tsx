@@ -69,11 +69,11 @@ const LatestTransactions = () => {
         <Box mt={ 2 } px={{ base: 3, lg: 4 }} pb={{ base: 3, lg: 4 }}>
           <Link
             href={ txsUrl }
-            fontSize={{ base: '14px', lg: '15px' }}
+            fontSize="10px"
             fontWeight={ 500 }
-            letterSpacing="0.05em"
+            letterSpacing="0.08em"
             textTransform="uppercase"
-            color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+            color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
             fontFamily="system-ui, -apple-system, sans-serif"
             width="100%"
             display="block"
@@ -96,11 +96,11 @@ const LatestTransactions = () => {
     <Box width="100%">
       <Box px={{ base: 3, lg: 4 }} pt={{ base: 3, lg: 5 }} pb={ 5 }>
         <Text
-          fontSize={{ base: '14px', lg: '18px' }}
+          fontSize="11px"
           fontWeight={ 500 }
-          letterSpacing="0.05em"
+          letterSpacing="0.1em"
           textTransform="uppercase"
-          color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+          color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
           fontFamily="system-ui, -apple-system, sans-serif"
         >
           Latest transactions

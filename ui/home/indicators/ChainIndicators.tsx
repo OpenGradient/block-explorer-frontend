@@ -174,11 +174,11 @@ const ChainIndicators = () => {
           mb={{ base: 2, lg: 3 }}
         >
           <Text
-            fontSize={{ base: '10px', lg: '11px' }}
+            fontSize="11px"
             fontWeight={ 500 }
-            letterSpacing="0.05em"
+            letterSpacing="0.1em"
             textTransform="uppercase"
-            color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+            color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
             fontFamily="system-ui, -apple-system, sans-serif"
           >
             { title }
@@ -282,11 +282,11 @@ const ChainIndicators = () => {
                     { item.icon }
                   </Box>
                   <Text
-                    fontSize={{ base: '10px', lg: '11px' }}
+                    fontSize="10px"
                     fontWeight={ 500 }
-                    letterSpacing="0.05em"
+                    letterSpacing="0.08em"
                     textTransform="uppercase"
-                    color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+                    color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
                     fontFamily="system-ui, -apple-system, sans-serif"
                   >
                     { item.label }
