@@ -7,7 +7,6 @@ import type { Block } from 'types/api/block';
 
 import { route } from 'nextjs-routes';
 
-import config from 'configs/app';
 import useApiQuery, { getResourceKey } from 'lib/api/useApiQuery';
 import useInitialList from 'lib/hooks/useInitialList';
 import useIsMobile from 'lib/hooks/useIsMobile';
@@ -21,13 +20,7 @@ import LatestBlocksItem from './LatestBlocksItem';
 
 const LatestBlocks = () => {
   const isMobile = useIsMobile();
-  // const blocksMaxCount = isMobile ? 2 : 3;
-  let blocksMaxCount: number;
-  if (config.features.rollup.isEnabled || config.UI.views.block.hiddenFields?.total_reward) {
-    blocksMaxCount = isMobile ? 6 : 10;
-  } else {
-    blocksMaxCount = isMobile ? 4 : 8;
-  }
+  const blocksMaxCount = isMobile ? 4 : 6;
   const { data, isPlaceholderData, isError } = useApiQuery('homepage_blocks', {
     queryOptions: {
       placeholderData: Array(blocksMaxCount).fill(BLOCK),
