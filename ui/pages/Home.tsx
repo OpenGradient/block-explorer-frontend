@@ -7,7 +7,6 @@ import ChainIndicators from 'ui/home/indicators/ChainIndicators';
 import LatestArbitrumL2Batches from 'ui/home/latestBatches/LatestArbitrumL2Batches';
 import LatestZkEvmL2Batches from 'ui/home/latestBatches/LatestZkEvmL2Batches';
 import LatestBlocks from 'ui/home/LatestBlocks';
-import Stats from 'ui/home/Stats';
 import Transactions from 'ui/home/Transactions';
 import AdBanner from 'ui/shared/ad/AdBanner';
 
@@ -38,39 +37,6 @@ const Home = () => {
       <Box position="relative" zIndex={ 1 }>
         <HeroBanner/>
         <Container maxW="container.xl" px={{ base: 4, lg: 6 }}>
-          <Box
-            position="relative"
-            mb={{ base: 4, lg: 6 }}
-            mt={{ base: 4, lg: 6 }}
-          >
-            <Flex
-              flexDir={{ base: 'column', lg: 'row' }}
-              columnGap={{ base: 4, lg: 6 }}
-              rowGap={{ base: 4, lg: 6 }}
-              _empty={{ mt: 0 }}
-            >
-              { /* Stats Panel - Flat design */ }
-              <Box
-                flex={ 1 }
-                position="relative"
-              >
-                <Box p={{ base: 4, lg: 6 }}>
-                  <Stats/>
-                </Box>
-              </Box>
-
-              { /* Chain Indicators Panel */ }
-              <Box
-                flex={ 1 }
-                position="relative"
-              >
-                <Box p={{ base: 4, lg: 6 }}>
-                  <ChainIndicators/>
-                </Box>
-              </Box>
-            </Flex>
-          </Box>
-
           <AdBanner
             mt={{ base: 6, lg: 8 }}
             mx="auto"
@@ -84,16 +50,19 @@ const Home = () => {
             columnGap={{ base: 6, lg: 8 }}
             rowGap={{ base: 6, lg: 8 }}
           >
-            { /* Latest Blocks Sidebar */ }
+            { /* Left Column: Chain Indicators + Latest Blocks */ }
             <Box
               width={{ base: '100%', lg: '320px' }}
               flexShrink={ 0 }
               height="fit-content"
             >
+              <Box mb={{ base: 6, lg: 8 }}>
+                <ChainIndicators/>
+              </Box>
               { leftWidget }
             </Box>
 
-            { /* Transactions Panel */ }
+            { /* Right Column: Transactions */ }
             <Box
               flexGrow={ 1 }
               position="relative"
