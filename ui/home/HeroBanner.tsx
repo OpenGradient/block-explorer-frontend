@@ -292,7 +292,7 @@ const HeroBanner = () => {
                       Accounts
                     </Text>
                     <IconSvg
-                      name="link"
+                      name="profile"
                       boxSize={ 3 }
                       color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
                     />
@@ -339,7 +339,7 @@ const HeroBanner = () => {
                       Transactions
                     </Text>
                     <IconSvg
-                      name="link"
+                      name="transactions_slim"
                       boxSize={ 3 }
                       color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
                     />
@@ -384,7 +384,7 @@ const HeroBanner = () => {
                       Active Workflows
                     </Text>
                     <IconSvg
-                      name="link"
+                      name="opengradient/workflow"
                       boxSize={ 3 }
                       color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
                     />

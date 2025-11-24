@@ -140,7 +140,7 @@ const LatestTransactions = () => {
     );
   }
 
-  const statusText = socketAlert || (num ? `${ num.toLocaleString() } new` : 'Monitoring...');
+  const statusText = socketAlert || (num ? `${ num.toLocaleString() } new txns` : 'Monitoring...');
 
   return (
     <Box width="100%">
