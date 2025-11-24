@@ -90,16 +90,16 @@ const ChainIndicators = () => {
 
   const valueTitle = (() => {
     if (isPlaceholderData) {
-      return <Skeleton loading h={{ base: '24px', lg: '36px' }} w="fit-content"/>;
+      return <Skeleton loading h={{ base: '18px', lg: '24px' }} w="fit-content"/>;
     }
 
     if (!hasData) {
-      return <Text fontSize={{ base: '24px', lg: '36px' }} fontWeight={ 300 }>—</Text>;
+      return <Text fontSize={{ base: '18px', lg: '24px' }} fontWeight={ 300 }>—</Text>;
     }
 
     return (
       <Text
-        fontSize={{ base: '24px', lg: '36px' }}
+        fontSize={{ base: '18px', lg: '24px' }}
         fontWeight={ 300 }
         letterSpacing="-0.02em"
         color={{ _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.95)' }}
