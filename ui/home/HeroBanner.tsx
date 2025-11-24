@@ -112,7 +112,7 @@ const HeroBanner = () => {
         mx="auto"
         px={{ base: 4, lg: 8, xl: 12 }}
         pt={{ base: 6, lg: 10, xl: 12 }}
-        pb={{ base: 4, lg: 8, xl: 9 }}
+        pb={{ base: 4, lg: 6, xl: 7 }}
       >
         <Grid
           templateColumns={{ base: '1fr', lg: '1.2fr 0.8fr' }}

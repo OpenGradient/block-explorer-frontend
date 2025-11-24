@@ -1,4 +1,4 @@
-import { chakra, Box, Text } from '@chakra-ui/react';
+import { Box, Text, Flex, VStack } from '@chakra-ui/react';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 
@@ -73,7 +73,17 @@ const LatestBlocks = () => {
   let content;
 
   if (isError) {
-    content = <Text>No data. Please reload the page.</Text>;
+    content = (
+      <Box px={ 4 } py={ 8 }>
+        <Text
+          fontSize="sm"
+          color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+          fontFamily="system-ui, -apple-system, sans-serif"
+        >
+          No data. Please reload the page.
+        </Text>
+      </Box>
+    );
   }
 
   if (data) {
@@ -81,22 +91,44 @@ const LatestBlocks = () => {
 
     content = (
       <>
-        <Box width="100%">
+        <VStack
+          align="stretch"
+          gap={ 2.5 }
+          px={{ base: 3, lg: 4 }}
+          pb={ 4 }
+        >
           { dataToShow.map(((block, index) => (
             <Box
               key={ block.height + (isPlaceholderData ? String(index) : '') }
-              borderBottom={ index < dataToShow.length - 1 ? '1px solid' : 'none' }
-              borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' }}
+              position="relative"
             >
+              { /* Visual connection line between blocks */ }
+              { index < dataToShow.length - 1 && (
+                <Box
+                  position="absolute"
+                  left={{ base: '20px', lg: '24px' }}
+                  top="100%"
+                  width="2px"
+                  height="10px"
+                  bg={{ _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(64, 209, 219, 0.15)' }}
+                  zIndex={ 0 }
+                  mt={ 2.5 }
+                />
+              ) }
               <LatestBlocksItem
                 block={ block }
                 isLoading={ isPlaceholderData }
                 animation={ initialList.getAnimationProp(block) }
+                isFirst={ index === 0 }
               />
             </Box>
           ))) }
-        </Box>
-        <Box mt={ 2 } px={{ base: 3, lg: 4 }} pb={{ base: 3, lg: 4 }}>
+        </VStack>
+        <Box
+          px={{ base: 3, lg: 4 }}
+          pb={{ base: 4, lg: 5 }}
+          pt={ 2 }
+        >
           <Link
             href={ route({ pathname: '/blocks' }) }
             fontSize="10px"
@@ -108,11 +140,12 @@ const LatestBlocks = () => {
             width="100%"
             display="block"
             textAlign="center"
-            py={ 2 }
-            transition="opacity 0.2s ease"
+            py={ 2.5 }
+            transition="all 0.2s ease"
             _hover={{
               textDecoration: 'none',
               opacity: 0.7,
+              color: { _light: 'rgba(0, 0, 0, 0.6)', _dark: 'rgba(255, 255, 255, 0.6)' },
             }}
           >
             View all blocks
@@ -123,8 +156,31 @@ const LatestBlocks = () => {
   }
 
   return (
-    <Box width={{ base: '100%', lg: '280px' }} flexShrink={ 0 }>
-      <Box px={{ base: 3, lg: 4 }} pt={{ base: 3, lg: 5 }} pb={ 5 }>
+    <Box
+      width={{ base: '100%', lg: '320px' }}
+      flexShrink={ 0 }
+      position="relative"
+    >
+      { /* Premium Header with Status Indicator */ }
+      <Flex
+        alignItems="center"
+        gap={ 2 }
+        px={{ base: 3, lg: 4 }}
+        pt={{ base: 4, lg: 6 }}
+        pb={ 5 }
+      >
+        <Box
+          position="relative"
+          w="6px"
+          h="6px"
+          borderRadius="50%"
+          bg="green.500"
+          boxShadow="0 0 6px rgba(34, 197, 94, 0.6)"
+          _dark={{
+            boxShadow: '0 0 8px rgba(34, 197, 94, 0.8)',
+          }}
+          animation="pulseOpacity 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
+        />
         <Text
           fontSize="11px"
           fontWeight={ 500 }
@@ -132,34 +188,38 @@ const LatestBlocks = () => {
           textTransform="uppercase"
           color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
           fontFamily="system-ui, -apple-system, sans-serif"
-          mb={ statsQueryResult.data?.celo ? 2 : 0 }
         >
           Latest blocks
         </Text>
-        { statsQueryResult.data?.celo && (
-          <Box whiteSpace="pre-wrap" mt={ 2 }>
+      </Flex>
+      { statsQueryResult.data?.celo && (
+        <Box px={{ base: 3, lg: 4 }} pb={ 3 }>
+          <Box
+            px={ 3 }
+            py={ 2 }
+            bg={{ _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(64, 209, 219, 0.05)' }}
+          >
             <Text
-              as="span"
               fontSize="10px"
               fontWeight={ 500 }
               letterSpacing="0.08em"
               color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
               fontFamily="system-ui, -apple-system, sans-serif"
+              mb={ 0.5 }
             >
-              Current epoch:{ ' ' }
+              Current epoch
             </Text>
-            <chakra.span
-              fontSize="10px"
-              fontWeight={ 500 }
-              letterSpacing="0.08em"
-              color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+            <Text
+              fontSize="14px"
+              fontWeight={ 400 }
+              color={{ _light: 'rgba(0, 0, 0, 0.8)', _dark: 'rgba(255, 255, 255, 0.9)' }}
               fontFamily="system-ui, -apple-system, sans-serif"
             >
               #{ statsQueryResult.data.celo.epoch_number }
-            </chakra.span>
+            </Text>
           </Box>
-        ) }
-      </Box>
+        </Box>
+      ) }
       <Box>
         { content }
       </Box>

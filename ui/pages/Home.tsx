@@ -36,7 +36,7 @@ const Home = () => {
     >
       <Box position="relative" zIndex={ 1 }>
         <HeroBanner/>
-        <Container maxW="container.xl" px={{ base: 4, lg: 6 }}>
+        <Container maxW="container.xl" px={{ base: 4, lg: 4 }}>
           <AdBanner
             mt={{ base: 6, lg: 8 }}
             mx="auto"
