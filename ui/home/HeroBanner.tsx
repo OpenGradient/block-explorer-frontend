@@ -117,7 +117,7 @@ const HeroBanner = () => {
         <Grid
           templateColumns={{ base: '1fr', lg: '1.2fr 0.8fr' }}
           gap={{ base: 8, lg: 16 }}
-          alignItems="flex-start"
+          alignItems="center"
         >
           { /* Left: Search + Title */ }
           <VStack
@@ -127,7 +127,7 @@ const HeroBanner = () => {
             { /* Title Section */ }
             <Box>
               <Text
-                fontSize={{ base: '32px', md: '48px', lg: '60px', xl: '66px' }}
+                fontSize={{ base: '30px', md: '44px', lg: '50px', xl: '56px' }}
                 fontWeight={ 200 }
                 letterSpacing="-0.04em"
                 lineHeight="0.95"
