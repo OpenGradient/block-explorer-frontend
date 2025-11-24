@@ -1,10 +1,12 @@
 import { Grid, Text, Box, Flex } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
 import { route } from 'nextjs-routes';
 
 import config from 'configs/app';
 import useApiQuery from 'lib/api/useApiQuery';
+import { getAllTasks } from 'lib/opengradient/contracts/scheduler';
 import { HOMEPAGE_STATS, HOMEPAGE_STATS_MICROSERVICE } from 'stubs/stats';
 import { LinkBox, LinkOverlay } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
@@ -31,6 +33,13 @@ const Stats = () => {
 
   const isPlaceholderData = statsQuery.isPlaceholderData || apiQuery.isPlaceholderData;
 
+  // Fetch active AI workflows
+  const workflowsQuery = useQuery({
+    queryKey: [ 'opengradient', 'getAllTasks' ],
+    queryFn: getAllTasks,
+    refetchOnMount: false,
+  });
+
   // Get total transactions from either microservice or regular API
   const totalTransactions = React.useMemo(() => {
     const statsData = statsQuery.data;
@@ -46,6 +55,13 @@ const Stats = () => {
 
     return null;
   }, [ statsQuery.data, apiQuery.data ]);
+
+  // Calculate active AI workflows count
+  const activeWorkflowsCount = React.useMemo(() => {
+    const tasks = workflowsQuery.data ?? [];
+    const now = BigInt(Math.floor(Date.now() / 1000));
+    return tasks.filter((t) => t.endTime > now).length;
+  }, [ workflowsQuery.data ]);
 
   // Format number with compact notation
   const formatTransactionCount = (count: number | null): string => {
@@ -83,8 +99,11 @@ const Stats = () => {
       value: '16',
     },
     {
-      label: 'Blockchain Validators',
-      value: '4',
+      label: 'Active AI Workflows',
+      value: activeWorkflowsCount.toLocaleString(),
+      isLoading: workflowsQuery.isPlaceholderData,
+      href: route({ pathname: '/workflows' }),
+      external: false,
     },
   ];
 
@@ -150,9 +169,14 @@ const Stats = () => {
         };
 
         if (metric.href) {
-          const linkHref = metric.external ?
-            metric.href :
-            route({ pathname: '/txs' as const });
+          let linkHref: string;
+          if (metric.external) {
+            linkHref = metric.href;
+          } else if (metric.label === 'Transactions') {
+            linkHref = route({ pathname: '/txs' as const });
+          } else {
+            linkHref = route({ pathname: '/workflows' as const });
+          }
 
           return (
             <LinkBox
