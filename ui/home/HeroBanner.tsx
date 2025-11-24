@@ -82,10 +82,10 @@ const HeroBanner = () => {
     return tasks.filter((t) => t.endTime > now).length;
   }, [ workflowsQuery.data ]);
 
-  const formatNumber = (num: number | null): string => {
+  const formatNumber = (num: number | null, decimals: number = 2): string => {
     if (num === null) return '—';
-    if (num >= 1_000_000) return `${ (num / 1_000_000).toFixed(2) }M`;
-    if (num >= 1_000) return `${ (num / 1_000).toFixed(2) }K`;
+    if (num >= 1_000_000) return `${ (num / 1_000_000).toFixed(decimals) }M`;
+    if (num >= 1_000) return `${ (num / 1_000).toFixed(decimals) }K`;
     return num.toLocaleString();
   };
 
@@ -306,7 +306,7 @@ const HeroBanner = () => {
                       fontFamily="system-ui, -apple-system, sans-serif"
                       lineHeight="1"
                     >
-                      { formatNumber(totalAccounts) }
+                      { formatNumber(totalAccounts, 1) }
                     </Text>
                   </Skeleton>
                 </LinkBox>
