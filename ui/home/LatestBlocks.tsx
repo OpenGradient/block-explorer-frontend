@@ -98,30 +98,13 @@ const LatestBlocks = () => {
           pb={ 4 }
         >
           { dataToShow.map(((block, index) => (
-            <Box
+            <LatestBlocksItem
               key={ block.height + (isPlaceholderData ? String(index) : '') }
-              position="relative"
-            >
-              { /* Visual connection line between blocks */ }
-              { index < dataToShow.length - 1 && (
-                <Box
-                  position="absolute"
-                  left={{ base: '20px', lg: '24px' }}
-                  top="100%"
-                  width="2px"
-                  height="10px"
-                  bg={{ _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(64, 209, 219, 0.15)' }}
-                  zIndex={ 0 }
-                  mt={ 2.5 }
-                />
-              ) }
-              <LatestBlocksItem
-                block={ block }
-                isLoading={ isPlaceholderData }
-                animation={ initialList.getAnimationProp(block) }
-                isFirst={ index === 0 }
-              />
-            </Box>
+              block={ block }
+              isLoading={ isPlaceholderData }
+              animation={ initialList.getAnimationProp(block) }
+              isFirst={ index === 0 }
+            />
           ))) }
         </VStack>
         <Box
@@ -169,18 +152,6 @@ const LatestBlocks = () => {
         pt={{ base: 4, lg: 6 }}
         pb={ 5 }
       >
-        <Box
-          position="relative"
-          w="6px"
-          h="6px"
-          borderRadius="50%"
-          bg="green.500"
-          boxShadow="0 0 6px rgba(34, 197, 94, 0.6)"
-          _dark={{
-            boxShadow: '0 0 8px rgba(34, 197, 94, 0.8)',
-          }}
-          animation="pulseOpacity 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
-        />
         <Text
           fontSize="11px"
           fontWeight={ 500 }
