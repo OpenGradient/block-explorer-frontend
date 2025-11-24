@@ -9,7 +9,6 @@ import useIsMobile from 'lib/hooks/useIsMobile';
 import useNewTxsSocket from 'lib/hooks/useNewTxsSocket';
 import { TX } from 'stubs/tx';
 import { Link } from 'toolkit/chakra/link';
-import SocketNewItemsNotice from 'ui/shared/SocketNewItemsNotice';
 
 import LatestTxsItem from './LatestTxsItem';
 import LatestTxsItemMobile from './LatestTxsItemMobile';
@@ -24,6 +23,7 @@ const LatestTransactions = () => {
   });
 
   const { num, socketAlert } = useNewTxsSocket();
+  const txsUrl = route({ pathname: '/txs' });
 
   let content;
 
@@ -42,10 +42,8 @@ const LatestTransactions = () => {
   }
 
   if (data) {
-    const txsUrl = route({ pathname: '/txs' });
     content = (
       <>
-        <SocketNewItemsNotice borderBottomRadius={ 0 } url={ txsUrl } num={ num } alert={ socketAlert } isLoading={ isPlaceholderData }/>
         <Box
           display={{ base: 'block', lg: 'none' }}
           width="100%"
@@ -142,6 +140,8 @@ const LatestTransactions = () => {
     );
   }
 
+  const statusText = socketAlert || (num ? `${ num.toLocaleString() } new` : 'Monitoring...');
+
   return (
     <Box width="100%">
       { /* Premium Header Section */ }
@@ -174,6 +174,32 @@ const LatestTransactions = () => {
         >
           Latest transactions
         </Text>
+        { (num || socketAlert) && !isPlaceholderData && (
+          <Link
+            href={ txsUrl }
+            display="inline-flex"
+            alignItems="center"
+            px={ 2.5 }
+            py={ 1 }
+            borderRadius="full"
+            bg={{ _light: 'rgba(59, 130, 246, 0.1)', _dark: 'rgba(59, 130, 246, 0.2)' }}
+            border="1px solid"
+            borderColor={{ _light: 'rgba(59, 130, 246, 0.2)', _dark: 'rgba(59, 130, 246, 0.3)' }}
+            fontSize="10px"
+            fontWeight={ 500 }
+            color={{ _light: 'rgba(59, 130, 246, 0.9)', _dark: 'rgba(147, 197, 253, 0.9)' }}
+            fontFamily="system-ui, -apple-system, sans-serif"
+            transition="all 0.2s ease"
+            _hover={{
+              bg: { _light: 'rgba(59, 130, 246, 0.15)', _dark: 'rgba(59, 130, 246, 0.25)' },
+              borderColor: { _light: 'rgba(59, 130, 246, 0.3)', _dark: 'rgba(59, 130, 246, 0.4)' },
+              textDecoration: 'none',
+              transform: 'scale(1.05)',
+            }}
+          >
+            { statusText }
+          </Link>
+        ) }
       </Flex>
       <Box>
         { content }
