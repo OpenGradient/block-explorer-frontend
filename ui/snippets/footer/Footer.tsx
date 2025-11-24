@@ -8,16 +8,11 @@ import type { CustomLinksGroup } from 'types/footerLinks';
 import config from 'configs/app';
 import type { ResourceError } from 'lib/api/resources';
 import useFetch from 'lib/hooks/useFetch';
-// import useIssueUrl from 'lib/hooks/useIssueUrl';
-// import { copy } from 'lib/html-entities';
-import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
-import IconSvg from 'ui/shared/IconSvg';
 import { CONTENT_MAX_WIDTH } from 'ui/shared/layout/utils';
 import NetworkAddToWallet from 'ui/shared/NetworkAddToWallet';
 
 import FooterLinkItem, { type FooterLinkItemProps } from './FooterLinkItem';
-import IntTxsIndexingStatus from './IntTxsIndexingStatus';
 // import getApiVersionUrl from './utils/getApiVersionUrl';
 // import useApiQuery from 'lib/api/useApiQuery';
 
@@ -47,7 +42,7 @@ const Footer = () => {
     {
       icon: 'social/twitter' as const,
       iconSize: '18px',
-      text: 'X (ex-Twitter)',
+      text: 'X',
       url: 'https://x.com/OpenGradient',
     },
     {
@@ -98,27 +93,15 @@ const Footer = () => {
         mb={{ base: 5, lg: 10 }}
         _empty={{ display: 'none' }}
       >
-        { !config.UI.indexingAlert.intTxs.isHidden && <IntTxsIndexingStatus/> }
         <NetworkAddToWallet/>
       </Flex>
     );
   }, []);
 
   const renderProjectInfo = React.useCallback((gridArea?: GridProps['gridArea']) => {
-    const logoColor = { base: 'blue.600', _dark: 'white' };
 
     return (
       <Box gridArea={ gridArea }>
-        <Flex columnGap={ 2 } textStyle="xs" alignItems="center">
-          <span>Powered by</span>
-          <Link href="https://www.opengradient.ai" target="_blank" display="inline-flex" color={ logoColor } _hover={{ color: logoColor }}>
-            <IconSvg
-              name="opengradient/full-black-logo"
-              width="80px"
-              height={ 4 }
-            />
-          </Link>
-        </Flex>
         <Text mt={ 3 } fontSize="xs">
           OpenGradient is an end-to-end decentralized infrastructure network
           for AI model hosting, secure execution, agentic reasoning, and application deployment.
@@ -157,22 +140,6 @@ const Footer = () => {
     m: '0 auto',
   };
 
-  const renderRecaptcha = (gridArea?: GridProps['gridArea']) => {
-    if (!config.services.reCaptchaV2.siteKey) {
-      return <Box gridArea={ gridArea }/>;
-    }
-
-    return (
-      <Box gridArea={ gridArea } textStyle="xs" mt={ 6 }>
-        <span>This site is protected by reCAPTCHA and the Google </span>
-        <Link href="https://policies.google.com/privacy" external noIcon>Privacy Policy</Link>
-        <span> and </span>
-        <Link href="https://policies.google.com/terms" external noIcon>Terms of Service</Link>
-        <span> apply.</span>
-      </Box>
-    );
-  };
-
   if (config.UI.footer.links) {
     return (
       <Box { ...containerProps }>
@@ -180,7 +147,6 @@ const Footer = () => {
           <div>
             { renderNetworkInfo() }
             { renderProjectInfo() }
-            { renderRecaptcha() }
           </div>
 
           <Grid
@@ -222,14 +188,12 @@ const Footer = () => {
           lg: `
           "network links-top"
           "info links-bottom"
-          "recaptcha links-bottom"
         `,
         }}
       >
 
         { renderNetworkInfo({ lg: 'network' }) }
         { renderProjectInfo({ lg: 'info' }) }
-        { renderRecaptcha({ lg: 'recaptcha' }) }
 
         <Grid
           gridArea={{ lg: 'links-bottom' }}
