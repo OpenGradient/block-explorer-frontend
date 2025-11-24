@@ -45,7 +45,7 @@ const Home = () => {
           />
 
           <Flex
-            mt={{ base: 8, lg: 10 }}
+            mt={{ base: 4, lg: 6 }}
             direction={{ base: 'column', lg: 'row' }}
             columnGap={{ base: 6, lg: 8 }}
             rowGap={{ base: 6, lg: 8 }}

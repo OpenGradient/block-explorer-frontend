@@ -127,7 +127,7 @@ const HeroBanner = () => {
             { /* Title Section */ }
             <Box>
               <Text
-                fontSize={{ base: '32px', md: '48px', lg: '64px', xl: '72px' }}
+                fontSize={{ base: '32px', md: '48px', lg: '60px', xl: '66px' }}
                 fontWeight={ 200 }
                 letterSpacing="-0.04em"
                 lineHeight="0.95"

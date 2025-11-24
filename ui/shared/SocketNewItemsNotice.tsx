@@ -1,7 +1,6 @@
-import { Text, chakra } from '@chakra-ui/react';
+import { Box, Text, chakra } from '@chakra-ui/react';
 import React from 'react';
 
-import { Alert } from 'toolkit/chakra/alert';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { TableCell, TableRow } from 'toolkit/chakra/table';
@@ -49,25 +48,38 @@ const SocketNewItemsNotice = chakra(({ children, className, url, num, alert, typ
 
     return (
       <>
-        <Link href={ url }>{ num.toLocaleString() } more { name }{ num > 1 ? 's' : '' }</Link>
-        <Text whiteSpace="pre"> ha{ num > 1 ? 've' : 's' } come in</Text>
+        <Link
+          href={ url }
+          fontWeight={ 500 }
+          color={{ _light: 'rgba(0, 0, 0, 0.8)', _dark: 'rgba(255, 255, 255, 0.9)' }}
+          _hover={{
+            textDecoration: 'underline',
+            color: { _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 1)' },
+          }}
+          transition="color 0.2s ease"
+        >
+          { num.toLocaleString() } more { name }{ num > 1 ? 's' : '' }
+        </Link>
+        <Text whiteSpace="pre" as="span"> ha{ num > 1 ? 've' : 's' } come in</Text>
       </>
     );
   })();
 
   const content = !isLoading ? (
-    <Alert
+    <Box
       className={ className }
-      status="info"
-      bgColor={{ _light: 'blue.50', _dark: 'blue.900' }}
-      color={{ _light: 'blue.700', _dark: 'blue.200' }}
+      bg={{ _light: 'rgba(59, 130, 246, 0.05)', _dark: 'rgba(59, 130, 246, 0.1)' }}
+      borderBottom="1px solid"
+      borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(64, 209, 219, 0.1)' }}
       px={ 4 }
-      py="6px"
-      fontSize="sm"
-      borderRadius={ 0 }
+      py={ 3 }
+      fontSize="12px"
+      fontFamily="system-ui, -apple-system, sans-serif"
+      color={{ _light: 'rgba(0, 0, 0, 0.6)', _dark: 'rgba(255, 255, 255, 0.7)' }}
+      fontWeight={ 400 }
     >
       { alertContent }
-    </Alert>
+    </Box>
   ) : <Skeleton className={ className } h="36px" loading/>;
 
   return children ? children({ content }) : content;

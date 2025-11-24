@@ -9,9 +9,11 @@ import React from 'react';
 
 import type { Transaction } from 'types/api/transaction';
 
+import { route } from 'nextjs-routes';
+
 import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
 import { Badge } from 'toolkit/chakra/badge';
-import { Link } from 'toolkit/chakra/link';
+import { LinkBox, LinkOverlay, Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import AddressFromTo from 'ui/shared/address/AddressFromTo';
 import TxEntity from 'ui/shared/entities/tx/TxEntity';
@@ -31,95 +33,162 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
   const dataTo = tx.to ? tx.to : tx.created_contract;
   const hasInference = tx.to?.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub;
   const inferenceInfo = useInferenceType(tx, isLoading || false);
+  const txUrl = route({ pathname: '/tx/[hash]', query: { hash: tx.hash } });
 
   return (
-    <Box
+    <LinkBox
       width="100%"
-      py={{ base: 3, lg: 4 }}
-      px={{ base: 3, lg: 4 }}
-      transition="opacity 0.2s ease"
+      py={ 4 }
+      px={ 4 }
+      transition="all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
+      position="relative"
       _hover={{
-        opacity: 0.7,
+        bg: { _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(64, 209, 219, 0.05)' },
       }}
       display={{ base: 'block', lg: 'none' }}
     >
-      <Flex
-        alignItems="center"
-        width="100%"
-        justifyContent="space-between"
-        mb={ 3 }
-        gap={ 2 }
-      >
-        <Flex alignItems="center" gap={ 2 } flexWrap="wrap">
-          <Text color="text.secondary" fontSize="xs" fontWeight="500">Txn</Text>
+      <LinkOverlay href={ txUrl } noIcon/>
+      <VStack align="stretch" gap={ 3 }>
+        { /* Header: Hash & Time */ }
+        <Flex
+          alignItems="center"
+          width="100%"
+          justifyContent="space-between"
+          gap={ 2 }
+        >
           <TxEntity
             isLoading={ isLoading }
             hash={ tx.hash }
-            fontWeight="600"
-            textStyle="xs"
+            fontWeight={ 500 }
+            fontSize="sm"
+            fontFamily="system-ui, -apple-system, sans-serif"
+            color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
             truncation="dynamic"
             tailLength={ 8 }
             noIcon
           />
+          <TimeAgoWithTooltip
+            timestamp={ tx.timestamp }
+            enableIncrement
+            isLoading={ isLoading }
+            color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+            fontSize="11px"
+            fontWeight={ 400 }
+            fontFamily="system-ui, -apple-system, sans-serif"
+            flexShrink={ 0 }
+          />
         </Flex>
-        <TimeAgoWithTooltip
-          timestamp={ tx.timestamp }
-          enableIncrement
-          isLoading={ isLoading }
-          color="text.secondary"
-          textStyle="xs"
-          flexShrink={ 0 }
-        />
-      </Flex>
-      <HStack flexWrap="wrap" gap={ 1.5 } mb={ 2.5 }>
-        <TxType types={ tx.transaction_types } isLoading={ isLoading }/>
-        <TxStatus status={ tx.status } errorText={ tx.status === 'error' ? tx.result : undefined } isLoading={ isLoading }/>
-        { hasInference && (
-          <>
-            <Badge colorPalette="purple" loading={ isLoading } textStyle="xs" px={ 1.5 } py={ 0.5 } minH="5">
-              { inferenceInfo?.type || 'AI Inference' }
-            </Badge>
-            { inferenceInfo?.mode && inferenceInfo.mode !== 'UNKNOWN' && (
-              <Badge colorPalette="blue" loading={ isLoading } textStyle="xs" px={ 1.5 } py={ 0.5 } minH="5">
-                { inferenceInfo.mode }
+
+        { /* Badges Row */ }
+        <HStack flexWrap="wrap" gap={ 1.5 }>
+          <TxType types={ tx.transaction_types } isLoading={ isLoading }/>
+          <TxStatus status={ tx.status } errorText={ tx.status === 'error' ? tx.result : undefined } isLoading={ isLoading }/>
+          { hasInference && (
+            <>
+              <Badge
+                colorPalette="purple"
+                loading={ isLoading }
+                fontSize="10px"
+                fontWeight={ 500 }
+                px={ 2 }
+                py={ 0.5 }
+                minH="6"
+                fontFamily="system-ui, -apple-system, sans-serif"
+                letterSpacing="0.02em"
+              >
+                { inferenceInfo?.type || 'AI Inference' }
               </Badge>
-            ) }
-          </>
-        ) }
-        <TxWatchListTags tx={ tx } isLoading={ isLoading }/>
-      </HStack>
-      <Box textStyle="xs" mb={ 2.5 }>
-        <AddressFromTo
-          from={ tx.from }
-          to={ dataTo }
-          isLoading={ isLoading }
-          noCopy
-          noIcon
-        />
-      </Box>
-      { hasInference && inferenceInfo && (
-        <VStack align="flex-start" gap={ 1 }>
-          { inferenceInfo.modelCID && (
-            <Skeleton loading={ isLoading }>
-              <Text fontSize="xs" color="text.secondary" lineClamp={ 1 }>
-                Model:{ ' ' }
-                <Link
-                  href={ `https://walruscan.com/mainnet/blob/${ inferenceInfo.modelCID }` }
-                  external
-                  fontSize="xs"
+              { inferenceInfo?.mode && inferenceInfo.mode !== 'UNKNOWN' && (
+                <Badge
+                  colorPalette="blue"
+                  loading={ isLoading }
+                  fontSize="10px"
                   fontWeight={ 500 }
-                  fontFamily="mono"
-                  color="link.default"
-                  _hover={{ textDecoration: 'underline' }}
+                  px={ 2 }
+                  py={ 0.5 }
+                  minH="6"
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                  letterSpacing="0.02em"
                 >
-                  { inferenceInfo.modelCID.slice(0, 8) }...
-                </Link>
-              </Text>
-            </Skeleton>
+                  { inferenceInfo.mode }
+                </Badge>
+              ) }
+            </>
           ) }
-        </VStack>
-      ) }
-    </Box>
+          <TxWatchListTags tx={ tx } isLoading={ isLoading }/>
+        </HStack>
+
+        { /* Addresses Section */ }
+        <Box>
+          <Text
+            fontSize="10px"
+            fontWeight={ 500 }
+            letterSpacing="0.08em"
+            textTransform="uppercase"
+            color={{ _light: 'rgba(0, 0, 0, 0.35)', _dark: 'rgba(255, 255, 255, 0.35)' }}
+            fontFamily="system-ui, -apple-system, sans-serif"
+            mb={ 1.5 }
+          >
+            Addresses
+          </Text>
+          <Box
+            fontSize="12px"
+            fontFamily="system-ui, -apple-system, sans-serif"
+          >
+            <AddressFromTo
+              from={ tx.from }
+              to={ dataTo }
+              isLoading={ isLoading }
+              noCopy
+              noIcon
+            />
+          </Box>
+        </Box>
+
+        { /* Inference Details */ }
+        { hasInference && inferenceInfo && (
+          <Box>
+            <Text
+              fontSize="10px"
+              fontWeight={ 500 }
+              letterSpacing="0.08em"
+              textTransform="uppercase"
+              color={{ _light: 'rgba(0, 0, 0, 0.35)', _dark: 'rgba(255, 255, 255, 0.35)' }}
+              fontFamily="system-ui, -apple-system, sans-serif"
+              mb={ 1.5 }
+            >
+              AI Inference
+            </Text>
+            { inferenceInfo.modelCID && (
+              <Skeleton loading={ isLoading }>
+                <Text
+                  fontSize="11px"
+                  color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                  lineClamp={ 1 }
+                >
+                  Model:{ ' ' }
+                  <Link
+                    href={ `https://walruscan.com/mainnet/blob/${ inferenceInfo.modelCID }` }
+                    external
+                    fontSize="11px"
+                    fontWeight={ 500 }
+                    fontFamily="mono"
+                    color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.7)' }}
+                    _hover={{
+                      textDecoration: 'underline',
+                      color: { _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.9)' },
+                    }}
+                  >
+                    { inferenceInfo.modelCID.slice(0, 8) }...
+                  </Link>
+                </Text>
+              </Skeleton>
+            ) }
+          </Box>
+        ) }
+      </VStack>
+    </LinkBox>
   );
 };
 
