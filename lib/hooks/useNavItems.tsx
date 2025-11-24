@@ -278,12 +278,12 @@ export default function useNavItems(): ReturnType {
         icon: 'apps',
         isActive: pathname.startsWith('/app'),
       } : null,
-      config.features.stats.isEnabled ? {
-        text: 'Charts & stats',
-        nextRoute: { pathname: '/stats' as const },
-        icon: 'stats',
-        isActive: pathname.startsWith('/stats'),
-      } : null,
+      // config.features.stats.isEnabled ? {
+      //   text: 'Charts & stats',
+      //   nextRoute: { pathname: '/stats' as const },
+      //   icon: 'stats',
+      //   isActive: pathname.startsWith('/stats'),
+      // } : null,
       {
         text: 'Other',
         icon: 'gear',
