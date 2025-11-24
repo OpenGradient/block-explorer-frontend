@@ -18,12 +18,12 @@ export default function useNavLinkStyleProps({ isActive }: Props) {
     },
     textProps: {
       variant: 'inherit',
-      fontSize: { base: '14px', lg: '15px' },
+      fontSize: { base: '12px', lg: '13px' },
       fontWeight: isActive ? 600 : 500,
       lineHeight: '1.3',
       opacity: 1,
-      fontFamily: 'system-ui, -apple-system, "SF Pro Display", -apple-system-blink-mac-system-font, sans-serif',
-      letterSpacing: '0.015em',
+      fontFamily: '"JetBrains Mono", "SF Mono", "Monaco", "Inconsolata", "Fira Code", "Droid Sans Mono", "Source Code Pro", monospace',
+      letterSpacing: '0.01em',
     },
   };
 }
