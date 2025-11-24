@@ -1,4 +1,4 @@
-import { Text, HStack, Box, VStack } from '@chakra-ui/react';
+import { Text, HStack, Box, VStack, chakra } from '@chakra-ui/react';
 import React from 'react';
 
 import type { NavGroupItem } from 'types/client/navigation';
@@ -24,12 +24,22 @@ const NavLinkGroup = ({ item }: Props) => {
 
   const content = (
     <Box
-      width="240px"
-      borderRadius="none"
+      width="260px"
       border="1px solid"
-      borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' }}
-      bgColor={{ _light: 'white', _dark: 'gray.900' }}
-      p={ 1 }
+      borderColor={{ _light: 'rgba(0, 0, 0, 0.12)', _dark: 'rgba(255, 255, 255, 0.18)' }}
+      bgColor={{
+        _light: 'linear-gradient(180deg, #ffffff 0%, #fafbfc 100%)',
+        _dark: 'linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%)',
+      }}
+      backgroundImage={{
+        _light: 'linear-gradient(180deg, #ffffff 0%, #fafbfc 100%)',
+        _dark: 'linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%)',
+      }}
+      p={ 2 }
+      boxShadow={{
+        _light: '0 4px 16px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08)',
+        _dark: '0 4px 16px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3)',
+      }}
     >
       <VStack gap={ 0 } alignItems="stretch" as="ul">
         { item.subItems.map((subItem, index) => Array.isArray(subItem) ? (
@@ -38,10 +48,10 @@ const NavLinkGroup = ({ item }: Props) => {
             w="100%"
             as="ul"
             _notLast={{
-              mb: 1,
-              pb: 1,
+              mb: 2,
+              pb: 2,
               borderBottomWidth: '1px',
-              borderColor: { _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' },
+              borderColor: { _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(255, 255, 255, 0.12)' },
             }}
           >
             { subItem.map(subSubItem => <NavLink key={ subSubItem.text } item={ subSubItem } isCollapsed={ false }/>) }
@@ -67,39 +77,62 @@ const NavLinkGroup = ({ item }: Props) => {
         variant="popover"
         interactive
         contentProps={{
-          borderRadius: 'none',
           p: 0,
-          boxShadow: { _light: '0 4px 12px rgba(0, 0, 0, 0.08)', _dark: '0 4px 12px rgba(0, 0, 0, 0.4)' },
+          boxShadow: {
+            _light: '0 8px 24px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1)',
+            _dark: '0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4)',
+          },
         }}
       >
-        <Box
-          { ...styleProps.itemProps }
+        <chakra.div
           w="100%"
           aria-label={ `${ item.text } link group` }
           position="relative"
           cursor="pointer"
-          bgColor={ item.isActive ?
-            { _light: 'rgba(0, 0, 0, 0.03)', _dark: 'rgba(255, 255, 255, 0.05)' } :
-            'transparent'
-          }
+          bgColor="transparent"
           color={ item.isActive ?
-            { _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.95)' } :
-            { _light: 'rgba(0, 0, 0, 0.6)', _dark: 'rgba(255, 255, 255, 0.7)' }
+            { _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' } :
+            { _light: 'rgba(0, 0, 0, 0.65)', _dark: 'rgba(255, 255, 255, 0.75)' }
           }
-          transition="opacity 0.2s ease"
+          transition="all 0.15s ease-out"
+          py={ 3 }
+          px={ 4 }
+          display="flex"
+          { ...(item.isActive ? { 'data-selected': true } : {}) }
           _hover={{
-            opacity: 0.7,
-            bgColor: 'transparent',
+            color: {
+              _light: 'rgba(0, 0, 0, 0.9)',
+              _dark: 'rgba(255, 255, 255, 0.95)',
+            },
           }}
         >
           <HStack gap={ 0 } overflow="hidden" w="100%" alignItems="center">
-            <NavLinkIcon item={ item }/>
+            <Box
+              opacity={ item.isActive ? 1 : 0.7 }
+              transition="opacity 0.2s ease"
+            >
+              <NavLinkIcon item={ item }/>
+            </Box>
             <Text
               { ...styleProps.textProps }
               ml={ 3 }
+              overflow="hidden"
+              textOverflow="ellipsis"
+              flexShrink={ 1 }
+              minW={ 0 }
             >
               { item.text }
             </Text>
+            { item.isActive && (
+              <Box
+                w="6px"
+                h="6px"
+                borderRadius="50%"
+                bg={{ _light: 'blue.500', _dark: 'blue.400' }}
+                ml={ 2 }
+                flexShrink={ 0 }
+              />
+            ) }
             { isHighlighted && (
               <LightningLabel
                 iconColor={ item.isActive ? 'link.navigation.bg.selected' : 'link.navigation.bg' }
@@ -112,10 +145,11 @@ const NavLinkGroup = ({ item }: Props) => {
               right={ 3 }
               transform="rotate(180deg)"
               boxSize={ 5 }
-              opacity={ 0.6 }
+              opacity={ item.isActive ? 0.8 : 0.5 }
+              transition="opacity 0.2s ease"
             />
           </HStack>
-        </Box>
+        </chakra.div>
       </Tooltip>
     </Box>
   );

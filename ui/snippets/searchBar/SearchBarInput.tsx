@@ -164,9 +164,9 @@ const SearchBarInput = (
           fontSize={{ base: 'xs', md: 'xs', lg: isHomepage ? 'xs' : 'sm' }}
           py={ isHomepage ? { base: 3, md: 3.5 } : undefined }
           px={ isHomepage ? { base: 3, md: 4 } : undefined }
-          borderRadius={ isHomepage ? 'xl' : undefined }
+          borderRadius={ isHomepage ? '0' : undefined }
           boxShadow={ isHomepage ?
-            { _light: '0 4px 20px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05)', _dark: '0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1)' } :
+            { _light: '0 4px 20px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05), 0 0 4px rgba(0, 150, 255, 0.8)', _dark: '0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 4px rgba(0, 150, 255, 0.9)' } :
             undefined
           }
           _hover={{}}

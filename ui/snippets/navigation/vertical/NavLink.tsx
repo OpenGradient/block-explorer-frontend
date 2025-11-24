@@ -37,29 +37,49 @@ const NavLink = ({ item, onClick, isDisabled }: Props) => {
         aria-label={ `${ item.text } link` }
         whiteSpace="nowrap"
         onClick={ onClick }
-        bgColor={ isInternalLink && item.isActive ?
-          { _light: 'rgba(0, 0, 0, 0.03)', _dark: 'rgba(255, 255, 255, 0.05)' } :
-          'transparent'
-        }
+        bgColor="transparent"
         color={ isInternalLink && item.isActive ?
-          { _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.95)' } :
-          { _light: 'rgba(0, 0, 0, 0.6)', _dark: 'rgba(255, 255, 255, 0.7)' }
+          { _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' } :
+          { _light: 'rgba(0, 0, 0, 0.65)', _dark: 'rgba(255, 255, 255, 0.75)' }
         }
-        transition="opacity 0.2s ease"
+        transition="all 0.15s ease-out"
         _hover={{
-          opacity: isDisabled ? 1 : 0.7,
-          bgColor: 'transparent',
+          color: isDisabled ? undefined : {
+            _light: 'rgba(0, 0, 0, 0.9)',
+            _dark: 'rgba(255, 255, 255, 0.95)',
+          },
         }}
       >
         <HStack gap={ 0 } overflow="hidden" w="100%" alignItems="center">
-          <NavLinkIcon item={ item }/>
+          <Box
+            opacity={ isInternalLink && item.isActive ? 1 : 0.7 }
+            transition="opacity 0.2s ease"
+          >
+            <NavLinkIcon item={ item }/>
+          </Box>
           <chakra.span
             { ...styleProps.textProps }
             ml={ 3 }
             display="inline"
+            position="relative"
+            textDecoration="none"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            flexShrink={ 1 }
+            minW={ 0 }
           >
             <span>{ item.text }</span>
           </chakra.span>
+          { isInternalLink && item.isActive && (
+            <Box
+              w="6px"
+              h="6px"
+              borderRadius="50%"
+              bg={{ _light: 'blue.500', _dark: 'blue.400' }}
+              ml={ 2 }
+              flexShrink={ 0 }
+            />
+          ) }
           { isHighlighted && (
             <LightningLabel
               iconColor={ isInternalLink && item.isActive ? 'link.navigation.bg.selected' : 'link.navigation.bg' }

@@ -8,23 +8,22 @@ export default function useNavLinkStyleProps({ isActive }: Props) {
   return {
     itemProps: {
       variant: 'navigation' as const,
-      py: 2.5,
-      px: 3,
+      py: 3,
+      px: 4,
       display: 'flex',
       ...(isActive ? { 'data-selected': true } : {}),
-      borderRadius: 'none',
-      transitionProperty: 'background-color, color',
+      transitionProperty: 'color, border-color',
       transitionDuration: '150ms',
       transitionTimingFunction: 'ease-out',
     },
     textProps: {
       variant: 'inherit',
       fontSize: { base: '14px', lg: '15px' },
-      fontWeight: isActive ? 500 : 400,
-      lineHeight: '1.2',
+      fontWeight: isActive ? 600 : 500,
+      lineHeight: '1.3',
       opacity: 1,
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      letterSpacing: '0.01em',
+      fontFamily: 'system-ui, -apple-system, "SF Pro Display", -apple-system-blink-mac-system-font, sans-serif',
+      letterSpacing: '0.015em',
     },
   };
 }

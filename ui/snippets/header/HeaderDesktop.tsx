@@ -8,10 +8,11 @@ import UserProfileDesktop from 'ui/snippets/user/profile/UserProfileDesktop';
 import UserWalletDesktop from 'ui/snippets/user/wallet/UserWalletDesktop';
 
 type Props = {
+  hideSearchBar?: boolean;
   renderSearchBar?: () => React.ReactNode;
 };
 
-const HeaderDesktop = ({ renderSearchBar }: Props) => {
+const HeaderDesktop = ({ hideSearchBar, renderSearchBar }: Props) => {
 
   const searchBar = renderSearchBar ? renderSearchBar() : <SearchBar/>;
 
@@ -24,9 +25,11 @@ const HeaderDesktop = ({ renderSearchBar }: Props) => {
       justifyContent="center"
       gap={ 6 }
     >
-      <Box width="100%">
-        { searchBar }
-      </Box>
+      { !hideSearchBar && (
+        <Box width="100%">
+          { searchBar }
+        </Box>
+      ) }
       { config.UI.navigation.layout === 'vertical' && (
         <Box display="flex" gap={ 2 } flexShrink={ 0 }>
           { config.features.rewards.isEnabled && <RewardsButton/> }
