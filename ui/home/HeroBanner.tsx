@@ -187,7 +187,7 @@ const HeroBanner = () => {
                   animation="pulseOpacity 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
                 />
                 <Text
-                  fontSize="10px"
+                  fontSize="11px"
                   fontWeight={ 500 }
                   letterSpacing="0.1em"
                   textTransform="uppercase"
@@ -224,7 +224,7 @@ const HeroBanner = () => {
                     mb={ 2 }
                   >
                     <Text
-                      fontSize="9px"
+                      fontSize="10px"
                       fontWeight={ 500 }
                       letterSpacing="0.08em"
                       textTransform="uppercase"
@@ -258,7 +258,7 @@ const HeroBanner = () => {
                   borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(64, 209, 219, 0.1)' }}
                 >
                   <Text
-                    fontSize="9px"
+                    fontSize="10px"
                     fontWeight={ 500 }
                     letterSpacing="0.08em"
                     textTransform="uppercase"
@@ -298,7 +298,7 @@ const HeroBanner = () => {
                     mb={ 2 }
                   >
                     <Text
-                      fontSize="9px"
+                      fontSize="10px"
                       fontWeight={ 500 }
                       letterSpacing="0.08em"
                       textTransform="uppercase"
@@ -343,7 +343,7 @@ const HeroBanner = () => {
                     mb={ 2 }
                   >
                     <Text
-                      fontSize="9px"
+                      fontSize="10px"
                       fontWeight={ 500 }
                       letterSpacing="0.08em"
                       textTransform="uppercase"
