@@ -28,6 +28,7 @@ const SearchBarInput = (
   const innerRef = React.useRef<HTMLFormElement>(null);
   React.useImperativeHandle(ref, () => innerRef.current as HTMLFormElement, []);
   const [ isSticky, setIsSticky ] = React.useState(false);
+  const [ isFocused, setIsFocused ] = React.useState(false);
   const scrollDirection = useScrollDirection();
   const isMobile = useIsMobile();
 
@@ -49,6 +50,15 @@ const SearchBarInput = (
   const handleChange = React.useCallback((event: ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value);
   }, [ onChange ]);
+
+  const handleInputFocus = React.useCallback(() => {
+    setIsFocused(true);
+    onFocus?.();
+  }, [ onFocus ]);
+
+  const handleInputBlur = React.useCallback(() => {
+    setIsFocused(false);
+  }, []);
 
   React.useEffect(() => {
     if (!isMobile) {
@@ -100,6 +110,35 @@ const SearchBarInput = (
 
   const transformMobile = scrollDirection !== 'down' ? 'translateY(0)' : 'translateY(-100%)';
 
+  const getInputBorderColor = () => {
+    if (!isHomepage) {
+      return { _light: 'blackAlpha.100', _dark: 'whiteAlpha.200' };
+    }
+    if (isFocused) {
+      return { _light: 'rgba(64, 209, 219, 0.4)', _dark: 'rgba(64, 209, 219, 0.5)' };
+    }
+    return { _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(255, 255, 255, 0.12)' };
+  };
+
+  const getInputBoxShadow = () => {
+    if (!isHomepage) {
+      return undefined;
+    }
+    if (isFocused) {
+      return {
+        _light: '0 4px 16px rgba(64, 209, 219, 0.15), 0 0 0 3px rgba(64, 209, 219, 0.1)',
+        _dark: '0 4px 16px rgba(64, 209, 219, 0.25), 0 0 0 3px rgba(64, 209, 219, 0.15)',
+      };
+    }
+    return {
+      _light: '0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)',
+      _dark: '0 2px 8px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3)',
+    };
+  };
+
+  const inputBorderColor = getInputBorderColor();
+  const inputBoxShadow = getInputBoxShadow();
+
   const startElement = undefined;
 
   const endElement = (
@@ -107,13 +146,15 @@ const SearchBarInput = (
       <ClearButton onClick={ onClear } isVisible={ value.length > 0 } mx={ isHomepage ? { base: 3, md: 4 } : 2 }/>
       { !isMobile && (
         <Center
-          boxSize={ isHomepage ? '24px' : '20px' }
-          mr={ isHomepage ? { base: 3, md: 4 } : 2 }
+          boxSize={ isHomepage ? '28px' : '20px' }
+          mr={ isHomepage ? { base: 4, md: 5 } : 2 }
           borderWidth="1px"
-          borderColor={ isHomepage ? { _light: 'gray.400', _dark: 'gray.500' } : 'gray.500' }
-          color={ isHomepage ? { _light: 'gray.500', _dark: 'gray.400' } : 'gray.500' }
-          borderRadius="sm"
-          fontSize={ isHomepage ? 'xs' : 'xs' }
+          borderColor={ isHomepage ? { _light: 'rgba(0, 0, 0, 0.1)', _dark: 'rgba(255, 255, 255, 0.15)' } : 'gray.500' }
+          color={ isHomepage ? { _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' } : 'gray.500' }
+          borderRadius="6px"
+          fontSize={ isHomepage ? '11px' : 'xs' }
+          fontWeight={ isHomepage ? 500 : 400 }
+          bg={ isHomepage ? { _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(255, 255, 255, 0.05)' } : 'transparent' }
         >
           /
         </Center>
@@ -128,7 +169,7 @@ const SearchBarInput = (
       onSubmit={ onSubmit }
       onBlur={ onBlur }
       w="100%"
-      backgroundColor={{ _light: 'white', _dark: 'black' }}
+      backgroundColor={ isHomepage ? 'transparent' : { _light: 'white', _dark: 'black' } }
       position={{ base: isHomepage ? 'static' : 'absolute', lg: 'relative' }}
       top={{ base: isHomepage ? 0 : 55, lg: 0 }}
       left="0"
@@ -152,34 +193,47 @@ const SearchBarInput = (
           placeholder={ isMobile ? 'Search by address / ... ' : 'Search by address / txn hash / block / token... ' }
           value={ value }
           onChange={ handleChange }
-          onFocus={ onFocus }
-          border={ isHomepage ? 'none' : '2px solid' }
-          borderColor={{ _light: 'blackAlpha.100', _dark: 'whiteAlpha.200' }}
+          onFocus={ handleInputFocus }
+          onBlur={ handleInputBlur }
+          border={ isHomepage ? '1px solid' : '2px solid' }
+          borderColor={ inputBorderColor }
           color={{ _light: 'black', _dark: 'white' }}
           bg={ isHomepage ?
-            { _light: 'whiteAlpha.95', _dark: 'blackAlpha.60' } :
+            { _light: 'white', _dark: 'rgba(0, 0, 0, 0.4)' } :
             undefined
           }
-          backdropFilter={ isHomepage ? 'blur(10px)' : 'none' }
-          fontSize={{ base: 'xs', md: 'xs', lg: isHomepage ? 'xs' : 'sm' }}
-          py={ isHomepage ? { base: 3, md: 3.5 } : undefined }
-          px={ isHomepage ? { base: 3, md: 4 } : undefined }
-          borderRadius={ isHomepage ? '0' : undefined }
-          boxShadow={ isHomepage ?
-            { _light: '0 4px 20px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05), 0 0 4px rgba(0, 150, 255, 0.8)', _dark: '0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 4px rgba(0, 150, 255, 0.9)' } :
-            undefined
-          }
-          _hover={{}}
-          _focusWithin={ isHomepage ?
-            {
-              outline: 'none',
-            } :
-            { outline: 'none' }
-          }
+          backdropFilter={ isHomepage ? 'blur(12px) saturate(180%)' : 'none' }
+          fontSize={{ base: 'xs', md: 'sm', lg: isHomepage ? 'sm' : 'sm' }}
+          py={ isHomepage ? { base: 4, md: 4.5 } : undefined }
+          px={ isHomepage ? { base: 4, md: 5 } : undefined }
+          borderRadius={ isHomepage ? '12px' : undefined }
+          boxShadow={ inputBoxShadow }
+          _hover={ isHomepage && !isFocused ? {
+            borderColor: { _light: 'rgba(0, 0, 0, 0.12)', _dark: 'rgba(255, 255, 255, 0.18)' },
+            boxShadow: {
+              _light: '0 4px 12px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.08)',
+              _dark: '0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.4)',
+            },
+          } : {} }
+          _focus={{
+            outline: 'none',
+          }}
+          _focusVisible={{
+            outline: 'none',
+          }}
+          _autofill={{
+            borderColor: isHomepage ? { _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(255, 255, 255, 0.12)' } : undefined,
+            boxShadow: isHomepage ? {
+              _light: '0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)',
+              _dark: '0 2px 8px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3)',
+            } : undefined,
+          }}
+          transition="all 0.15s ease"
           _placeholder={{
-            color: isHomepage ? { _light: 'gray.500', _dark: 'gray.400' } : undefined,
-            opacity: isHomepage ? 0.8 : undefined,
-            fontSize: isHomepage ? { base: 'xs', md: 'sm' } : undefined,
+            color: isHomepage ? { _light: 'rgba(0, 0, 0, 0.45)', _dark: 'rgba(255, 255, 255, 0.45)' } : undefined,
+            opacity: isHomepage ? 1 : undefined,
+            fontSize: isHomepage ? { base: 'sm', md: 'sm' } : undefined,
+            fontWeight: isHomepage ? 400 : undefined,
           }}
         />
       </InputGroup>

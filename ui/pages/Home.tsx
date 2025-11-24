@@ -29,124 +29,80 @@ const Home = () => {
   })();
 
   return (
-    <Box as="main" position="relative">
-      <HeroBanner/>
-      <Container maxW="container.xl" px={{ base: 4, lg: 6 }}>
-        <Box
-          position="relative"
-          mb={{ base: 6, lg: 8 }}
-        >
-          <Flex
-            flexDir={{ base: 'column', lg: 'row' }}
-            columnGap={{ base: 4, lg: 6 }}
-            rowGap={{ base: 4, lg: 6 }}
-            _empty={{ mt: 0 }}
-          >
-            <Box
-              flex={ 1 }
-              position="relative"
-              _before={{
-                content: '""',
-                position: 'absolute',
-                inset: 0,
-                padding: '1px',
-                background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 50%, rgba(79, 172, 254, 0.1) 100%)',
-                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                WebkitMaskComposite: 'xor',
-                maskComposite: 'exclude',
-                _dark: {
-                  background: 'linear-gradient(135deg, rgba(66, 153, 225, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(79, 172, 254, 0.15) 100%)',
-                },
-                pointerEvents: 'none',
-              }}
-            >
-              <Box
-                bg={{ _light: 'white', _dark: 'rgba(26, 32, 44, 0.6)' }}
-                backdropFilter="blur(10px)"
-                p={{ base: 4, lg: 6 }}
-              >
-                <Stats/>
-              </Box>
-            </Box>
-            <Box
-              flex={ 1 }
-              position="relative"
-              _before={{
-                content: '""',
-                position: 'absolute',
-                inset: 0,
-                padding: '1px',
-                background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 50%, rgba(79, 172, 254, 0.1) 100%)',
-                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                WebkitMaskComposite: 'xor',
-                maskComposite: 'exclude',
-                _dark: {
-                  background: 'linear-gradient(135deg, rgba(66, 153, 225, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(79, 172, 254, 0.15) 100%)',
-                },
-                pointerEvents: 'none',
-              }}
-            >
-              <Box
-                bg={{ _light: 'white', _dark: 'rgba(26, 32, 44, 0.6)' }}
-                backdropFilter="blur(10px)"
-                p={{ base: 4, lg: 6 }}
-              >
-                <ChainIndicators/>
-              </Box>
-            </Box>
-          </Flex>
-        </Box>
-        <AdBanner
-          mt={{ base: 6, lg: 8 }}
-          mx="auto"
-          display={{ base: 'flex', lg: 'none' }}
-          justifyContent="center"
-        />
-        <Flex
-          mt={{ base: 8, lg: 10 }}
-          direction={{ base: 'column', lg: 'row' }}
-          columnGap={{ base: 6, lg: 8 }}
-          rowGap={{ base: 6, lg: 8 }}
-        >
+    <Box
+      as="main"
+      position="relative"
+      bg={{ _light: '#ffffff', _dark: '#0a0a0a' }}
+      minH="100vh"
+    >
+      <Box position="relative" zIndex={ 1 }>
+        <HeroBanner/>
+        <Container maxW="container.xl" px={{ base: 4, lg: 6 }}>
           <Box
-            width={{ base: '100%', lg: '280px' }}
-            flexShrink={ 0 }
+            position="relative"
+            mb={{ base: 4, lg: 6 }}
+            mt={{ base: 4, lg: 6 }}
           >
+            <Flex
+              flexDir={{ base: 'column', lg: 'row' }}
+              columnGap={{ base: 4, lg: 6 }}
+              rowGap={{ base: 4, lg: 6 }}
+              _empty={{ mt: 0 }}
+            >
+              { /* Stats Panel - Flat design */ }
+              <Box
+                flex={ 1 }
+                position="relative"
+              >
+                <Box p={{ base: 4, lg: 6 }}>
+                  <Stats/>
+                </Box>
+              </Box>
+
+              { /* Chain Indicators Panel */ }
+              <Box
+                flex={ 1 }
+                position="relative"
+              >
+                <Box p={{ base: 4, lg: 6 }}>
+                  <ChainIndicators/>
+                </Box>
+              </Box>
+            </Flex>
+          </Box>
+
+          <AdBanner
+            mt={{ base: 6, lg: 8 }}
+            mx="auto"
+            display={{ base: 'flex', lg: 'none' }}
+            justifyContent="center"
+          />
+
+          <Flex
+            mt={{ base: 8, lg: 10 }}
+            direction={{ base: 'column', lg: 'row' }}
+            columnGap={{ base: 6, lg: 8 }}
+            rowGap={{ base: 6, lg: 8 }}
+          >
+            { /* Latest Blocks Sidebar */ }
             <Box
-              bg={{ _light: 'white', _dark: 'rgba(26, 32, 44, 0.6)' }}
-              backdropFilter="blur(10px)"
+              width={{ base: '100%', lg: '320px' }}
+              flexShrink={ 0 }
               height="fit-content"
             >
               { leftWidget }
             </Box>
-          </Box>
-          <Box
-            flexGrow={ 1 }
-            position="relative"
-            _before={{
-              content: '""',
-              position: 'absolute',
-              inset: 0,
-              padding: '1px',
-              background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 50%, rgba(79, 172, 254, 0.1) 100%)',
-              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-              WebkitMaskComposite: 'xor',
-              maskComposite: 'exclude',
-              _dark: {
-                background: 'linear-gradient(135deg, rgba(66, 153, 225, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(79, 172, 254, 0.15) 100%)',
-              },
-              pointerEvents: 'none',
-            }}
-          >
+
+            { /* Transactions Panel */ }
             <Box
-              bg={{ _light: 'white', _dark: 'rgba(26, 32, 44, 0.6)' }}
-              backdropFilter="blur(10px)"
+              flexGrow={ 1 }
+              position="relative"
             >
               <Transactions/>
             </Box>
-          </Box>
-        </Flex>
-      </Container>
+          </Flex>
+        </Container>
+      </Box>
     </Box>
   );
 };

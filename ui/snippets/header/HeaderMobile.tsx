@@ -26,7 +26,7 @@ const HeaderMobile = ({ hideSearchBar, renderSearchBar }: Props) => {
   return (
     <Box
       ref={ ref }
-      bgColor={{ _light: 'white', _dark: 'black' }}
+      bgColor={{ _light: 'white', _dark: '#0a0a0a' }}
       display={{ base: 'block', lg: 'none' }}
       position="sticky"
       top="-1px"
@@ -39,7 +39,7 @@ const HeaderMobile = ({ hideSearchBar, renderSearchBar }: Props) => {
         as="header"
         paddingX={ 3 }
         paddingY={ 2 }
-        bgColor={{ _light: 'white', _dark: 'black' }}
+        bgColor={{ _light: 'white', _dark: '#0a0a0a' }}
         width="100%"
         alignItems="center"
         transitionProperty="box-shadow"

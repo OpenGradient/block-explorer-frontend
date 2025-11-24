@@ -26,11 +26,11 @@ const NavigationDesktop = () => {
       borderColor={{ _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(255, 255, 255, 0.12)' }}
       bgColor={{
         _light: 'linear-gradient(180deg, #ffffff 0%, #fafbfc 100%)',
-        _dark: 'linear-gradient(180deg, #0f0f0f 0%, #0a0a0a 100%)',
+        _dark: '#0a0a0a',
       }}
       backgroundImage={{
         _light: 'linear-gradient(180deg, #ffffff 0%, #fafbfc 100%)',
-        _dark: 'linear-gradient(180deg, #0f0f0f 0%, #0a0a0a 100%)',
+        _dark: '#0a0a0a',
       }}
       px={ 6 }
       py={ 10 }

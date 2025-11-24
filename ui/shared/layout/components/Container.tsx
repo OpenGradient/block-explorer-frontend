@@ -12,7 +12,7 @@ const Container = ({ children, className }: Props) => {
       className={ className }
       minWidth={{ base: '100vw', lg: 'fit-content' }}
       m="0 auto"
-      bgColor={{ _light: 'white', _dark: 'black' }}
+      bgColor={{ _light: 'white', _dark: '#0a0a0a' }}
     >
       { children }
     </Box>
