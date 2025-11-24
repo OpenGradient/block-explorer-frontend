@@ -106,21 +106,6 @@ const Footer = () => {
           OpenGradient is an end-to-end decentralized infrastructure network
           for AI model hosting, secure execution, agentic reasoning, and application deployment.
         </Text>
-        { /* <Box mt={ 6 } alignItems="start" textStyle="xs">
-          { apiVersionUrl && (
-            <Text>
-              Backend: <Link href={ apiVersionUrl } target="_blank">{ backendVersionData?.backend_version }</Link>
-            </Text>
-          ) }
-          { frontendLink && (
-            <Text>
-              Frontend: { frontendLink }
-            </Text>
-          ) }
-          <Text>
-            Copyright { copy } Blockscout Limited 2023-{ (new Date()).getFullYear() }
-          </Text>
-        </Box> */ }
       </Box>
     );
   }, []);
