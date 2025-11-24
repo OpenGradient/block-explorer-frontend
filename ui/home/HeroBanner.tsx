@@ -64,6 +64,18 @@ const HeroBanner = () => {
     return null;
   }, [ statsQuery.data, apiQuery.data ]);
 
+  const totalAccounts = React.useMemo(() => {
+    const statsData = statsQuery.data;
+    const apiData = apiQuery.data;
+    if (statsData?.total_addresses?.value) {
+      return Number(statsData.total_addresses.value);
+    }
+    if (apiData?.total_addresses) {
+      return Number(apiData.total_addresses);
+    }
+    return null;
+  }, [ statsQuery.data, apiQuery.data ]);
+
   const activeWorkflowsCount = React.useMemo(() => {
     const tasks = workflowsQuery.data ?? [];
     const now = BigInt(Math.floor(Date.now() / 1000));
@@ -72,8 +84,8 @@ const HeroBanner = () => {
 
   const formatNumber = (num: number | null): string => {
     if (num === null) return '—';
-    if (num >= 1_000_000) return `${ (num / 1_000_000).toFixed(1) }M`;
-    if (num >= 1_000) return `${ (num / 1_000).toFixed(1) }K`;
+    if (num >= 1_000_000) return `${ (num / 1_000_000).toFixed(2) }M`;
+    if (num >= 1_000) return `${ (num / 1_000).toFixed(2) }K`;
     return num.toLocaleString();
   };
 
@@ -252,34 +264,52 @@ const HeroBanner = () => {
                   </Text>
                 </LinkBox>
 
-                { /* Inference Nodes */ }
-                <Box
+                { /* Accounts */ }
+                <LinkBox
                   p={ 5 }
                   borderBottom="1px solid"
                   borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(64, 209, 219, 0.1)' }}
+                  transition="opacity 0.2s ease"
+                  _hover={{ opacity: 0.7 }}
                 >
-                  <Text
-                    fontSize="10px"
-                    fontWeight={ 500 }
-                    letterSpacing="0.08em"
-                    textTransform="uppercase"
-                    color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-                    fontFamily="system-ui, -apple-system, sans-serif"
+                  <LinkOverlay
+                    href={ route({ pathname: '/accounts' }) }
+                    noIcon
+                  />
+                  <Flex
+                    alignItems="center"
+                    gap={ 1.5 }
                     mb={ 2 }
                   >
-                    Inference Nodes
-                  </Text>
-                  <Text
-                    fontSize="32px"
-                    fontWeight={ 200 }
-                    letterSpacing="-0.02em"
-                    color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                    fontFamily="system-ui, -apple-system, sans-serif"
-                    lineHeight="1"
-                  >
-                    16
-                  </Text>
-                </Box>
+                    <Text
+                      fontSize="10px"
+                      fontWeight={ 500 }
+                      letterSpacing="0.08em"
+                      textTransform="uppercase"
+                      color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+                      fontFamily="system-ui, -apple-system, sans-serif"
+                    >
+                      Accounts
+                    </Text>
+                    <IconSvg
+                      name="link"
+                      boxSize={ 3 }
+                      color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+                    />
+                  </Flex>
+                  <Skeleton loading={ statsQuery.isPlaceholderData || apiQuery.isPlaceholderData } w="fit-content">
+                    <Text
+                      fontSize="32px"
+                      fontWeight={ 200 }
+                      letterSpacing="-0.02em"
+                      color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
+                      fontFamily="system-ui, -apple-system, sans-serif"
+                      lineHeight="1"
+                    >
+                      { formatNumber(totalAccounts) }
+                    </Text>
+                  </Skeleton>
+                </LinkBox>
 
                 { /* Transactions */ }
                 <LinkBox
