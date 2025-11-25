@@ -1,14 +1,16 @@
 import type { HTMLChakraProps } from '@chakra-ui/react';
-import { chakra, Center } from '@chakra-ui/react';
+import { chakra } from '@chakra-ui/react';
 import { throttle } from 'es-toolkit';
 import React from 'react';
-import type { ChangeEvent, FormEvent, FocusEvent } from 'react';
+import type { ChangeEvent, FormEvent, FocusEvent, MouseEvent } from 'react';
 
 import { useScrollDirection } from 'lib/contexts/scrollDirection';
 import useIsMobile from 'lib/hooks/useIsMobile';
+import { IconButton } from 'toolkit/chakra/icon-button';
 import { Input } from 'toolkit/chakra/input';
 import { InputGroup } from 'toolkit/chakra/input-group';
 import ClearButton from 'ui/shared/ClearButton';
+import IconSvg from 'ui/shared/IconSvg';
 interface Props extends Omit<HTMLChakraProps<'form'>, 'onChange'> {
   onChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -59,6 +61,30 @@ const SearchBarInput = (
   const handleInputBlur = React.useCallback(() => {
     setIsFocused(false);
   }, []);
+
+  const handleSearchButtonClick = React.useCallback((event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (innerRef.current) {
+      const syntheticEvent = {
+        preventDefault: () => {},
+        stopPropagation: () => {},
+        isDefaultPrevented: () => false,
+        isPropagationStopped: () => false,
+        persist: () => {},
+        nativeEvent: event.nativeEvent,
+        currentTarget: innerRef.current,
+        target: innerRef.current,
+        bubbles: true,
+        cancelable: true,
+        defaultPrevented: false,
+        eventPhase: 0,
+        isTrusted: false,
+        timeStamp: Date.now(),
+        type: 'submit',
+      } as FormEvent<HTMLFormElement>;
+      onSubmit(syntheticEvent);
+    }
+  }, [ onSubmit ]);
 
   React.useEffect(() => {
     if (!isMobile) {
@@ -115,7 +141,7 @@ const SearchBarInput = (
       return { _light: 'blackAlpha.100', _dark: 'whiteAlpha.200' };
     }
     if (isFocused) {
-      return { _light: 'rgba(64, 209, 219, 0.5)', _dark: 'rgba(64, 209, 219, 0.6)' };
+      return { _light: 'rgba(64, 209, 219, 0.8)', _dark: 'rgba(64, 209, 219, 0.9)' };
     }
     return { _light: 'rgba(0, 0, 0, 0.1)', _dark: 'rgba(255, 255, 255, 0.15)' };
   };
@@ -126,8 +152,8 @@ const SearchBarInput = (
     }
     if (isFocused) {
       return {
-        _light: '0 4px 20px rgba(64, 209, 219, 0.12), 0 0 0 3px rgba(64, 209, 219, 0.08)',
-        _dark: '0 4px 20px rgba(64, 209, 219, 0.2), 0 0 0 3px rgba(64, 209, 219, 0.12)',
+        _light: '0 4px 20px rgba(64, 209, 219, 0.15), 0 0 0 1px rgba(64, 209, 219, 0.4), 0 0 12px rgba(64, 209, 219, 0.3)',
+        _dark: '0 4px 20px rgba(64, 209, 219, 0.25), 0 0 0 1px rgba(64, 209, 219, 0.5), 0 0 16px rgba(64, 209, 219, 0.4)',
       };
     }
     return {
@@ -144,21 +170,20 @@ const SearchBarInput = (
   const endElement = (
     <>
       <ClearButton onClick={ onClear } isVisible={ value.length > 0 } mx={ isHomepage ? { base: 3, md: 4 } : 2 }/>
-      { !isMobile && (
-        <Center
-          boxSize={ isHomepage ? '28px' : '20px' }
-          mr={ isHomepage ? { base: 4, md: 5 } : 2 }
-          borderWidth="1px"
-          borderColor={ isHomepage ? { _light: 'rgba(0, 0, 0, 0.1)', _dark: 'rgba(255, 255, 255, 0.15)' } : 'gray.500' }
-          color={ isHomepage ? { _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' } : 'gray.500' }
-          borderRadius="6px"
-          fontSize={ isHomepage ? '11px' : 'xs' }
-          fontWeight={ isHomepage ? 500 : 400 }
-          bg={ isHomepage ? { _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(255, 255, 255, 0.05)' } : 'transparent' }
-        >
-          /
-        </Center>
-      ) }
+      <IconButton
+        aria-label="Search"
+        onClick={ handleSearchButtonClick }
+        type="submit"
+        variant="plain"
+        color={{ _light: 'rgba(64, 209, 219, 1)', _dark: 'rgba(64, 209, 219, 1)' }}
+        _hover={{
+          color: { _light: 'rgba(64, 209, 219, 0.8)', _dark: 'rgba(64, 209, 219, 0.8)' },
+        }}
+        mr={ isHomepage ? { base: 3, md: 4 } : 2 }
+        boxSize={ isHomepage ? { base: 6, md: 7 } : 6 }
+      >
+        <IconSvg name="search" boxSize={ isHomepage ? { base: 5, md: 6 } : 5 }/>
+      </IconButton>
     </>
   );
 
@@ -199,12 +224,21 @@ const SearchBarInput = (
           borderColor={ inputBorderColor }
           color={{ _light: 'black', _dark: 'white' }}
           bg={ isHomepage ?
-            { _light: 'rgba(255, 255, 255, 0.95)', _dark: 'rgba(255, 255, 255, 0.08)' } :
+            { _light: 'rgba(255, 255, 255, 0.7)', _dark: 'rgba(255, 255, 255, 0.05)' } :
             undefined
           }
-          backdropFilter={ isHomepage ? 'blur(16px) saturate(180%)' : 'none' }
+          backdropFilter={ isHomepage ? 'blur(20px) saturate(180%)' : 'none' }
+          _focus={{
+            outline: 'none',
+            bg: isHomepage ? {
+              _light: 'rgba(255, 255, 255, 0.75)',
+              _dark: 'rgba(255, 255, 255, 0.08)',
+            } : undefined,
+            backdropFilter: isHomepage ? 'blur(24px) saturate(180%)' : undefined,
+          }}
           fontSize={{ base: 'xs', md: 'sm', lg: isHomepage ? 'sm' : 'sm' }}
-          py={ isHomepage ? { base: 4, md: 4.5 } : undefined }
+          h={ isHomepage ? { base: '50px', md: '56px' } : '50px' }
+          py={ isHomepage ? { base: 4, md: 4.5 } : { base: 3, md: 3.5 } }
           px={ isHomepage ? { base: 4, md: 5 } : undefined }
           borderRadius={ isHomepage ? '12px' : undefined }
           boxShadow={ inputBoxShadow }
@@ -215,9 +249,6 @@ const SearchBarInput = (
               _dark: '0 2px 8px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.45)',
             },
           } : {} }
-          _focus={{
-            outline: 'none',
-          }}
           _focusVisible={{
             outline: 'none',
           }}
