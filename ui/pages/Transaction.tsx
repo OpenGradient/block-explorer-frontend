@@ -1,3 +1,4 @@
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -11,13 +12,14 @@ import throwOnResourceLoadError from 'lib/errors/throwOnResourceLoadError';
 import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import { publicClient } from 'lib/web3/client';
+import { Skeleton } from 'toolkit/chakra/skeleton';
 import RoutedTabs from 'toolkit/components/RoutedTabs/RoutedTabs';
 import RoutedTabsSkeleton from 'toolkit/components/RoutedTabs/RoutedTabsSkeleton';
 import useActiveTabFromQuery from 'toolkit/components/RoutedTabs/useActiveTabFromQuery';
 import TextAd from 'ui/shared/ad/TextAd';
 import isCustomAppError from 'ui/shared/AppError/isCustomAppError';
+import ButtonBackTo from 'ui/shared/buttons/ButtonBackTo';
 import EntityTags from 'ui/shared/EntityTags/EntityTags';
-import PageTitle from 'ui/shared/Page/PageTitle';
 import TxAssetFlows from 'ui/tx/TxAssetFlows';
 import TxAuthorizations from 'ui/tx/TxAuthorizations';
 import TxBlobs from 'ui/tx/TxBlobs';
@@ -120,8 +122,6 @@ const TransactionPageContent = () => {
     };
   }, [ appProps.referrer ]);
 
-  const titleSecondRow = <TxSubHeading hash={ hash } hasTag={ Boolean(data?.transaction_tag) } txQuery={ txQuery }/>;
-
   const content = (() => {
     if (isPlaceholderData && !showDegradedView) {
       return (
@@ -142,16 +142,73 @@ const TransactionPageContent = () => {
   }
 
   return (
-    <>
-      <TextAd mb={ 6 }/>
-      <PageTitle
-        title="Transaction details"
-        backLink={ backLink }
-        contentAfter={ tags }
-        secondRow={ titleSecondRow }
-      />
-      { content }
-    </>
+    <Box
+      as="main"
+      position="relative"
+      bg={{ _light: '#ffffff', _dark: '#0a0a0a' }}
+      minH="100vh"
+    >
+      <Box
+        position="relative"
+        zIndex={ 1 }
+        maxW={{ base: '100%', xl: '1600px' }}
+        mx="auto"
+        px={{ base: 4, lg: 8, xl: 12 }}
+        pt={{ base: 6, lg: 8 }}
+        pb={{ base: 4, lg: 6 }}
+      >
+        <TextAd mb={ 6 }/>
+        { /* Custom Header matching HeroBanner style */ }
+        <Box mb={ 6 }>
+          <Flex
+            flexDir="row"
+            flexWrap="wrap"
+            rowGap={ 3 }
+            columnGap={ 3 }
+            alignItems="flex-start"
+            mb={ 4 }
+          >
+            { backLink && (
+              <ButtonBackTo
+                hint={ backLink.label }
+                href={ backLink.url }
+                mr={ 3 }
+              />
+            ) }
+            <Box flex="1" minW={ 0 }>
+              <Text
+                fontSize={{ base: '30px', md: '44px', lg: '50px', xl: '56px' }}
+                fontWeight={ 200 }
+                letterSpacing="-0.04em"
+                lineHeight="0.95"
+                color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
+                fontFamily="system-ui, -apple-system, sans-serif"
+                mb={ 6 }
+              >
+                Transaction details
+              </Text>
+              <Skeleton loading={ isPlaceholderData }>
+                <Box
+                  fontSize={{ base: '14px', md: '16px' }}
+                  fontWeight={ 400 }
+                  letterSpacing="0.02em"
+                  color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                >
+                  <TxSubHeading hash={ hash } hasTag={ Boolean(data?.transaction_tag) } txQuery={ txQuery }/>
+                </Box>
+              </Skeleton>
+            </Box>
+            { tags && (
+              <Box flexShrink={ 0 }>
+                { tags }
+              </Box>
+            ) }
+          </Flex>
+        </Box>
+        { content }
+      </Box>
+    </Box>
   );
 };
 

@@ -72,7 +72,13 @@ const PageTitle = ({ title, contentAfter, withTextAd, backLink, className, isLoa
   }, [ tooltip ]);
 
   return (
-    <Flex className={ className } flexDir="column" rowGap={ 3 } mb={ 6 }>
+    <Flex
+      className={ className }
+      flexDir="column"
+      rowGap={ 3 }
+      mb={ 6 }
+      mt={{ base: 1, lg: 2 }}
+    >
       <Flex
         flexDir="row"
         flexWrap="wrap"
@@ -118,6 +124,12 @@ const PageTitle = ({ title, contentAfter, withTextAd, backLink, className, isLoa
                 onMouseEnter={ tooltip.onOpen }
                 onMouseLeave={ tooltip.onClose }
                 onClick={ isMobile ? tooltip.onToggle : undefined }
+                fontSize={{ base: '30px', md: '40px', lg: '44px', xl: '46px' }}
+                fontWeight={ 200 }
+                letterSpacing="-0.04em"
+                lineHeight="1"
+                color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
+                fontFamily="system-ui, -apple-system, sans-serif"
               >
                 <span ref={ textRef }>
                   { title }

@@ -7,12 +7,15 @@ import config from 'configs/app';
 import useApiQuery from 'lib/api/useApiQuery';
 import { NOVES_TRANSLATE } from 'stubs/noves/NovesTranslate';
 import { TX_INTERPRETATION } from 'stubs/txInterpretation';
+import { Badge } from 'toolkit/chakra/badge';
 import { Link } from 'toolkit/chakra/link';
+import { Skeleton } from 'toolkit/chakra/skeleton';
 import AccountActionsMenu from 'ui/shared/AccountActionsMenu/AccountActionsMenu';
 import AppActionButton from 'ui/shared/AppActionButton/AppActionButton';
 import useAppActionData from 'ui/shared/AppActionButton/useAppActionData';
+import CopyToClipboard from 'ui/shared/CopyToClipboard';
 import { TX_ACTIONS_BLOCK_ID } from 'ui/shared/DetailedInfo/DetailedInfoActionsWrapper';
-import TxEntity from 'ui/shared/entities/tx/TxEntity';
+import HashStringShortenDynamic from 'ui/shared/HashStringShortenDynamic';
 import NetworkExplorers from 'ui/shared/NetworkExplorers';
 import TxInterpretation from 'ui/shared/tx/interpretation/TxInterpretation';
 
@@ -118,7 +121,43 @@ const TxSubHeading = ({ hash, hasTag, txQuery }: Props) => {
         />
       );
     } else {
-      return <TxEntity hash={ hash } noLink noCopy={ false } variant="subheading" mr={{ base: 0, lg: 2 }}/>;
+      return (
+        <Flex
+          alignItems="center"
+          gap={ 2.5 }
+          fontFamily="system-ui, -apple-system, sans-serif"
+        >
+          <Skeleton loading={ txQuery.isPlaceholderData }>
+            <Flex
+              alignItems="center"
+              gap={ 2 }
+            >
+              <Badge
+                colorPalette="gray"
+                fontSize={{ base: '13px', md: '14px' }}
+                fontWeight={ 500 }
+                px={ 3 }
+                py={ 1.5 }
+                fontFamily="mono"
+                letterSpacing="0.02em"
+                bgGradient={{
+                  _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
+                  _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.16) 100%)',
+                }}
+                border="1px solid"
+                borderColor={{
+                  _light: 'rgba(30, 58, 138, 0.15)',
+                  _dark: 'rgba(148, 163, 184, 0.2)',
+                }}
+                color={{ _light: 'rgba(30, 58, 138, 0.95)', _dark: 'rgba(255, 255, 255, 0.95)' }}
+              >
+                <HashStringShortenDynamic hash={ hash }/>
+              </Badge>
+              <CopyToClipboard text={ hash } isLoading={ txQuery.isPlaceholderData }/>
+            </Flex>
+          </Skeleton>
+        </Flex>
+      );
     }
   })();
 
@@ -128,20 +167,26 @@ const TxSubHeading = ({ hash, hasTag, txQuery }: Props) => {
     (hasInternalInterpretation && txInterpretationQuery.isPlaceholderData);
 
   return (
-    <Box display={{ base: 'block', lg: 'flex' }} alignItems="center" w="100%">
-      { content }
+    <Box display={{ base: 'block', lg: 'flex' }} alignItems="center" w="100%" gap={ 4 }>
+      <Box
+        flex="1"
+        minW={ 0 }
+        fontFamily="system-ui, -apple-system, sans-serif"
+      >
+        { content }
+      </Box>
       <Flex
         alignItems="center"
-        justifyContent={{ base: 'start', lg: 'space-between' }}
-        flexGrow={ 1 }
+        justifyContent={{ base: 'start', lg: 'flex-end' }}
         gap={ 3 }
         mt={{ base: 3, lg: 0 }}
+        flexShrink={ 0 }
       >
         { !hasTag && <AccountActionsMenu isLoading={ isLoading }/> }
         { appActionData && (
           <AppActionButton data={ appActionData } txHash={ hash } source="Txn"/>
         ) }
-        <NetworkExplorers type="tx" pathParam={ hash } ml={{ base: 0, lg: 'auto' }}/>
+        <NetworkExplorers type="tx" pathParam={ hash }/>
       </Flex>
     </Box>
   );

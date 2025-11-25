@@ -20,6 +20,7 @@ import config from 'configs/app';
 import useApiQuery from 'lib/api/useApiQuery';
 import { WEI, WEI_IN_GWEI } from 'lib/consts';
 import useIsMobile from 'lib/hooks/useIsMobile';
+import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
 import getNetworkValidatorTitle from 'lib/networks/getNetworkValidatorTitle';
 import * as arbitrum from 'lib/rollups/arbitrum';
 import getConfirmationDuration from 'lib/tx/getConfirmationDuration';
@@ -29,6 +30,7 @@ import { CollapsibleDetails } from 'toolkit/chakra/collapsible';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { Tooltip } from 'toolkit/chakra/tooltip';
+import useInferenceType from 'ui/home/useInferenceType';
 import CopyToClipboard from 'ui/shared/CopyToClipboard';
 import CurrencyValue from 'ui/shared/CurrencyValue';
 import * as DetailedInfo from 'ui/shared/DetailedInfo/DetailedInfo';
@@ -97,6 +99,9 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
   const showAssociatedL1Tx = React.useCallback(() => {
     setIsExpanded(true);
   }, []);
+
+  const hasInference = data?.to?.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub;
+  const inferenceInfo = useInferenceType(data, isLoading);
 
   if (!data) {
     return null;
@@ -190,15 +195,32 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
         }
       </DetailedInfo.ItemLabel>
       <DetailedInfo.ItemValue>
-        <TxStatus status={ data.status } errorText={ data.status === 'error' ? data.result : undefined } isLoading={ isLoading }/>
-        { data.method && (
-          <Badge colorPalette={ data.method === 'Multicall' ? 'teal' : 'gray' } loading={ isLoading } truncated ml={ 3 }>
-            { data.method }
-          </Badge>
-        ) }
+        <Flex alignItems="center" flexWrap="wrap" gap={ 2 }>
+          <TxStatus status={ data.status } errorText={ data.status === 'error' ? data.result : undefined } isLoading={ isLoading }/>
+          { data.method && (
+            <Badge colorPalette={ data.method === 'Multicall' ? 'teal' : 'gray' } loading={ isLoading } truncated>
+              { data.method }
+            </Badge>
+          ) }
+          { hasInference && (
+            <Badge
+              colorPalette="purple"
+              loading={ isLoading }
+              fontSize="10px"
+              fontWeight={ 500 }
+              px={ 2 }
+              py={ 0.5 }
+              minH="6"
+              fontFamily="system-ui, -apple-system, sans-serif"
+              letterSpacing="0.02em"
+            >
+              { inferenceInfo?.type || 'AI Inference' }
+            </Badge>
+          ) }
+        </Flex>
         { data.arbitrum?.contains_message && (
-          <Skeleton loading={ isLoading } onClick={ showAssociatedL1Tx }>
-            <Link truncate ml={ 3 }>
+          <Skeleton loading={ isLoading } onClick={ showAssociatedL1Tx } mt={ 2 }>
+            <Link truncate>
               { data.arbitrum?.contains_message === 'incoming' ? 'Incoming message' : 'Outgoing message' }
             </Link>
           </Skeleton>
