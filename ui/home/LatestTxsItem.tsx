@@ -137,7 +137,7 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
                 color={{ _light: 'rgba(0, 0, 0, 0.35)', _dark: 'rgba(255, 255, 255, 0.35)' }}
                 fontFamily="system-ui, -apple-system, sans-serif"
               >
-                AI Inference
+                Inference
               </Text>
               { inferenceInfo ? (
                 <>
@@ -195,7 +195,7 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
                   fontFamily="system-ui, -apple-system, sans-serif"
                   letterSpacing="0.02em"
                 >
-                  AI Inference
+                  Inference
                 </Badge>
               ) }
             </VStack>
@@ -209,7 +209,7 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
                 color={{ _light: 'rgba(0, 0, 0, 0.35)', _dark: 'rgba(255, 255, 255, 0.35)' }}
                 fontFamily="system-ui, -apple-system, sans-serif"
               >
-                AI Inference
+                Inference
               </Text>
               <Text
                 fontSize="12px"

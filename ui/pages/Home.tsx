@@ -36,7 +36,7 @@ const Home = () => {
     >
       <Box position="relative" zIndex={ 1 }>
         <HeroBanner/>
-        <Container maxW="container.xl" px={{ base: 4, lg: 4 }}>
+        <Container maxW="container.xl" px={{ base: 2, lg: 2 }}>
           <AdBanner
             mt={{ base: 6, lg: 8 }}
             mx="auto"
@@ -56,7 +56,7 @@ const Home = () => {
               flexShrink={ 0 }
               height="fit-content"
             >
-              <Box mb={{ base: 6, lg: 8 }}>
+              <Box mb={{ base: 5, lg: 6 }}>
                 <ChainIndicators/>
               </Box>
               { leftWidget }
