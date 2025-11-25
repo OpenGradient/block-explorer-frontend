@@ -283,7 +283,7 @@ const HeroBanner = () => {
                     fontFamily="system-ui, -apple-system, sans-serif"
                     lineHeight="1"
                   >
-                    435
+                    486
                   </Text>
                 </LinkBox>
 

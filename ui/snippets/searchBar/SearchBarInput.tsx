@@ -213,7 +213,7 @@ const SearchBarInput = (
           onBlur={ handleInputBlur }
           border={ isHomepage ? '1px solid' : '2px solid' }
           borderColor={ isHomepage ?
-            { _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(255, 255, 255, 0.1)' } :
+            { _light: 'rgba(0, 0, 0, 0.15)', _dark: 'rgba(255, 255, 255, 0.18)' } :
             inputBorderColor
           }
           color={{ _light: 'black', _dark: 'white' }}
@@ -230,8 +230,8 @@ const SearchBarInput = (
             } : undefined,
             backdropFilter: 'none',
             borderColor: isHomepage ? {
-              _light: 'rgba(0, 0, 0, 0.12)',
-              _dark: 'rgba(255, 255, 255, 0.15)',
+              _light: 'rgba(0, 0, 0, 0.2)',
+              _dark: 'rgba(255, 255, 255, 0.25)',
             } : undefined,
           }}
           fontSize={{ base: 'xs', md: 'sm', lg: isHomepage ? 'sm' : 'sm' }}
@@ -241,7 +241,7 @@ const SearchBarInput = (
           borderRadius={ isHomepage ? '12px' : undefined }
           boxShadow={ inputBoxShadow }
           _hover={ isHomepage && !isFocused ? {
-            borderColor: { _light: 'rgba(0, 0, 0, 0.1)', _dark: 'rgba(255, 255, 255, 0.12)' },
+            borderColor: { _light: 'rgba(0, 0, 0, 0.18)', _dark: 'rgba(255, 255, 255, 0.2)' },
             boxShadow: {
               _light: '0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1)',
               _dark: '0 2px 8px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.45)',
@@ -251,7 +251,7 @@ const SearchBarInput = (
             outline: 'none',
           }}
           _autofill={{
-            borderColor: isHomepage ? { _light: 'rgba(0, 0, 0, 0.1)', _dark: 'rgba(255, 255, 255, 0.15)' } : undefined,
+            borderColor: isHomepage ? { _light: 'rgba(0, 0, 0, 0.18)', _dark: 'rgba(255, 255, 255, 0.2)' } : undefined,
             boxShadow: isHomepage ? 'none' : undefined,
           }}
           transition="all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
