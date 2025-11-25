@@ -264,7 +264,7 @@ const HeroBanner = () => {
                       fontWeight={ 600 }
                       letterSpacing="0.08em"
                       textTransform="uppercase"
-                      color={{ _light: 'rgba(88, 28, 135, 0.7)', _dark: 'rgba(109, 40, 217, 0.8)' }}
+                      color={{ _light: 'rgba(88, 28, 135, 0.9)', _dark: 'rgba(167, 139, 250, 1)' }}
                       fontFamily="system-ui, -apple-system, sans-serif"
                     >
                       Models Hosted
@@ -272,7 +272,7 @@ const HeroBanner = () => {
                     <IconSvg
                       name="link_external"
                       boxSize={ 3 }
-                      color={{ _light: 'rgba(88, 28, 135, 0.75)', _dark: 'rgba(109, 40, 217, 0.85)' }}
+                      color={{ _light: 'rgba(88, 28, 135, 0.9)', _dark: 'rgba(167, 139, 250, 1)' }}
                     />
                   </Flex>
                   <Text
@@ -317,7 +317,7 @@ const HeroBanner = () => {
                       fontWeight={ 600 }
                       letterSpacing="0.08em"
                       textTransform="uppercase"
-                      color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
+                      color={{ _light: 'rgba(30, 58, 138, 0.9)', _dark: 'rgba(148, 163, 184, 1)' }}
                       fontFamily="system-ui, -apple-system, sans-serif"
                     >
                       Accounts
@@ -325,7 +325,7 @@ const HeroBanner = () => {
                     <IconSvg
                       name="profile"
                       boxSize={ 3 }
-                      color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
+                      color={{ _light: 'rgba(30, 58, 138, 0.9)', _dark: 'rgba(148, 163, 184, 1)' }}
                     />
                   </Flex>
                   <Skeleton loading={ statsQuery.isPlaceholderData || apiQuery.isPlaceholderData } w="fit-content">
@@ -372,7 +372,7 @@ const HeroBanner = () => {
                       fontWeight={ 600 }
                       letterSpacing="0.08em"
                       textTransform="uppercase"
-                      color={{ _light: 'rgba(6, 182, 212, 0.7)', _dark: 'rgba(14, 165, 233, 0.8)' }}
+                      color={{ _light: 'rgba(6, 182, 212, 0.9)', _dark: 'rgba(125, 211, 252, 1)' }}
                       fontFamily="system-ui, -apple-system, sans-serif"
                     >
                       AI Workflows
@@ -380,7 +380,7 @@ const HeroBanner = () => {
                     <IconSvg
                       name="opengradient/workflow"
                       boxSize={ 3 }
-                      color={{ _light: 'rgba(6, 182, 212, 0.75)', _dark: 'rgba(14, 165, 233, 0.85)' }}
+                      color={{ _light: 'rgba(6, 182, 212, 0.9)', _dark: 'rgba(125, 211, 252, 1)' }}
                     />
                   </Flex>
                   <Skeleton loading={ workflowsQuery.isPlaceholderData } w="fit-content">
@@ -427,7 +427,7 @@ const HeroBanner = () => {
                       fontWeight={ 600 }
                       letterSpacing="0.08em"
                       textTransform="uppercase"
-                      color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
+                      color={{ _light: 'rgba(30, 58, 138, 0.9)', _dark: 'rgba(148, 163, 184, 1)' }}
                       fontFamily="system-ui, -apple-system, sans-serif"
                     >
                       Transactions
@@ -435,7 +435,7 @@ const HeroBanner = () => {
                     <IconSvg
                       name="transactions_slim"
                       boxSize={ 3 }
-                      color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
+                      color={{ _light: 'rgba(30, 58, 138, 0.9)', _dark: 'rgba(148, 163, 184, 1)' }}
                     />
                   </Flex>
                   <Skeleton loading={ statsQuery.isPlaceholderData || apiQuery.isPlaceholderData } w="fit-content">
