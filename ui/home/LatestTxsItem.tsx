@@ -155,21 +155,6 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
                     >
                       { inferenceInfo.type || 'AI Inference' }
                     </Badge>
-                    { inferenceInfo.mode && inferenceInfo.mode !== 'UNKNOWN' && (
-                      <Badge
-                        colorPalette="blue"
-                        loading={ isLoading }
-                        fontSize="10px"
-                        fontWeight={ 500 }
-                        px={ 2 }
-                        py={ 0.5 }
-                        minH="6"
-                        fontFamily="system-ui, -apple-system, sans-serif"
-                        letterSpacing="0.02em"
-                      >
-                        { inferenceInfo.mode }
-                      </Badge>
-                    ) }
                   </HStack>
                   { inferenceInfo.modelCID && (
                     <Skeleton loading={ isLoading }>
