@@ -48,8 +48,6 @@ const LatestTransactions = () => {
           display={{ base: 'block', lg: 'none' }}
           width="100%"
           bg={{ _light: '#ffffff', _dark: '#0a0a0a' }}
-          border="1px solid"
-          borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(64, 209, 219, 0.1)' }}
           borderRadius="0"
           overflow="hidden"
         >
@@ -57,7 +55,7 @@ const LatestTransactions = () => {
             <Box
               key={ tx.hash + (isPlaceholderData ? index : '') }
               borderBottom={ index < txsCount - 1 ? '1px solid' : 'none' }
-              borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(64, 209, 219, 0.1)' }}
+              borderColor={{ _light: 'rgba(0, 0, 0, 0.1)', _dark: 'rgba(255, 255, 255, 0.1)' }}
             >
               <LatestTxsItemMobile
                 tx={ tx }
@@ -71,8 +69,6 @@ const LatestTransactions = () => {
             display={{ base: 'none', lg: 'block' }}
             width="100%"
             bg={{ _light: '#ffffff', _dark: '#0a0a0a' }}
-            border="1px solid"
-            borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(64, 209, 219, 0.1)' }}
             borderRadius="0"
             overflow="hidden"
             position="relative"
@@ -97,7 +93,7 @@ const LatestTransactions = () => {
                 <Box
                   key={ tx.hash + (isPlaceholderData ? index : '') }
                   borderBottom={ index < txsCount - 1 ? '1px solid' : 'none' }
-                  borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(64, 209, 219, 0.1)' }}
+                  borderColor={{ _light: 'rgba(0, 0, 0, 0.1)', _dark: 'rgba(255, 255, 255, 0.1)' }}
                 >
                   <LatestTxsItem
                     tx={ tx }
@@ -165,7 +161,7 @@ const LatestTransactions = () => {
           animation="pulseOpacity 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
         />
         <Text
-          fontSize="11px"
+          fontSize="13px"
           fontWeight={ 500 }
           letterSpacing="0.1em"
           textTransform="uppercase"

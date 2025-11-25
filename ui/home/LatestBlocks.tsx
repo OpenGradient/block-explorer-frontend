@@ -146,7 +146,7 @@ const LatestBlocks = () => {
         pb={ 5 }
       >
         <Text
-          fontSize="11px"
+          fontSize="13px"
           fontWeight={ 500 }
           letterSpacing="0.1em"
           textTransform="uppercase"
