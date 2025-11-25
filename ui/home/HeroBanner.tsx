@@ -207,7 +207,7 @@ const HeroBanner = () => {
                   color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
-                  Network Status
+                  Network Stats
                 </Text>
               </Flex>
 

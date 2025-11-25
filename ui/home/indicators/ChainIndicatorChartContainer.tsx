@@ -4,7 +4,6 @@ import React from 'react';
 import type { TimeChartData } from 'ui/shared/chart/types';
 
 import ContentLoader from 'ui/shared/ContentLoader';
-import DataFetchAlert from 'ui/shared/DataFetchAlert';
 
 import ChainIndicatorChartContent from './ChainIndicatorChartContent';
 
@@ -21,11 +20,11 @@ const ChainIndicatorChartContainer = ({ data, isError, isPending }: Props) => {
   }
 
   if (isError) {
-    return <DataFetchAlert fontSize="xs"/>;
+    return <chakra.span fontSize="xs">No historical data</chakra.span>;
   }
 
   if (data[0].items.length === 0) {
-    return <chakra.span fontSize="xs">no data</chakra.span>;
+    return <chakra.span fontSize="xs">No historical data</chakra.span>;
   }
 
   return (

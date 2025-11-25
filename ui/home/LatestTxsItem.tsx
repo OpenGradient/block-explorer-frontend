@@ -224,14 +224,14 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
                 color={{ _light: 'rgba(0, 0, 0, 0.35)', _dark: 'rgba(255, 255, 255, 0.35)' }}
                 fontFamily="system-ui, -apple-system, sans-serif"
               >
-                Type
+                AI Inference
               </Text>
               <Text
                 fontSize="12px"
                 color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
                 fontFamily="system-ui, -apple-system, sans-serif"
               >
-                —
+                No inference
               </Text>
             </VStack>
           ) }
