@@ -528,9 +528,11 @@ const featuredNetworkSchema: yup.ObjectSchema<FeaturedNetwork> = yup
   });
 
 const navItemExternalSchema: yup.ObjectSchema<NavItemExternal> = yup
-  .object({
+  .object()
+  .shape({
     text: yup.string().required(),
     url: yup.string().test(urlTest).required(),
+    icon: yup.string<IconName>(),
   });
 
 const fontFamilySchema: yup.ObjectSchema<FontFamily> = yup
