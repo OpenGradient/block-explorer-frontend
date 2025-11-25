@@ -22,8 +22,6 @@ const NavigationDesktop = () => {
       position="relative"
       flexDirection="column"
       alignItems="stretch"
-      borderRight="1px solid"
-      borderColor={{ _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(255, 255, 255, 0.12)' }}
       bgColor={{
         _light: 'linear-gradient(180deg, #ffffff 0%, #fafbfc 100%)',
         _dark: '#0a0a0a',
@@ -38,7 +36,6 @@ const NavigationDesktop = () => {
       minWidth="260px"
       maxWidth="260px"
       minH="100vh"
-      boxShadow={{ _light: 'inset -1px 0 0 rgba(0, 0, 0, 0.04)', _dark: 'inset -1px 0 0 rgba(255, 255, 255, 0.06)' }}
     >
       <Box
         as="header"

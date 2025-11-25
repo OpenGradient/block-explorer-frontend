@@ -222,14 +222,14 @@ const HeroBanner = () => {
                   p={ 5 }
                   position="relative"
                   bgGradient={{
-                    _light: 'linear-gradient(135deg, rgba(139, 92, 246, 0.04) 0%, rgba(167, 139, 250, 0.05) 100%)',
-                    _dark: 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(167, 139, 250, 0.1) 100%)',
+                    _light: 'linear-gradient(135deg, rgba(88, 28, 135, 0.04) 0%, rgba(109, 40, 217, 0.05) 100%)',
+                    _dark: 'linear-gradient(135deg, rgba(88, 28, 135, 0.08) 0%, rgba(109, 40, 217, 0.1) 100%)',
                   }}
                   transition="all 0.2s ease"
                   _hover={{
                     bgGradient: {
-                      _light: 'linear-gradient(135deg, rgba(139, 92, 246, 0.06) 0%, rgba(167, 139, 250, 0.08) 100%)',
-                      _dark: 'linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(167, 139, 250, 0.15) 100%)',
+                      _light: 'linear-gradient(135deg, rgba(88, 28, 135, 0.06) 0%, rgba(109, 40, 217, 0.08) 100%)',
+                      _dark: 'linear-gradient(135deg, rgba(88, 28, 135, 0.12) 0%, rgba(109, 40, 217, 0.15) 100%)',
                     },
                   }}
                 >
@@ -248,7 +248,7 @@ const HeroBanner = () => {
                       fontWeight={ 600 }
                       letterSpacing="0.08em"
                       textTransform="uppercase"
-                      color={{ _light: 'rgba(139, 92, 246, 0.7)', _dark: 'rgba(167, 139, 250, 0.8)' }}
+                      color={{ _light: 'rgba(88, 28, 135, 0.7)', _dark: 'rgba(109, 40, 217, 0.8)' }}
                       fontFamily="system-ui, -apple-system, sans-serif"
                     >
                       Models Hosted
@@ -256,7 +256,7 @@ const HeroBanner = () => {
                     <IconSvg
                       name="link_external"
                       boxSize={ 3 }
-                      color={{ _light: 'rgba(139, 92, 246, 0.75)', _dark: 'rgba(167, 139, 250, 0.85)' }}
+                      color={{ _light: 'rgba(88, 28, 135, 0.75)', _dark: 'rgba(109, 40, 217, 0.85)' }}
                     />
                   </Flex>
                   <Text
@@ -276,14 +276,14 @@ const HeroBanner = () => {
                   p={ 5 }
                   position="relative"
                   bgGradient={{
-                    _light: 'linear-gradient(135deg, rgba(34, 197, 94, 0.04) 0%, rgba(74, 222, 128, 0.05) 100%)',
-                    _dark: 'linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(74, 222, 128, 0.1) 100%)',
+                    _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
+                    _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
                   }}
                   transition="all 0.2s ease"
                   _hover={{
                     bgGradient: {
-                      _light: 'linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(74, 222, 128, 0.08) 100%)',
-                      _dark: 'linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(74, 222, 128, 0.15) 100%)',
+                      _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
+                      _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
                     },
                   }}
                 >
@@ -301,7 +301,7 @@ const HeroBanner = () => {
                       fontWeight={ 600 }
                       letterSpacing="0.08em"
                       textTransform="uppercase"
-                      color={{ _light: 'rgba(34, 197, 94, 0.7)', _dark: 'rgba(74, 222, 128, 0.8)' }}
+                      color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
                       fontFamily="system-ui, -apple-system, sans-serif"
                     >
                       Accounts
@@ -309,7 +309,7 @@ const HeroBanner = () => {
                     <IconSvg
                       name="profile"
                       boxSize={ 3 }
-                      color={{ _light: 'rgba(34, 197, 94, 0.75)', _dark: 'rgba(74, 222, 128, 0.85)' }}
+                      color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
                     />
                   </Flex>
                   <Skeleton loading={ statsQuery.isPlaceholderData || apiQuery.isPlaceholderData } w="fit-content">
@@ -326,74 +326,19 @@ const HeroBanner = () => {
                   </Skeleton>
                 </LinkBox>
 
-                { /* Transactions */ }
-                <LinkBox
-                  p={ 5 }
-                  position="relative"
-                  bgGradient={{
-                    _light: 'linear-gradient(135deg, rgba(251, 146, 60, 0.04) 0%, rgba(251, 191, 36, 0.05) 100%)',
-                    _dark: 'linear-gradient(135deg, rgba(251, 146, 60, 0.08) 0%, rgba(251, 191, 36, 0.1) 100%)',
-                  }}
-                  transition="all 0.2s ease"
-                  _hover={{
-                    bgGradient: {
-                      _light: 'linear-gradient(135deg, rgba(251, 146, 60, 0.06) 0%, rgba(251, 191, 36, 0.08) 100%)',
-                      _dark: 'linear-gradient(135deg, rgba(251, 146, 60, 0.12) 0%, rgba(251, 191, 36, 0.15) 100%)',
-                    },
-                  }}
-                >
-                  <LinkOverlay
-                    href={ route({ pathname: '/txs' }) }
-                    noIcon
-                  />
-                  <Flex
-                    alignItems="center"
-                    gap={ 1.5 }
-                    mb={ 2 }
-                  >
-                    <Text
-                      fontSize="10px"
-                      fontWeight={ 600 }
-                      letterSpacing="0.08em"
-                      textTransform="uppercase"
-                      color={{ _light: 'rgba(251, 146, 60, 0.7)', _dark: 'rgba(251, 191, 36, 0.8)' }}
-                      fontFamily="system-ui, -apple-system, sans-serif"
-                    >
-                      Transactions
-                    </Text>
-                    <IconSvg
-                      name="transactions_slim"
-                      boxSize={ 3 }
-                      color={{ _light: 'rgba(251, 146, 60, 0.75)', _dark: 'rgba(251, 191, 36, 0.85)' }}
-                    />
-                  </Flex>
-                  <Skeleton loading={ statsQuery.isPlaceholderData || apiQuery.isPlaceholderData } w="fit-content">
-                    <Text
-                      fontSize="32px"
-                      fontWeight={ 200 }
-                      letterSpacing="-0.02em"
-                      color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                      fontFamily="system-ui, -apple-system, sans-serif"
-                      lineHeight="1"
-                    >
-                      { formatNumber(totalTransactions) }
-                    </Text>
-                  </Skeleton>
-                </LinkBox>
-
                 { /* Active Workflows */ }
                 <LinkBox
                   p={ 5 }
                   position="relative"
                   bgGradient={{
-                    _light: 'linear-gradient(135deg, rgba(81, 120, 199, 0.05) 0%, rgba(107, 143, 212, 0.06) 100%)',
-                    _dark: 'linear-gradient(135deg, rgba(81, 120, 199, 0.1) 0%, rgba(107, 143, 212, 0.12) 100%)',
+                    _light: 'linear-gradient(135deg, rgba(6, 182, 212, 0.04) 0%, rgba(14, 165, 233, 0.05) 100%)',
+                    _dark: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(14, 165, 233, 0.1) 100%)',
                   }}
                   transition="all 0.2s ease"
                   _hover={{
                     bgGradient: {
-                      _light: 'linear-gradient(135deg, rgba(81, 120, 199, 0.08) 0%, rgba(107, 143, 212, 0.1) 100%)',
-                      _dark: 'linear-gradient(135deg, rgba(81, 120, 199, 0.15) 0%, rgba(107, 143, 212, 0.18) 100%)',
+                      _light: 'linear-gradient(135deg, rgba(6, 182, 212, 0.06) 0%, rgba(14, 165, 233, 0.08) 100%)',
+                      _dark: 'linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(14, 165, 233, 0.15) 100%)',
                     },
                   }}
                 >
@@ -411,7 +356,7 @@ const HeroBanner = () => {
                       fontWeight={ 600 }
                       letterSpacing="0.08em"
                       textTransform="uppercase"
-                      color={{ _light: 'rgba(81, 120, 199, 0.7)', _dark: 'rgba(107, 143, 212, 0.8)' }}
+                      color={{ _light: 'rgba(6, 182, 212, 0.7)', _dark: 'rgba(14, 165, 233, 0.8)' }}
                       fontFamily="system-ui, -apple-system, sans-serif"
                     >
                       AI Workflows
@@ -419,7 +364,7 @@ const HeroBanner = () => {
                     <IconSvg
                       name="opengradient/workflow"
                       boxSize={ 3 }
-                      color={{ _light: 'rgba(81, 120, 199, 0.75)', _dark: 'rgba(107, 143, 212, 0.85)' }}
+                      color={{ _light: 'rgba(6, 182, 212, 0.75)', _dark: 'rgba(14, 165, 233, 0.85)' }}
                     />
                   </Flex>
                   <Skeleton loading={ workflowsQuery.isPlaceholderData } w="fit-content">
@@ -432,6 +377,61 @@ const HeroBanner = () => {
                       lineHeight="1"
                     >
                       { activeWorkflowsCount.toLocaleString() }
+                    </Text>
+                  </Skeleton>
+                </LinkBox>
+
+                { /* Transactions */ }
+                <LinkBox
+                  p={ 5 }
+                  position="relative"
+                  bgGradient={{
+                    _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
+                    _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
+                  }}
+                  transition="all 0.2s ease"
+                  _hover={{
+                    bgGradient: {
+                      _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
+                      _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
+                    },
+                  }}
+                >
+                  <LinkOverlay
+                    href={ route({ pathname: '/txs' }) }
+                    noIcon
+                  />
+                  <Flex
+                    alignItems="center"
+                    gap={ 1.5 }
+                    mb={ 2 }
+                  >
+                    <Text
+                      fontSize="10px"
+                      fontWeight={ 600 }
+                      letterSpacing="0.08em"
+                      textTransform="uppercase"
+                      color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
+                      fontFamily="system-ui, -apple-system, sans-serif"
+                    >
+                      Transactions
+                    </Text>
+                    <IconSvg
+                      name="transactions_slim"
+                      boxSize={ 3 }
+                      color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
+                    />
+                  </Flex>
+                  <Skeleton loading={ statsQuery.isPlaceholderData || apiQuery.isPlaceholderData } w="fit-content">
+                    <Text
+                      fontSize="32px"
+                      fontWeight={ 200 }
+                      letterSpacing="-0.02em"
+                      color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
+                      fontFamily="system-ui, -apple-system, sans-serif"
+                      lineHeight="1"
+                    >
+                      { formatNumber(totalTransactions) }
                     </Text>
                   </Skeleton>
                 </LinkBox>
