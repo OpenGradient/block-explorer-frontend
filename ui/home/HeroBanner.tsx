@@ -97,7 +97,6 @@ const HeroBanner = () => {
       background={ backgroundValue }
       border="none"
       borderRadius="0"
-      borderBottom="1px solid"
       borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(64, 209, 219, 0.1)' }}
       minH={{ base: 'auto', lg: 'auto' }}
     >
@@ -126,7 +125,25 @@ const HeroBanner = () => {
         pt={{ base: 6, lg: 10, xl: 12 }}
         pb={{ base: 4, lg: 6, xl: 7 }}
       >
+        { /* Large diffuse radial gradient behind entire top section */ }
+        <Box
+          position="absolute"
+          top={{ base: '20px', lg: '40px' }}
+          left={{ base: '-100px', md: '-150px', lg: '-200px' }}
+          w={{ base: '400px', md: '500px', lg: '600px' }}
+          h={{ base: '400px', md: '500px', lg: '600px' }}
+          borderRadius="50%"
+          background={{
+            _light: 'radial-gradient(circle, rgba(8, 145, 178, 0.15) 0%, rgba(0, 0, 0, 0) 70%)',
+            _dark: 'radial-gradient(circle, rgba(103, 232, 249, 0.15) 0%, rgba(0, 0, 0, 0) 70%)',
+          }}
+          filter="blur(60px)"
+          pointerEvents="none"
+          zIndex={ 0 }
+        />
         <Grid
+          position="relative"
+          zIndex={ 1 }
           templateColumns={{ base: '1fr', lg: '1.2fr 0.8fr' }}
           gap={{ base: 8, lg: 16 }}
           alignItems="center"
@@ -154,10 +171,10 @@ const HeroBanner = () => {
                 letterSpacing="0.02em"
                 color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                 fontFamily="system-ui, -apple-system, sans-serif"
-                mt={ 4 }
+                mt={ 3 }
                 maxW="500px"
               >
-                Explore transactions, blocks, addresses, and AI workflows on the OpenGradient network.
+                Find transactions, blocks, addresses, models, and AI workflows on the OpenGradient network.
               </Text>
             </Box>
 
@@ -166,7 +183,6 @@ const HeroBanner = () => {
               w="100%"
               maxW={{ base: '100%', lg: '700px' }}
               position="relative"
-              mt={ 2 }
             >
               <SearchBar isHomepage/>
             </Box>

@@ -150,16 +150,7 @@ const SearchBarInput = (
     if (!isHomepage) {
       return undefined;
     }
-    if (isFocused) {
-      return {
-        _light: '0 4px 20px rgba(64, 209, 219, 0.15), 0 0 0 1px rgba(64, 209, 219, 0.4), 0 0 12px rgba(64, 209, 219, 0.3)',
-        _dark: '0 4px 20px rgba(64, 209, 219, 0.25), 0 0 0 1px rgba(64, 209, 219, 0.5), 0 0 16px rgba(64, 209, 219, 0.4)',
-      };
-    }
-    return {
-      _light: '0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.08)',
-      _dark: '0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4)',
-    };
+    return 'none';
   };
 
   const inputBorderColor = getInputBorderColor();
@@ -221,20 +212,27 @@ const SearchBarInput = (
           onFocus={ handleInputFocus }
           onBlur={ handleInputBlur }
           border={ isHomepage ? '1px solid' : '2px solid' }
-          borderColor={ inputBorderColor }
+          borderColor={ isHomepage ?
+            { _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(255, 255, 255, 0.1)' } :
+            inputBorderColor
+          }
           color={{ _light: 'black', _dark: 'white' }}
           bg={ isHomepage ?
-            { _light: 'rgba(255, 255, 255, 0.7)', _dark: 'rgba(255, 255, 255, 0.05)' } :
+            { _light: '#ffffff', _dark: '#0a0a0a' } :
             undefined
           }
-          backdropFilter={ isHomepage ? 'blur(20px) saturate(180%)' : 'none' }
+          backdropFilter="none"
           _focus={{
             outline: 'none',
             bg: isHomepage ? {
-              _light: 'rgba(255, 255, 255, 0.75)',
-              _dark: 'rgba(255, 255, 255, 0.08)',
+              _light: '#ffffff',
+              _dark: '#0a0a0a',
             } : undefined,
-            backdropFilter: isHomepage ? 'blur(24px) saturate(180%)' : undefined,
+            backdropFilter: 'none',
+            borderColor: isHomepage ? {
+              _light: 'rgba(0, 0, 0, 0.12)',
+              _dark: 'rgba(255, 255, 255, 0.15)',
+            } : undefined,
           }}
           fontSize={{ base: 'xs', md: 'sm', lg: isHomepage ? 'sm' : 'sm' }}
           h={ isHomepage ? { base: '50px', md: '56px' } : '50px' }
@@ -243,7 +241,7 @@ const SearchBarInput = (
           borderRadius={ isHomepage ? '12px' : undefined }
           boxShadow={ inputBoxShadow }
           _hover={ isHomepage && !isFocused ? {
-            borderColor: { _light: 'rgba(0, 0, 0, 0.14)', _dark: 'rgba(255, 255, 255, 0.2)' },
+            borderColor: { _light: 'rgba(0, 0, 0, 0.1)', _dark: 'rgba(255, 255, 255, 0.12)' },
             boxShadow: {
               _light: '0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1)',
               _dark: '0 2px 8px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.45)',
@@ -254,10 +252,7 @@ const SearchBarInput = (
           }}
           _autofill={{
             borderColor: isHomepage ? { _light: 'rgba(0, 0, 0, 0.1)', _dark: 'rgba(255, 255, 255, 0.15)' } : undefined,
-            boxShadow: isHomepage ? {
-              _light: '0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.08)',
-              _dark: '0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4)',
-            } : undefined,
+            boxShadow: isHomepage ? 'none' : undefined,
           }}
           transition="all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
           _placeholder={{
