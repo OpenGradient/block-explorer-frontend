@@ -173,8 +173,8 @@ const Workflows = () => {
             color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
             fontFamily="system-ui, -apple-system, sans-serif"
           >
-            Manage and monitor your scheduled AI model executions. Each workflow runs automatically at specified intervals,
-            executing your models and storing results on-chain. Track execution history, model performance, and workflow status
+            Manage and monitor scheduled AI model executions. Each workflow runs automatically at specified intervals,
+            executing models and storing results on-chain. Track execution history, results, and status
             in real-time.
           </Text>
         </Box>
