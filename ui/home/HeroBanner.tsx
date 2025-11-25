@@ -134,8 +134,8 @@ const HeroBanner = () => {
           h={{ base: '400px', md: '500px', lg: '600px' }}
           borderRadius="50%"
           background={{
-            _light: 'radial-gradient(circle, rgba(8, 145, 178, 0.15) 0%, rgba(0, 0, 0, 0) 70%)',
-            _dark: 'radial-gradient(circle, rgba(103, 232, 249, 0.15) 0%, rgba(0, 0, 0, 0) 70%)',
+            _light: 'radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(0, 0, 0, 0) 70%)',
+            _dark: 'radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(0, 0, 0, 0) 70%)',
           }}
           filter="blur(60px)"
           pointerEvents="none"
