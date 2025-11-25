@@ -26,7 +26,7 @@ const StatusTag = ({ type, text, errorText, isLoading, className }: Props) => {
       colorPalette = 'green';
       break;
     case 'error':
-      colorPalette = 'red';
+      colorPalette = 'gray';
       break;
     case 'pending':
       colorPalette = 'gray';
