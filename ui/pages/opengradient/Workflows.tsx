@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, Text } from '@chakra-ui/react';
+import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { range } from 'es-toolkit';
 import { useRouter } from 'next/router';
@@ -11,12 +11,13 @@ import useIsMobile from 'lib/hooks/useIsMobile';
 import type { SchedulerTask } from 'lib/opengradient/contracts/scheduler';
 import { getAllTasks } from 'lib/opengradient/contracts/scheduler';
 import getQueryParamString from 'lib/router/getQueryParamString';
+import { LinkBox } from 'toolkit/chakra/link';
+import { Skeleton } from 'toolkit/chakra/skeleton';
 import RoutedTabs from 'toolkit/components/RoutedTabs/RoutedTabs';
 import WorkflowsActionBar from 'ui/opengradient/workflows/WorkflowsActionBar';
 import WorkflowsList from 'ui/opengradient/workflows/WorkflowsList';
 import IconSvg from 'ui/shared/IconSvg';
 import PageTitle from 'ui/shared/Page/PageTitle';
-import StatsWidget from 'ui/shared/stats/StatsWidget';
 
 const TAB_LIST_PROPS = {
   marginBottom: 0,
@@ -134,11 +135,11 @@ const Workflows = () => {
   const description = (
     <Box
       mb={ 6 }
-      p={{ base: 4, lg: 6 }}
-      borderRadius="lg"
-      bg={{ _light: 'rgba(255, 255, 255, 0.5)', _dark: 'rgba(255, 255, 255, 0.03)' }}
-      border="1px solid"
-      borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' }}
+      p={{ base: 4, lg: 5 }}
+      bg={{ _light: 'rgba(0, 0, 0, 0.01)', _dark: 'rgba(255, 255, 255, 0.01)' }}
+      borderTop="1px solid"
+      borderBottom="1px solid"
+      borderColor={{ _light: 'rgba(0, 0, 0, 0.04)', _dark: 'rgba(255, 255, 255, 0.04)' }}
     >
       <Flex
         gap={ 3 }
@@ -146,30 +147,31 @@ const Workflows = () => {
         flexDirection={{ base: 'column', lg: 'row' }}
       >
         <Box
-          p={ 2.5 }
-          bg={{ _light: 'rgba(81, 120, 199, 0.1)', _dark: 'rgba(66, 153, 225, 0.15)' }}
-          borderRadius="md"
+          p={ 2 }
+          bg={{ _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(255, 255, 255, 0.02)' }}
           flexShrink={ 0 }
         >
           <IconSvg
-            name="apps"
-            boxSize={ 6 }
-            color={{ _light: 'blue.600', _dark: 'blue.400' }}
+            name="opengradient/workflow"
+            boxSize={ 5 }
+            color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
           />
         </Box>
         <Box flex={ 1 }>
           <Text
-            fontSize={{ base: 'md', lg: 'lg' }}
-            fontWeight={ 600 }
-            mb={ 2 }
-            color={{ _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.95)' }}
+            fontSize={{ base: 'sm', lg: 'md' }}
+            fontWeight={ 500 }
+            mb={ 1.5 }
+            color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.7)' }}
+            fontFamily="system-ui, -apple-system, sans-serif"
           >
             Automated AI Workflows
           </Text>
           <Text
-            fontSize={{ base: 'sm', lg: 'md' }}
+            fontSize={{ base: '12px', md: '13px' }}
             lineHeight="1.6"
-            color={{ _light: 'rgba(0, 0, 0, 0.6)', _dark: 'rgba(255, 255, 255, 0.7)' }}
+            color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+            fontFamily="system-ui, -apple-system, sans-serif"
           >
             Manage and monitor your scheduled AI model executions. Each workflow runs automatically at specified intervals,
             executing your models and storing results on-chain. Track execution history, model performance, and workflow status
@@ -190,9 +192,7 @@ const Workflows = () => {
           data={ filteredTasks }
           isLoading={ query.isPlaceholderData }
           error={ query.error }
-          actionBar={ isMobile ? actionBar : null }
           tableTop={ hasMultipleTabs ? TABS_HEIGHT : undefined }
-          description={ description }
         />
       ),
     },
@@ -209,93 +209,265 @@ const Workflows = () => {
       <Box
         position="relative"
         mb={ 8 }
-        p={{ base: 4, lg: 6 }}
-        borderRadius="xl"
-        bgGradient={{
-          _light: 'linear-gradient(135deg, rgba(81, 120, 199, 0.08) 0%, rgba(107, 143, 212, 0.12) 50%, rgba(81, 120, 199, 0.08) 100%)',
-          _dark: 'linear-gradient(135deg, rgba(81, 120, 199, 0.15) 0%, rgba(107, 143, 212, 0.2) 50%, rgba(81, 120, 199, 0.15) 100%)',
-        }}
-        border="1px solid"
-        borderColor={{ _light: 'rgba(102, 126, 234, 0.2)', _dark: 'rgba(255, 255, 255, 0.1)' }}
-        _before={{
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'radial-gradient(circle at 20% 50%, rgba(81, 120, 199, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(81, 120, 199, 0.1) 0%, transparent 50%)',
-          pointerEvents: 'none',
-          borderRadius: 'xl',
-        }}
+        w="100%"
+        overflow="hidden"
       >
-        <Flex
-          position="relative"
-          flexDirection="column"
-          gap={ 4 }
+        <VStack
+          align="stretch"
+          gap={ 0 }
         >
-          <Box mb={ 2 }>
+          { /* Section Header */ }
+          <Flex
+            alignItems="center"
+            gap={ 2 }
+            mb={ 6 }
+          >
+            <Box
+              position="relative"
+              w="6px"
+              h="6px"
+              borderRadius="50%"
+              bg="green.500"
+              boxShadow="0 0 6px rgba(34, 197, 94, 0.6)"
+              _dark={{
+                boxShadow: '0 0 8px rgba(34, 197, 94, 0.8)',
+              }}
+              animation="pulseOpacity 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
+            />
             <Text
-              fontSize={{ base: 'sm', lg: 'md' }}
-              fontWeight={ 600 }
-              color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.8)' }}
-              letterSpacing="0.02em"
-              mb={ 1 }
+              fontSize="11px"
+              fontWeight={ 500 }
+              letterSpacing="0.1em"
+              textTransform="uppercase"
+              color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+              fontFamily="system-ui, -apple-system, sans-serif"
             >
               Platform Overview
             </Text>
-            <Text
-              fontSize={{ base: 'xs', lg: 'sm' }}
-              color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-            >
-              Real-time insights into AI workflow execution
-            </Text>
-          </Box>
+          </Flex>
 
+          { /* Metrics Grid */ }
           <Grid
-            gridTemplateColumns={{ base: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }}
-            gridGap={ 4 }
+            templateColumns={{ base: '1fr 1fr', lg: 'repeat(4, 1fr)' }}
+            gap={ 0 }
+            overflow="hidden"
           >
-            <StatsWidget
-              label="Total Workflows"
-              value={ stats.total.toLocaleString() }
-              icon="apps"
-              isLoading={ query.isPlaceholderData }
-              hint="All registered AI workflows on the platform"
-            />
-            <StatsWidget
-              label="Active Workflows"
-              value={ stats.active.toLocaleString() }
-              icon="check"
-              isLoading={ query.isPlaceholderData }
-              hint="Currently running workflows"
-            />
-            <StatsWidget
-              label="Expired Workflows"
-              value={ stats.expired.toLocaleString() }
-              icon="clock"
-              isLoading={ query.isPlaceholderData }
-              hint="Workflows that have completed"
-            />
-            <StatsWidget
-              label="Scheduled Runs"
-              value={ (() => {
-                if (stats.totalRuns >= 1000000) {
-                  return `${ (stats.totalRuns / 1000000).toFixed(1) }M`;
-                }
-                if (stats.totalRuns >= 1000) {
-                  return `${ (stats.totalRuns / 1000).toFixed(1) }K`;
-                }
-                return stats.totalRuns.toLocaleString();
-              })() }
-              icon="repeat"
-              isLoading={ query.isPlaceholderData }
-              hint="Total scheduled executions across all workflows"
-            />
+            { /* Total Workflows */ }
+            <LinkBox
+              p={ 5 }
+              position="relative"
+              bgGradient={{
+                _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
+                _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
+              }}
+              transition="all 0.2s ease"
+              _hover={{
+                bgGradient: {
+                  _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
+                  _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
+                },
+              }}
+            >
+              <Flex
+                alignItems="center"
+                gap={ 1.5 }
+                mb={ 2 }
+              >
+                <Text
+                  fontSize="10px"
+                  fontWeight={ 600 }
+                  letterSpacing="0.08em"
+                  textTransform="uppercase"
+                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                >
+                  Total Workflows
+                </Text>
+                <IconSvg
+                  name="apps"
+                  boxSize={ 3 }
+                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
+                />
+              </Flex>
+              <Skeleton loading={ query.isPlaceholderData } w="fit-content">
+                <Text
+                  fontSize="32px"
+                  fontWeight={ 200 }
+                  letterSpacing="-0.02em"
+                  color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                  lineHeight="1"
+                >
+                  { stats.total.toLocaleString() }
+                </Text>
+              </Skeleton>
+            </LinkBox>
+
+            { /* Active Workflows */ }
+            <LinkBox
+              p={ 5 }
+              position="relative"
+              bgGradient={{
+                _light: 'linear-gradient(135deg, rgba(6, 182, 212, 0.04) 0%, rgba(14, 165, 233, 0.05) 100%)',
+                _dark: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(14, 165, 233, 0.1) 100%)',
+              }}
+              transition="all 0.2s ease"
+              _hover={{
+                bgGradient: {
+                  _light: 'linear-gradient(135deg, rgba(6, 182, 212, 0.06) 0%, rgba(14, 165, 233, 0.08) 100%)',
+                  _dark: 'linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(14, 165, 233, 0.15) 100%)',
+                },
+              }}
+            >
+              <Flex
+                alignItems="center"
+                gap={ 1.5 }
+                mb={ 2 }
+              >
+                <Text
+                  fontSize="10px"
+                  fontWeight={ 600 }
+                  letterSpacing="0.08em"
+                  textTransform="uppercase"
+                  color={{ _light: 'rgba(6, 182, 212, 0.7)', _dark: 'rgba(14, 165, 233, 0.8)' }}
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                >
+                  Active Workflows
+                </Text>
+                <IconSvg
+                  name="check"
+                  boxSize={ 3 }
+                  color={{ _light: 'rgba(6, 182, 212, 0.75)', _dark: 'rgba(14, 165, 233, 0.85)' }}
+                />
+              </Flex>
+              <Skeleton loading={ query.isPlaceholderData } w="fit-content">
+                <Text
+                  fontSize="32px"
+                  fontWeight={ 200 }
+                  letterSpacing="-0.02em"
+                  color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                  lineHeight="1"
+                >
+                  { stats.active.toLocaleString() }
+                </Text>
+              </Skeleton>
+            </LinkBox>
+
+            { /* Expired Workflows */ }
+            <LinkBox
+              p={ 5 }
+              position="relative"
+              bgGradient={{
+                _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
+                _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
+              }}
+              transition="all 0.2s ease"
+              _hover={{
+                bgGradient: {
+                  _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
+                  _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
+                },
+              }}
+            >
+              <Flex
+                alignItems="center"
+                gap={ 1.5 }
+                mb={ 2 }
+              >
+                <Text
+                  fontSize="10px"
+                  fontWeight={ 600 }
+                  letterSpacing="0.08em"
+                  textTransform="uppercase"
+                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                >
+                  Expired Workflows
+                </Text>
+                <IconSvg
+                  name="clock"
+                  boxSize={ 3 }
+                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
+                />
+              </Flex>
+              <Skeleton loading={ query.isPlaceholderData } w="fit-content">
+                <Text
+                  fontSize="32px"
+                  fontWeight={ 200 }
+                  letterSpacing="-0.02em"
+                  color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                  lineHeight="1"
+                >
+                  { stats.expired.toLocaleString() }
+                </Text>
+              </Skeleton>
+            </LinkBox>
+
+            { /* Scheduled Runs */ }
+            <LinkBox
+              p={ 5 }
+              position="relative"
+              bgGradient={{
+                _light: 'linear-gradient(135deg, rgba(6, 182, 212, 0.04) 0%, rgba(14, 165, 233, 0.05) 100%)',
+                _dark: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(14, 165, 233, 0.1) 100%)',
+              }}
+              transition="all 0.2s ease"
+              _hover={{
+                bgGradient: {
+                  _light: 'linear-gradient(135deg, rgba(6, 182, 212, 0.06) 0%, rgba(14, 165, 233, 0.08) 100%)',
+                  _dark: 'linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(14, 165, 233, 0.15) 100%)',
+                },
+              }}
+            >
+              <Flex
+                alignItems="center"
+                gap={ 1.5 }
+                mb={ 2 }
+              >
+                <Text
+                  fontSize="10px"
+                  fontWeight={ 600 }
+                  letterSpacing="0.08em"
+                  textTransform="uppercase"
+                  color={{ _light: 'rgba(6, 182, 212, 0.7)', _dark: 'rgba(14, 165, 233, 0.8)' }}
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                >
+                  Scheduled Runs
+                </Text>
+                <IconSvg
+                  name="repeat"
+                  boxSize={ 3 }
+                  color={{ _light: 'rgba(6, 182, 212, 0.75)', _dark: 'rgba(14, 165, 233, 0.85)' }}
+                />
+              </Flex>
+              <Skeleton loading={ query.isPlaceholderData } w="fit-content">
+                <Text
+                  fontSize="32px"
+                  fontWeight={ 200 }
+                  letterSpacing="-0.02em"
+                  color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                  lineHeight="1"
+                >
+                  { (() => {
+                    if (stats.totalRuns >= 1000000) {
+                      return `${ (stats.totalRuns / 1000000).toFixed(1) }M`;
+                    }
+                    if (stats.totalRuns >= 1000) {
+                      return `${ (stats.totalRuns / 1000).toFixed(1) }K`;
+                    }
+                    return stats.totalRuns.toLocaleString();
+                  })() }
+                </Text>
+              </Skeleton>
+            </LinkBox>
           </Grid>
-        </Flex>
+        </VStack>
       </Box>
 
+      { description }
       { actionBar }
       <RoutedTabs
         tabs={ tabs }
