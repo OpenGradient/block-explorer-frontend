@@ -285,7 +285,7 @@ export default function useNavItems(): ReturnType {
       //   isActive: pathname.startsWith('/stats'),
       // } : null,
       {
-        text: 'Other',
+        text: 'Developers',
         icon: 'gear',
         isActive: otherNavItems.flat().some(item => isInternalItem(item) && item.isActive),
         subItems: otherNavItems,
