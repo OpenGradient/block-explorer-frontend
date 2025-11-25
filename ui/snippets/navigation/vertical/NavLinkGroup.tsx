@@ -128,7 +128,7 @@ const NavLinkGroup = ({ item }: Props) => {
                 w="6px"
                 h="6px"
                 borderRadius="50%"
-                bg={{ _light: 'blue.500', _dark: 'blue.400' }}
+                bg={{ _light: 'cyan.600', _dark: 'cyan.300' }}
                 ml={ 2 }
                 flexShrink={ 0 }
               />
