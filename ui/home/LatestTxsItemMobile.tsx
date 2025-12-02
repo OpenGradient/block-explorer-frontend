@@ -146,7 +146,7 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
         </Box>
 
         { /* Inference Details */ }
-        { hasInference && inferenceInfo && (
+        { hasInference && (
           <Box>
             <Text
               fontSize="10px"
@@ -159,7 +159,25 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
             >
               AI Inference
             </Text>
-            { inferenceInfo.modelCID && (
+            { !inferenceInfo && (
+              <Text
+                fontSize="11px"
+                color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+                fontFamily="system-ui, -apple-system, sans-serif"
+              >
+                —
+              </Text>
+            ) }
+            { inferenceInfo && inferenceInfo.isLoading && (
+              <Text
+                fontSize="11px"
+                color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+                fontFamily="system-ui, -apple-system, sans-serif"
+              >
+                Loading...
+              </Text>
+            ) }
+            { inferenceInfo && !inferenceInfo.isLoading && inferenceInfo.modelCID && (
               <Skeleton loading={ isLoading }>
                 <Text
                   fontSize="11px"

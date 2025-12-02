@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import type { LogsResponseTx } from 'types/api/log';
 import type { Transaction } from 'types/api/transaction';
 import { InferenceEvents } from 'types/client/inference/event';
 import type { InferenceMode } from 'types/client/inference/event';
@@ -17,6 +18,7 @@ export interface InferenceInfo {
   type: InferenceType;
   modelCID: string | null;
   mode: InferenceMode | null;
+  isLoading: boolean;
 }
 
 /**
@@ -25,18 +27,50 @@ export interface InferenceInfo {
  */
 export default function useInferenceType(tx: Transaction | undefined, isLoading: boolean): InferenceInfo | null {
   const isInferenceTx = tx?.to?.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub;
+  const isTxFailed = tx?.status === 'error';
+  const isQueryEnabled = !isLoading && isInferenceTx && Boolean(tx?.hash) && Boolean(tx?.status);
 
-  const { data: logsData } = useQueryWithPages({
+  const { data, isPlaceholderData, isLoading: isQueryLoading, isFetched } = useQueryWithPages({
     resourceName: 'tx_logs',
     pathParams: { hash: tx?.hash || '' },
     options: {
-      enabled: !isLoading && isInferenceTx && Boolean(tx?.hash) && Boolean(tx?.status),
+      enabled: isQueryEnabled,
       placeholderData: generateListStub<'tx_logs'>(LOG, 3, { next_page_params: null }),
     },
   });
+  const logsData: LogsResponseTx | undefined = data;
 
   return useMemo(() => {
-    if (!isInferenceTx || !logsData?.items) {
+    if (!isInferenceTx) {
+      return null;
+    }
+
+    // Don't show spinner if transaction failed
+    if (isTxFailed) {
+      return null;
+    }
+
+    // Don't show spinner if query is not enabled (e.g., no status yet)
+    if (!isQueryEnabled) {
+      return null;
+    }
+
+    // Only show spinner if query is actively loading and we haven't fetched yet
+    if (isQueryLoading && !isFetched && !logsData?.items) {
+      return {
+        type: null,
+        modelCID: null,
+        mode: null,
+        isLoading: true,
+      };
+    }
+
+    // If query has completed but no data, return null (no inference)
+    if (isFetched && !logsData?.items) {
+      return null;
+    }
+
+    if (!logsData?.items) {
       return null;
     }
 
@@ -84,6 +118,7 @@ export default function useInferenceType(tx: Transaction | undefined, isLoading:
       type,
       modelCID,
       mode,
+      isLoading: isPlaceholderData,
     };
-  }, [ isInferenceTx, logsData ]);
+  }, [ isInferenceTx, logsData, isPlaceholderData, isQueryLoading, isFetched, isTxFailed, isQueryEnabled ]);
 }

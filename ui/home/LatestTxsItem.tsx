@@ -139,64 +139,69 @@ const LatestTxsItem = ({ tx, isLoading }: Props) => {
               >
                 Inference
               </Text>
+              { /* eslint-disable-next-line no-nested-ternary */ }
               { inferenceInfo ? (
-                <>
-                  <HStack flexWrap="wrap" gap={ 1.5 }>
-                    <Badge
-                      colorPalette="purple"
-                      loading={ isLoading }
-                      fontSize="10px"
-                      fontWeight={ 500 }
-                      px={ 2 }
-                      py={ 0.5 }
-                      minH="6"
-                      fontFamily="system-ui, -apple-system, sans-serif"
-                      letterSpacing="0.02em"
-                    >
-                      { inferenceInfo.type || 'AI Inference' }
-                    </Badge>
-                  </HStack>
-                  { inferenceInfo.modelCID && (
-                    <Skeleton loading={ isLoading }>
-                      <Text
-                        fontSize="11px"
-                        color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+                inferenceInfo.isLoading ? (
+                  <Text
+                    fontSize="11px"
+                    color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+                    fontFamily="system-ui, -apple-system, sans-serif"
+                  >
+                    Loading...
+                  </Text>
+                ) : (
+                  <>
+                    <HStack flexWrap="wrap" gap={ 1.5 }>
+                      <Badge
+                        colorPalette="purple"
+                        loading={ isLoading }
+                        fontSize="10px"
+                        fontWeight={ 500 }
+                        px={ 2 }
+                        py={ 0.5 }
+                        minH="6"
                         fontFamily="system-ui, -apple-system, sans-serif"
-                        lineClamp={ 1 }
+                        letterSpacing="0.02em"
                       >
-                        Model:{ ' ' }
-                        <Link
-                          href={ `https://walruscan.com/mainnet/blob/${ inferenceInfo.modelCID }` }
-                          external
+                        { inferenceInfo.type || 'AI Inference' }
+                      </Badge>
+                    </HStack>
+                    { inferenceInfo.modelCID && (
+                      <Skeleton loading={ isLoading }>
+                        <Text
                           fontSize="11px"
-                          fontWeight={ 500 }
-                          fontFamily="mono"
-                          color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.7)' }}
-                          _hover={{
-                            textDecoration: 'underline',
-                            color: { _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.9)' },
-                          }}
+                          color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+                          fontFamily="system-ui, -apple-system, sans-serif"
+                          lineClamp={ 1 }
                         >
-                          { inferenceInfo.modelCID.slice(0, 8) }...
-                        </Link>
-                      </Text>
-                    </Skeleton>
-                  ) }
-                </>
+                          Model:{ ' ' }
+                          <Link
+                            href={ `https://walruscan.com/mainnet/blob/${ inferenceInfo.modelCID }` }
+                            external
+                            fontSize="11px"
+                            fontWeight={ 500 }
+                            fontFamily="mono"
+                            color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.7)' }}
+                            _hover={{
+                              textDecoration: 'underline',
+                              color: { _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.9)' },
+                            }}
+                          >
+                            { inferenceInfo.modelCID.slice(0, 8) }...
+                          </Link>
+                        </Text>
+                      </Skeleton>
+                    ) }
+                  </>
+                )
               ) : (
-                <Badge
-                  colorPalette="purple"
-                  loading={ isLoading }
-                  fontSize="10px"
-                  fontWeight={ 500 }
-                  px={ 2 }
-                  py={ 0.5 }
-                  minH="6"
+                <Text
+                  fontSize="11px"
+                  color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
-                  letterSpacing="0.02em"
                 >
-                  Inference
-                </Badge>
+                  —
+                </Text>
               ) }
             </VStack>
           ) : (
