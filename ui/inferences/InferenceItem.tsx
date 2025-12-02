@@ -89,7 +89,7 @@ const InferenceItem = ({ type, address, preCompileData, decoded, isLoading }: Pr
             { precompileDecodedData.request && (
               <>
                 <RowHeader isLoading={ isLoading }>
-                  Input
+                  Input Data
                 </RowHeader>
                 <GridItem>
                   <InferenceInput value={ precompileDecodedData.request } isLoading={ isLoading }/>

@@ -107,62 +107,51 @@ const InferenceInput = ({ value, isLoading }: InferenceInputProps) => {
       } else if (isModelInput(value)) {
         const { numbers, strings } = value;
 
-        return (
-          <VStackContainer>
-            { !isEmpty(numbers) && (
-              <Item label={ `Numbers (${ numbers.length })` }>
-                { isEmpty(numbers) ? 'None' : (
-                  <AccordionRoot defaultValue={ numbers.map((_, i) => i.toString()) } multiple width="100%" border="transparent">
-                    { numbers.map((number, index) => {
+        const allItems: Array<React.ReactNode> = [];
 
-                      const values = number.values.map((v) => Number(v.value) / (10 ** Number(v.decimals)));
-                      return (
-                        <AccordionItem key={ index } value={ index.toString() }>
-                          <AccordionItemTrigger indicatorPlacement="end">
-                            <Box as="span" flex="1" textAlign="left">
-                              { number.name }
-                            </Box>
-                          </AccordionItemTrigger>
-                          <AccordionItemContent>
-                            <Item isLoading={ isLoading } isCode>
-                              { JSON.stringify(reshapeArray(values, number.shape.map(Number))) }
-                              { /* { `${ JSON.stringify(reshapeArray(values, number.shape.map(Number))) }
+        if (!isEmpty(numbers)) {
+          numbers.forEach((number, index) => {
+            const values = number.values.map((v) => Number(v.value) / (10 ** Number(v.decimals)));
+            allItems.push(
+              <VStackContainer key={ `number-${ index }` }>
+                <Item label="Name" isLoading={ isLoading }>
+                  { number.name }
+                </Item>
+                <Item label="Value" isLoading={ isLoading } isCode>
+                  { JSON.stringify(reshapeArray(values, number.shape.map(Number))) }
+                  { /* { `${ JSON.stringify(reshapeArray(values, number.shape.map(Number))) }
 
 Shape: [${ number.shape.map(String).join(',') }]` } */ }
-                            </Item>
-                          </AccordionItemContent>
-                        </AccordionItem>
-                      );
-                    }) }
-                  </AccordionRoot>
-                ) }
-              </Item>
-            ) }
+                </Item>
+                <Item label="Type" isLoading={ isLoading }>
+                  number
+                </Item>
+              </VStackContainer>,
+            );
+          });
+        }
 
-            { !isEmpty(strings) && (
-              <Item label={ `Strings (${ strings.length })` }>
-                <AccordionRoot defaultValue={ strings.map((_, i) => i.toString()) } multiple width="100%" border="transparent">
-                  { strings.map((string, index) => {
-                    return (
-                      <AccordionItem key={ index } value={ index.toString() }>
-                        <AccordionItemTrigger indicatorPlacement="end">
-                          <Box as="span" flex="1" textAlign="left">
-                            { string.name }
-                          </Box>
-                        </AccordionItemTrigger>
-                        <AccordionItemContent>
-                          <VStackContainer>
-                            <Item isLoading={ isLoading } isCode>
-                              { `[${ string.values.join(',') }]` }
-                            </Item>
-                          </VStackContainer>
-                        </AccordionItemContent>
-                      </AccordionItem>
-                    );
-                  }) }
-                </AccordionRoot>
-              </Item>
-            ) }
+        if (!isEmpty(strings)) {
+          strings.forEach((string, index) => {
+            allItems.push(
+              <VStackContainer key={ `string-${ index }` }>
+                <Item label="Name" isLoading={ isLoading }>
+                  { string.name }
+                </Item>
+                <Item label="Value" isLoading={ isLoading } isCode>
+                  { `[${ string.values.join(',') }]` }
+                </Item>
+                <Item label="Type" isLoading={ isLoading }>
+                  string
+                </Item>
+              </VStackContainer>,
+            );
+          });
+        }
+
+        return (
+          <VStackContainer>
+            { allItems.length > 0 ? allItems : 'None' }
           </VStackContainer>
         );
       } else if (isLLMCompletionRequest(value)) {
