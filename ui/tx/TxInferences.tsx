@@ -10,6 +10,7 @@ import { getInferenceEvent } from 'lib/inferences/event';
 import { LOG } from 'stubs/log';
 import { generateListStub } from 'stubs/utils';
 import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from 'toolkit/chakra/accordion';
+import { useColorModeValue } from 'toolkit/chakra/color-mode';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import InferenceItem from 'ui/inferences/InferenceItem';
 import ActionBar from 'ui/shared/ActionBar';
@@ -34,6 +35,10 @@ interface Props {
 }
 
 const TxInferences = ({ txQuery, logsFilter }: Props) => {
+  const bgColor = useColorModeValue('blackAlpha.50', 'whiteAlpha.50');
+  const hoverBgColor = useColorModeValue('blackAlpha.100', 'whiteAlpha.100');
+  const borderColor = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
+
   const { data, isPlaceholderData, isError, pagination } = useQueryWithPages({
     resourceName: 'tx_logs',
     pathParams: { hash: txQuery.data?.hash },
@@ -115,7 +120,20 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
 
             return (
               <AccordionItem key={ keyValue } value={ keyValue }>
-                <AccordionItemTrigger indicatorPlacement="end">
+                <AccordionItemTrigger
+                  indicatorPlacement="end"
+                  mb={ 4 }
+                  bgColor={ bgColor }
+                  borderWidth="1px"
+                  borderColor={ borderColor }
+                  borderRadius="md"
+                  px={ 4 }
+                  py={ 3 }
+                  fontWeight={ 600 }
+                  _hover={{
+                    bgColor: hoverBgColor,
+                  }}
+                >
                   <Box as="span" flex="1" textAlign="left">
                     { renderInferenceType(item.decoded) }
                   </Box>

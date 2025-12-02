@@ -1,4 +1,4 @@
-import { Grid, GridItem } from '@chakra-ui/react';
+import { Flex, Grid, GridItem } from '@chakra-ui/react';
 import React from 'react';
 
 import type { Log } from 'types/api/log';
@@ -12,6 +12,8 @@ import { useColorModeValue } from 'toolkit/chakra/color-mode';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { Tag } from 'toolkit/chakra/tag';
+import CopyToClipboard from 'ui/shared/CopyToClipboard';
+import HashStringShorten from 'ui/shared/HashStringShorten';
 
 import InferenceInput from './InferenceInput';
 import InferenceOutput from './InferenceOutput';
@@ -45,7 +47,7 @@ const InferenceItem = ({ type, address, preCompileData, decoded, isLoading }: Pr
             </RowHeader>
             <GridItem>
               <Tag>
-                { precompileDecodedData.inferenceID }
+                <HashStringShorten hash={ precompileDecodedData.inferenceID } type="long"/>
               </Tag>
             </GridItem>
 
@@ -62,9 +64,26 @@ const InferenceItem = ({ type, address, preCompileData, decoded, isLoading }: Pr
               Model CID
             </RowHeader>
             <GridItem>
-              <Tag>
-                { precompileDecodedData.modelCID }
-              </Tag>
+              <Flex alignItems="center" gap={ 2 } flexWrap="wrap">
+                <Tag>
+                  { precompileDecodedData.modelCID }
+                </Tag>
+                <CopyToClipboard text={ precompileDecodedData.modelCID } isLoading={ isLoading }/>
+                <Link
+                  href={ `https://walruscan.com/mainnet/blob/${ precompileDecodedData.modelCID }` }
+                  external
+                  fontSize="sm"
+                  fontWeight={ 500 }
+                  fontFamily="mono"
+                  color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.7)' }}
+                  _hover={{
+                    textDecoration: 'underline',
+                    color: { _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.9)' },
+                  }}
+                >
+                  View on Walrus
+                </Link>
+              </Flex>
             </GridItem>
 
             { precompileDecodedData.request && (
