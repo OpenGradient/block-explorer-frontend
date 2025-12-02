@@ -20,7 +20,6 @@ import config from 'configs/app';
 import useApiQuery from 'lib/api/useApiQuery';
 import { WEI, WEI_IN_GWEI } from 'lib/consts';
 import useIsMobile from 'lib/hooks/useIsMobile';
-import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
 import getNetworkValidatorTitle from 'lib/networks/getNetworkValidatorTitle';
 import * as arbitrum from 'lib/rollups/arbitrum';
 import getConfirmationDuration from 'lib/tx/getConfirmationDuration';
@@ -100,7 +99,6 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
     setIsExpanded(true);
   }, []);
 
-  const hasInference = data?.to?.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub;
   const inferenceInfo = useInferenceType(data, isLoading);
 
   if (!data) {
@@ -202,21 +200,6 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
               { data.method }
             </Badge>
           ) }
-          { hasInference && (
-            <Badge
-              colorPalette="purple"
-              loading={ isLoading }
-              fontSize="10px"
-              fontWeight={ 500 }
-              px={ 2 }
-              py={ 0.5 }
-              minH="6"
-              fontFamily="system-ui, -apple-system, sans-serif"
-              letterSpacing="0.02em"
-            >
-              { inferenceInfo?.type || 'AI Inference' }
-            </Badge>
-          ) }
         </Flex>
         { data.arbitrum?.contains_message && (
           <Skeleton loading={ isLoading } onClick={ showAssociatedL1Tx } mt={ 2 }>
@@ -225,6 +208,21 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
             </Link>
           </Skeleton>
         ) }
+      </DetailedInfo.ItemValue>
+
+      <DetailedInfo.ItemLabel
+        hint="Type of ML inference for this transaction, if any"
+        isLoading={ isLoading }
+      >
+        Inference
+      </DetailedInfo.ItemLabel>
+      <DetailedInfo.ItemValue>
+        <Badge
+          colorPalette={ inferenceInfo?.type ? 'purple' : 'gray' }
+          loading={ isLoading }
+        >
+          { inferenceInfo?.type || 'None' }
+        </Badge>
       </DetailedInfo.ItemValue>
 
       { rollupFeature.isEnabled && rollupFeature.type === 'optimistic' && data.op_withdrawals && data.op_withdrawals.length > 0 &&
