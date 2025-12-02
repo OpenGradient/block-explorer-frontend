@@ -41,22 +41,23 @@ export default function useInferenceType(tx: Transaction | undefined, isLoading:
   const logsData: LogsResponseTx | undefined = data;
 
   return useMemo(() => {
+    // Not an inference transaction
     if (!isInferenceTx) {
       return null;
     }
 
-    // Don't show spinner if transaction failed
+    // Transaction failed - don't show inference
     if (isTxFailed) {
       return null;
     }
 
-    // Don't show spinner if query is not enabled (e.g., no status yet)
+    // Query not enabled yet (e.g., no status/hash yet)
     if (!isQueryEnabled) {
       return null;
     }
 
-    // Only show spinner if query is actively loading and we haven't fetched yet
-    if (isQueryLoading && !isFetched && !logsData?.items) {
+    // Show loading if: we have placeholder data OR (query is loading AND no data yet)
+    if (isPlaceholderData || (isQueryLoading && !logsData?.items?.length)) {
       return {
         type: null,
         modelCID: null,
@@ -65,12 +66,13 @@ export default function useInferenceType(tx: Transaction | undefined, isLoading:
       };
     }
 
-    // If query has completed but no data, return null (no inference)
-    if (isFetched && !logsData?.items) {
+    // Query completed but no logs
+    if (isFetched && !logsData?.items?.length) {
       return null;
     }
 
-    if (!logsData?.items) {
+    // No logs data yet
+    if (!logsData?.items?.length) {
       return null;
     }
 
@@ -90,6 +92,7 @@ export default function useInferenceType(tx: Transaction | undefined, isLoading:
       return item;
     }).filter((i) => i.address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub);
 
+    // No inference logs found
     if (!inferenceHubLogs.length) {
       return null;
     }
@@ -118,7 +121,7 @@ export default function useInferenceType(tx: Transaction | undefined, isLoading:
       type,
       modelCID,
       mode,
-      isLoading: isPlaceholderData,
+      isLoading: false, // We have real data, not loading
     };
   }, [ isInferenceTx, logsData, isPlaceholderData, isQueryLoading, isFetched, isTxFailed, isQueryEnabled ]);
 }
