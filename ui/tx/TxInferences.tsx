@@ -115,8 +115,10 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
         { /* Skeleton doesn't work for accordion, so this is a placeholder. */ }
         { isPlaceholderData && 'Loading...' }
         <AccordionRoot defaultValue={ inferenceHubLogs.map((it) => calculateAccordionKeyValue(it.address.hash, it.index)) } multiple>
-          { inferenceHubLogs.map((item) => {
+          { inferenceHubLogs.map((item, index) => {
             const keyValue = calculateAccordionKeyValue(item.address.hash, item.index);
+            const inferenceType = renderInferenceType(item.decoded);
+            const headerLabel = `${ inferenceType } #${ index + 1 }`;
 
             return (
               <AccordionItem key={ keyValue } value={ keyValue }>
@@ -135,7 +137,7 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
                   }}
                 >
                   <Box as="span" flex="1" textAlign="left">
-                    { renderInferenceType(item.decoded) }
+                    { headerLabel }
                   </Box>
                 </AccordionItemTrigger>
                 <AccordionItemContent>
