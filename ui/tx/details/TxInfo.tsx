@@ -221,7 +221,7 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
           colorPalette={ inferenceInfo?.type ? 'purple' : 'gray' }
           loading={ isLoading || inferenceInfo?.isLoading }
         >
-          { inferenceInfo?.isLoading ? '—' : (inferenceInfo?.type || 'None') }
+          { inferenceInfo?.isLoading ? 'Loading...' : (inferenceInfo?.type || 'None') }
         </Badge>
       </DetailedInfo.ItemValue>
 
