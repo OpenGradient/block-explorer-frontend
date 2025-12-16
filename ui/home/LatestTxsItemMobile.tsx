@@ -31,7 +31,8 @@ type Props = {
 
 const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
   const dataTo = tx.to ? tx.to : tx.created_contract;
-  const hasInference = tx.to?.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub;
+  const hasInference = tx.to?.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub ||
+                       tx.to?.hash === SUPPORTED_INFERENCE_ADDRESSES.LLMInference;
   const inferenceInfo = useInferenceType(tx, isLoading || false);
   const txUrl = route({ pathname: '/tx/[hash]', query: { hash: tx.hash } });
 

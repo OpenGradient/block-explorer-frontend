@@ -12,7 +12,7 @@ import { LOG } from 'stubs/log';
 import { generateListStub } from 'stubs/utils';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 
-export type InferenceType = 'ML Inference' | 'LLM Chat Inference' | 'LLM Completion Inference' | null;
+export type InferenceType = 'ML Inference' | 'LLM Chat Inference' | 'LLM Completion Inference' | 'LLM Inference Settlement' | null;
 
 export interface InferenceInfo {
   type: InferenceType;
@@ -27,6 +27,7 @@ export interface InferenceInfo {
  */
 export default function useInferenceType(tx: Transaction | undefined, isLoading: boolean): InferenceInfo | null {
   const isInferenceTx = tx?.to?.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub;
+  const isLLMInferenceTx = tx?.to?.hash === SUPPORTED_INFERENCE_ADDRESSES.LLMInference;
   const isTxFailed = tx?.status === 'error';
   const isQueryEnabled = !isLoading && isInferenceTx && Boolean(tx?.hash) && Boolean(tx?.status);
 
@@ -41,6 +42,23 @@ export default function useInferenceType(tx: Transaction | undefined, isLoading:
   const logsData: LogsResponseTx | undefined = data;
 
   return useMemo(() => {
+    // Check for LLM Inference Settlement transaction (x402 infrastructure posts proof to blockchain)
+    if (isLLMInferenceTx && tx?.raw_input) {
+      const methodSelector = tx.raw_input.slice(0, 10).toLowerCase();
+      if (methodSelector === '0x6a99184a') {
+        // Transaction failed - don't show inference
+        if (isTxFailed) {
+          return null;
+        }
+        return {
+          type: 'LLM Inference Settlement',
+          modelCID: null,
+          mode: null,
+          isLoading: false,
+        };
+      }
+    }
+
     // Not an inference transaction
     if (!isInferenceTx) {
       return null;
@@ -123,5 +141,5 @@ export default function useInferenceType(tx: Transaction | undefined, isLoading:
       mode,
       isLoading: false, // We have real data, not loading
     };
-  }, [ isInferenceTx, logsData, isPlaceholderData, isQueryLoading, isFetched, isTxFailed, isQueryEnabled ]);
+  }, [ isInferenceTx, isLLMInferenceTx, tx, logsData, isPlaceholderData, isQueryLoading, isFetched, isTxFailed, isQueryEnabled ]);
 }
