@@ -12,7 +12,7 @@ import { LOG } from 'stubs/log';
 import { generateListStub } from 'stubs/utils';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 
-export type InferenceType = 'ML Inference' | 'LLM Chat Inference' | 'LLM Completion Inference' | 'LLM Inference Settlement' | null;
+export type InferenceType = 'ML Inference' | 'LLM Chat Inference' | 'LLM Completion Inference' | 'LLM Inference Batch Settlement' | 'LLM Inference Settlement' | null;
 
 export interface InferenceInfo {
   type: InferenceType;
