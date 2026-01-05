@@ -12,7 +12,7 @@ import { LOG } from 'stubs/log';
 import { generateListStub } from 'stubs/utils';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 
-export type InferenceType = 'ML Inference' | 'LLM Chat Inference' | 'LLM Completion Inference' | 'LLM Inference Batch Settlement' | 'LLM Inference Settlement' | null;
+export type InferenceType = 'ML Inference' | 'LLM Chat Inference' | 'LLM Completion Inference' | 'LLM Batch Settlement' | 'LLM Settlement' | null;
 
 export interface InferenceInfo {
   type: InferenceType;
@@ -42,7 +42,7 @@ export default function useInferenceType(tx: Transaction | undefined, isLoading:
   const logsData: LogsResponseTx | undefined = data;
 
   return useMemo(() => {
-    // Check for LLM Inference Settlement transaction (x402 infrastructure posts proof to blockchain)
+    // Check for LLM Batch Settlement transaction (x402 infrastructure posts proof to blockchain)
     if (isLLMInferenceTx && tx?.raw_input) {
       const methodSelector = tx.raw_input.slice(0, 10).toLowerCase();
       if (methodSelector === '0x609580f6') {
@@ -51,7 +51,7 @@ export default function useInferenceType(tx: Transaction | undefined, isLoading:
           return null;
         }
         return {
-          type: 'LLM Inference Batch Settlement',
+          type: 'LLM Batch Settlement',
           modelCID: null,
           mode: null,
           isLoading: false,
