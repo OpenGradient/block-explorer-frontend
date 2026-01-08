@@ -56,6 +56,17 @@ export default function useInferenceType(tx: Transaction | undefined, isLoading:
           mode: null,
           isLoading: false,
         };
+      } else if (methodSelector === '0xa1cc828') {
+        // Transaction failed - don't show inference
+        if (isTxFailed) {
+          return null;
+        }
+        return {
+          type: 'LLM Settlement',
+          modelCID: null,
+          mode: null,
+          isLoading: false,
+        };
       }
     }
 
