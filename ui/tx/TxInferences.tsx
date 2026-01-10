@@ -13,6 +13,7 @@ import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoo
 import { useColorModeValue } from 'toolkit/chakra/color-mode';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import InferenceItem from 'ui/inferences/InferenceItem';
+import SettlementInferenceItem from 'ui/inferences/SettlementInferenceItem';
 import ActionBar from 'ui/shared/ActionBar';
 import DataFetchAlert from 'ui/shared/DataFetchAlert';
 import Pagination from 'ui/shared/pagination/Pagination';
@@ -93,20 +94,41 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
     return 'ML Inference';
   };
 
-  const inferenceHubLogs = items.map((item, index) => {
-    const prevItem = index > 0 ? items[index - 1] : undefined;
+  const isSettlementInference = (decoded: DecodedInput | null): boolean => {
+    const event = getInferenceEvent(decoded?.method_call);
+    return event === InferenceEvents.BatchSettlement ||
+           event === InferenceEvents.InferenceSettlement ||
+           event === InferenceEvents.SettlementWithMetadata;
+  };
 
-    if (item.address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub && prevItem?.address.hash === SUPPORTED_INFERENCE_ADDRESSES.Precompile) {
-      return {
-        ...item,
-        preCompileData: prevItem.data,
-      };
-    }
+  // Settlement logs only come from SettlementRelay - no pairing needed
+  // InferenceHub logs may need Precompile pairing
+  const inferenceLogs = items
+    .filter((item) =>
+      item.address.hash === SUPPORTED_INFERENCE_ADDRESSES.SettlementRelay ||
+      item.address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub,
+    )
+    .map((item) => {
+      // Settlement logs from SettlementRelay are ready to use as-is
+      if (item.address.hash === SUPPORTED_INFERENCE_ADDRESSES.SettlementRelay) {
+        return item;
+      }
 
-    return item;
-  }).filter((i) => i.address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub);
+      // For InferenceHub logs, check if previous log in original array is from Precompile
+      const itemIndex = items.findIndex((log) => log === item);
+      const prevItem = itemIndex > 0 ? items[itemIndex - 1] : undefined;
 
-  if (!inferenceHubLogs.length && !isPlaceholderData) {
+      if (prevItem?.address.hash === SUPPORTED_INFERENCE_ADDRESSES.Precompile) {
+        return {
+          ...item,
+          preCompileData: prevItem.data,
+        };
+      }
+
+      return item;
+    });
+
+  if (!inferenceLogs.length && !isPlaceholderData) {
     return <Text as="span">There are no inferences for this transaction.</Text>;
   }
 
@@ -120,11 +142,12 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
       <Skeleton loading={ isPlaceholderData }>
         { /* Skeleton doesn't work for accordion, so this is a placeholder. */ }
         { isPlaceholderData && 'Loading...' }
-        <AccordionRoot defaultValue={ inferenceHubLogs.map((it) => calculateAccordionKeyValue(it.address.hash, it.index)) } multiple>
-          { inferenceHubLogs.map((item, index) => {
+        <AccordionRoot defaultValue={ inferenceLogs.map((it) => calculateAccordionKeyValue(it.address.hash, it.index)) } multiple>
+          { inferenceLogs.map((item, index) => {
             const keyValue = calculateAccordionKeyValue(item.address.hash, item.index);
             const inferenceType = renderInferenceType(item.decoded);
             const headerLabel = `${ inferenceType } #${ index + 1 }`;
+            const isSettlement = isSettlementInference(item.decoded);
 
             return (
               <AccordionItem key={ keyValue } value={ keyValue }>
@@ -147,11 +170,19 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
                   </Box>
                 </AccordionItemTrigger>
                 <AccordionItemContent>
-                  <InferenceItem
-                    { ...item }
-                    type="transaction"
-                    isLoading={ isPlaceholderData }
-                  />
+                  { isSettlement ? (
+                    <SettlementInferenceItem
+                      { ...item }
+                      type="transaction"
+                      isLoading={ isPlaceholderData }
+                    />
+                  ) : (
+                    <InferenceItem
+                      { ...item }
+                      type="transaction"
+                      isLoading={ isPlaceholderData }
+                    />
+                  ) }
                 </AccordionItemContent>
               </AccordionItem>
             );
