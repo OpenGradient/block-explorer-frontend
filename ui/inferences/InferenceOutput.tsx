@@ -21,6 +21,25 @@ const formatArray = (arr: Array<string | number>): string => {
   return `[${ arr.map(v => typeof v === 'string' ? v : String(v)).join(', ') }]`;
 };
 
+// Helper function to format values without unnecessary quotes
+const formatValue = (val: unknown): string => {
+  if (val === null || val === undefined) return 'None';
+  if (typeof val === 'string') return val;
+  if (typeof val === 'number' || typeof val === 'bigint') return String(val);
+  if (typeof val === 'boolean') return val ? 'true' : 'false';
+  if (Array.isArray(val)) {
+    // For arrays of primitives, format without quotes
+    if (val.every(item => typeof item === 'string' || typeof item === 'number')) {
+      return formatArray(val as Array<string | number>);
+    }
+    return JSON.stringify(val, null, 2);
+  }
+  if (typeof val === 'object') {
+    return JSON.stringify(val, null, 2);
+  }
+  return String(val);
+};
+
 const InferenceOutput = ({ value, isLoading }: InferenceOutputProps) => {
   try {
     const modelOutput = convertArrayToModelOutput(value);
@@ -87,15 +106,15 @@ const InferenceOutput = ({ value, isLoading }: InferenceOutputProps) => {
     }
   } catch {}
 
+  if (!value) return null;
+
+  const formattedValue = formatValue(value);
+  const isComplexValue = typeof value === 'object' && value !== null;
+
   return (
-    value &&
-    (
-      <VStackContainer>
-        <Item isLoading={ isLoading }>
-          { JSON.stringify(value, null, 4) }
-        </Item>
-      </VStackContainer>
-    )
+    <Item isLoading={ isLoading } isCode={ isComplexValue } whiteSpace={ isComplexValue ? 'pre-wrap' : undefined }>
+      { formattedValue }
+    </Item>
   );
 };
 

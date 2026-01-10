@@ -1,4 +1,4 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 
 import type { DecodedInput } from 'types/api/decodedInput';
@@ -10,12 +10,13 @@ import { getInferenceEvent } from 'lib/inferences/event';
 import { LOG } from 'stubs/log';
 import { generateListStub } from 'stubs/utils';
 import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from 'toolkit/chakra/accordion';
-import { useColorModeValue } from 'toolkit/chakra/color-mode';
+import { Badge } from 'toolkit/chakra/badge';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import InferenceItem from 'ui/inferences/InferenceItem';
 import SettlementInferenceItem from 'ui/inferences/SettlementInferenceItem';
 import ActionBar from 'ui/shared/ActionBar';
 import DataFetchAlert from 'ui/shared/DataFetchAlert';
+import IconSvg from 'ui/shared/IconSvg';
 import Pagination from 'ui/shared/pagination/Pagination';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 import TxPendingAlert from 'ui/tx/TxPendingAlert';
@@ -36,9 +37,6 @@ interface Props {
 }
 
 const TxInferences = ({ txQuery, logsFilter }: Props) => {
-  const bgColor = useColorModeValue('blackAlpha.50', 'whiteAlpha.50');
-  const hoverBgColor = useColorModeValue('blackAlpha.100', 'whiteAlpha.100');
-  const borderColor = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
 
   const { data, isPlaceholderData, isError, pagination } = useQueryWithPages({
     resourceName: 'tx_logs',
@@ -142,30 +140,68 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
           { inferenceLogs.map((item, index) => {
             const keyValue = calculateAccordionKeyValue(item.address.hash, item.index);
             const inferenceType = renderInferenceType(item.decoded);
-            const headerLabel = `${ inferenceType } #${ index + 1 }`;
             const isSettlement = isSettlementInference(item.decoded);
 
             return (
               <AccordionItem key={ keyValue } value={ keyValue }>
                 <AccordionItemTrigger
                   indicatorPlacement="end"
-                  mb={ 4 }
-                  bgColor={ bgColor }
+                  mb={ 3 }
+                  bgColor={{ _light: 'rgba(255, 255, 255, 0.8)', _dark: 'rgba(255, 255, 255, 0.04)' }}
                   borderWidth="1px"
-                  borderColor={ borderColor }
-                  borderRadius="md"
-                  px={ 4 }
-                  py={ 3 }
-                  fontWeight={ 600 }
+                  borderColor={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
+                  borderRadius="xl"
+                  px={ 5 }
+                  py={ 4 }
+                  fontWeight={ 500 }
+                  transition="all 0.2s ease"
                   _hover={{
-                    bgColor: hoverBgColor,
+                    bgColor: { _light: 'rgba(255, 255, 255, 1)', _dark: 'rgba(255, 255, 255, 0.06)' },
+                    borderColor: { _light: 'gray.200', _dark: 'whiteAlpha.200' },
+                    boxShadow: { _light: '0 4px 12px rgba(0, 0, 0, 0.05)', _dark: '0 4px 12px rgba(0, 0, 0, 0.2)' },
+                    transform: 'translateY(-1px)',
+                  }}
+                  _expanded={{
+                    bgColor: { _light: 'rgba(255, 255, 255, 1)', _dark: 'rgba(255, 255, 255, 0.06)' },
+                    borderColor: { _light: 'blue.200', _dark: 'blue.700' },
+                    boxShadow: { _light: '0 4px 12px rgba(66, 153, 225, 0.1)', _dark: '0 4px 12px rgba(66, 153, 225, 0.15)' },
                   }}
                 >
-                  <Box as="span" flex="1" textAlign="left">
-                    { headerLabel }
-                  </Box>
+                  <Flex flex="1" alignItems="center" gap={ 3 } textAlign="left">
+                    <Flex
+                      alignItems="center"
+                      justifyContent="center"
+                      w={ 8 }
+                      h={ 8 }
+                      borderRadius="lg"
+                      bgColor={{ _light: isSettlement ? 'purple.50' : 'blue.50', _dark: isSettlement ? 'purple.900' : 'blue.900' }}
+                      flexShrink={ 0 }
+                    >
+                      <IconSvg
+                        name={ isSettlement ? 'check' : 'lightning' }
+                        boxSize={ 4 }
+                        color={{ _light: isSettlement ? 'purple.500' : 'blue.500', _dark: isSettlement ? 'purple.300' : 'blue.300' }}
+                      />
+                    </Flex>
+                    <Box>
+                      <Text fontSize="sm" fontWeight={ 600 } color={{ _light: 'gray.800', _dark: 'gray.100' }}>
+                        { inferenceType }
+                      </Text>
+                      <Text fontSize="xs" color={{ _light: 'gray.500', _dark: 'gray.400' }}>
+                        Event #{ index + 1 }
+                      </Text>
+                    </Box>
+                    <Badge
+                      ml="auto"
+                      mr={ 2 }
+                      colorPalette={ isSettlement ? 'purple' : 'blue' }
+                      variant="subtle"
+                    >
+                      { isSettlement ? 'Settlement' : 'Inference' }
+                    </Badge>
+                  </Flex>
                 </AccordionItemTrigger>
-                <AccordionItemContent>
+                <AccordionItemContent pb={ 4 }>
                   { isSettlement ? (
                     <SettlementInferenceItem
                       { ...item }
