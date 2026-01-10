@@ -1,4 +1,4 @@
-import { Grid, GridItem, Flex } from '@chakra-ui/react';
+import { Box, Grid, GridItem, Flex } from '@chakra-ui/react';
 import React from 'react';
 
 import type { Log } from 'types/api/log';
@@ -7,7 +7,6 @@ import { route } from 'nextjs-routes';
 
 import { space } from 'lib/html-entities';
 import { Alert } from 'toolkit/chakra/alert';
-import { useColorModeValue } from 'toolkit/chakra/color-mode';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { Tooltip } from 'toolkit/chakra/tooltip';
@@ -56,20 +55,46 @@ const RowHeader = ({ children, isLoading, tooltip }: { children: React.ReactNode
   <GridItem
     _notFirst={{ mt: { base: 4, lg: 0 } }}
     display="flex"
-    alignItems={{ base: 'flex-start', lg: 'flex-start' }}
-    pt={{ base: 0, lg: 1 }}
+    alignItems={{ base: 'flex-start', lg: 'center' }}
+    py={{ base: 0, lg: 2 }}
   >
-    <Flex alignItems="center" gap={ 1 }>
-      <Skeleton fontWeight={ 500 } loading={ isLoading }>{ children }</Skeleton>
+    <Flex
+      alignItems="center"
+      gap={ 2 }
+      px={ 3 }
+      py={ 1.5 }
+      borderRadius="md"
+      bgColor={{ _light: 'blackAlpha.50', _dark: 'whiteAlpha.50' }}
+    >
+      <Skeleton
+        fontWeight={ 600 }
+        fontSize="sm"
+        color={{ _light: 'gray.700', _dark: 'gray.200' }}
+        loading={ isLoading }
+        textTransform="uppercase"
+        letterSpacing="0.02em"
+      >
+        { children }
+      </Skeleton>
       { tooltip && !isLoading && (
         <Tooltip content={ tooltip }>
-          <IconSvg
-            name="info"
-            boxSize={ 4 }
-            color="icon.info"
+          <Box
+            as="span"
+            display="inline-flex"
+            alignItems="center"
+            justifyContent="center"
             cursor="pointer"
-            flexShrink={ 0 }
-          />
+            transition="all 0.2s ease"
+            _hover={{ transform: 'scale(1.1)' }}
+          >
+            <IconSvg
+              name="info"
+              boxSize={ 3.5 }
+              color={{ _light: 'gray.500', _dark: 'gray.400' }}
+              _hover={{ color: { _light: 'blue.500', _dark: 'blue.300' } }}
+              flexShrink={ 0 }
+            />
+          </Box>
         </Tooltip>
       ) }
     </Flex>
@@ -77,16 +102,13 @@ const RowHeader = ({ children, isLoading, tooltip }: { children: React.ReactNode
 );
 
 const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) => {
-  const borderColor = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
-
   const renderGridItems = () => {
     return (
       <>
         { decoded?.parameters && decoded.parameters.length > 0 && (
           <>
             { decoded.parameters.map((param, index) => {
-              const fieldName = param.name || `Parameter ${ index + 1 }`;
-              const displayName = param.name ? formatFieldName(param.name) : fieldName;
+              const displayName = param.name ? formatFieldName(param.name) : `Parameter ${ index + 1 }`;
               const tooltip = param.name ? fieldDescriptions[param.name] : undefined;
 
               return (
@@ -94,8 +116,19 @@ const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) =
                   <RowHeader isLoading={ isLoading } tooltip={ tooltip }>
                     { displayName }
                   </RowHeader>
-                  <GridItem>
-                    <InferenceOutput value={ param.value } isLoading={ isLoading }/>
+                  <GridItem
+                    display="flex"
+                    alignItems="center"
+                    py={ 2 }
+                  >
+                    <Box
+                      w="100%"
+                      fontSize="sm"
+                      fontFamily="mono"
+                      color={{ _light: 'gray.800', _dark: 'gray.100' }}
+                    >
+                      <InferenceOutput value={ param.value } isLoading={ isLoading }/>
+                    </Box>
                   </GridItem>
                 </React.Fragment>
               );
@@ -108,7 +141,7 @@ const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) =
             <RowHeader isLoading={ isLoading }>
               Output
             </RowHeader>
-            <GridItem>
+            <GridItem py={ 2 }>
               <Alert status="warning" display="inline-table" whiteSpace="normal">
                 To see accurate decoded input data, the contract must be verified.{ space }
                 <Link href={ route({ pathname: '/address/[hash]/contract-verification', query: { hash: address.hash } }) }>Verify the contract here</Link>
@@ -122,7 +155,7 @@ const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) =
             <RowHeader isLoading={ isLoading }>
               Data
             </RowHeader>
-            <GridItem>
+            <GridItem py={ 2 }>
               <VStackContainer>
                 <Item isLoading={ isLoading } isCode>
                   { JSON.stringify(decoded, null, 2) }
@@ -136,21 +169,29 @@ const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) =
   };
 
   return (
-    <Grid
-      gridTemplateColumns={{ base: 'minmax(0, 1fr)', lg: '200px minmax(0, 1fr)' }}
-      gap={{ base: 2, lg: 8 }}
-      py={ 8 }
-      alignItems={{ base: 'flex-start', lg: 'flex-start' }}
-      _notFirst={{
-        borderTopWidth: '1px',
-        borderTopColor: borderColor,
+    <Box
+      p={{ base: 4, lg: 6 }}
+      borderRadius="xl"
+      bgColor={{ _light: 'rgba(255, 255, 255, 0.6)', _dark: 'rgba(255, 255, 255, 0.03)' }}
+      border="1px solid"
+      borderColor={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
+      transition="all 0.2s ease"
+      _hover={{
+        borderColor: { _light: 'gray.200', _dark: 'whiteAlpha.200' },
+        boxShadow: { _light: '0 4px 12px rgba(0, 0, 0, 0.05)', _dark: '0 4px 12px rgba(0, 0, 0, 0.2)' },
       }}
-      _first={{
-        pt: 0,
+      _notFirst={{
+        mt: 4,
       }}
     >
-      { renderGridItems() }
-    </Grid>
+      <Grid
+        gridTemplateColumns={{ base: 'minmax(0, 1fr)', lg: '180px minmax(0, 1fr)' }}
+        gap={{ base: 3, lg: 6 }}
+        alignItems={{ base: 'flex-start', lg: 'center' }}
+      >
+        { renderGridItems() }
+      </Grid>
+    </Box>
   );
 };
 
