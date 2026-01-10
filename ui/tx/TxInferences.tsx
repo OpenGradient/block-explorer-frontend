@@ -82,6 +82,12 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
       return 'LLM Chat Inference';
     } else if (event === InferenceEvents.LLMCompletionResult) {
       return 'LLM Completion Inference';
+    } else if (event === InferenceEvents.BatchSettlement) {
+      return 'LLM Batch Settlement';
+    } else if (event === InferenceEvents.InferenceSettlement) {
+      return 'LLM Individual Settlement';
+    } else if (event === InferenceEvents.SettlementWithMetadata) {
+      return 'LLM Individual Settlement with Metadata';
     }
 
     return 'ML Inference';

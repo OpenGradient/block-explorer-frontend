@@ -7,6 +7,11 @@ export const InferenceEvents = {
   ModelInferenceEvent: 'ModelInferenceEvent',
   LLMCompletionEvent: 'LLMCompletionEvent',
   LLMChat: 'LLMChat',
+
+  // x402 events - https://github.com/OpenGradient/inference-facilitator/blob/main/contracts/settlement.sol
+  BatchSettlement: 'BatchSettlement',
+  InferenceSettlement: 'Settlement',
+  SettlementWithMetadata: 'SettlementWithMetadata',
 } as const;
 type InferenceEventsType = typeof InferenceEvents;
 export type InferenceEvent = InferenceEventsType[keyof InferenceEventsType];
