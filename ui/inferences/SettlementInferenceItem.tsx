@@ -21,7 +21,12 @@ type Props = Log & {
 };
 
 const RowHeader = ({ children, isLoading }: { children: React.ReactNode; isLoading?: boolean }) => (
-  <GridItem _notFirst={{ my: { base: 4, lg: 0 } }}>
+  <GridItem
+    _notFirst={{ mt: { base: 4, lg: 0 } }}
+    display="flex"
+    alignItems={{ base: 'flex-start', lg: 'flex-start' }}
+    pt={{ base: 0, lg: 1 }}
+  >
     <Skeleton fontWeight={ 500 } loading={ isLoading }>{ children }</Skeleton>
   </GridItem>
 );
@@ -72,7 +77,7 @@ const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) =
             </RowHeader>
             <GridItem>
               <VStackContainer>
-                <Item isLoading={ isLoading }>
+                <Item isLoading={ isLoading } isCode>
                   { JSON.stringify(decoded, null, 2) }
                 </Item>
               </VStackContainer>
@@ -88,6 +93,7 @@ const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) =
       gridTemplateColumns={{ base: 'minmax(0, 1fr)', lg: '200px minmax(0, 1fr)' }}
       gap={{ base: 2, lg: 8 }}
       py={ 8 }
+      alignItems={{ base: 'flex-start', lg: 'flex-start' }}
       _notFirst={{
         borderTopWidth: '1px',
         borderTopColor: borderColor,

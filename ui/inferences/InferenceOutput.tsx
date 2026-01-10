@@ -15,6 +15,12 @@ interface InferenceOutputProps {
   isLoading?: boolean;
 }
 
+// Helper function to format arrays without quotes around string values
+const formatArray = (arr: Array<string | number>): string => {
+  if (arr.length === 0) return '[]';
+  return `[${ arr.map(v => typeof v === 'string' ? v : String(v)).join(', ') }]`;
+};
+
 const InferenceOutput = ({ value, isLoading }: InferenceOutputProps) => {
   try {
     const modelOutput = convertArrayToModelOutput(value);
@@ -35,7 +41,7 @@ const InferenceOutput = ({ value, isLoading }: InferenceOutputProps) => {
         elements.push(...strings.map(({ name, values }) => {
           return (
             <Item key={ name } label={ name } isLoading={ isLoading } isCode>
-              { JSON.stringify(values) }
+              { formatArray(values) }
             </Item>
           );
         }));
@@ -44,7 +50,7 @@ const InferenceOutput = ({ value, isLoading }: InferenceOutputProps) => {
         elements.push(...jsons.map(({ name, value }) => {
           return (
             <Item key={ name } label={ name } isLoading={ isLoading } isCode>
-              { JSON.stringify(JSON.parse(value)) }
+              { JSON.stringify(JSON.parse(value), null, 2) }
             </Item>
           );
         }));
