@@ -180,13 +180,14 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
             ) }
             { inferenceInfo && !inferenceInfo.isLoading && inferenceInfo.modelCID && (
               <Skeleton loading={ isLoading }>
-                <Text
+                <Flex
                   fontSize="11px"
                   color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
-                  lineClamp={ 1 }
+                  alignItems="baseline"
+                  gap={ 1 }
                 >
-                  Model:{ ' ' }
+                  <Text>Model:</Text>
                   <Link
                     href={ `https://walruscan.com/mainnet/blob/${ inferenceInfo.modelCID }` }
                     external
@@ -198,10 +199,11 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
                       textDecoration: 'underline',
                       color: { _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.9)' },
                     }}
+                    lineClamp={ 1 }
                   >
                     { inferenceInfo.modelCID.slice(0, 8) }...
                   </Link>
-                </Text>
+                </Flex>
               </Skeleton>
             ) }
           </Box>
