@@ -71,10 +71,6 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
     return <Text as="span">There are no inferences for this transaction.</Text>;
   }
 
-  // if (logsFilter) {
-  //   items = (data?.items ?? []).filter(logsFilter);
-  // }
-
   const renderInferenceType = (decoded: DecodedInput | null) => {
     const event = getInferenceEvent(decoded?.method_call);
     if (event === InferenceEvents.InferenceResult) {
@@ -101,16 +97,16 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
            event === InferenceEvents.SettlementWithMetadata;
   };
 
-  // Settlement logs only come from SettlementRelay - no pairing needed
+  // Settlement logs come from LLMInference - no pairing needed
   // InferenceHub logs may need Precompile pairing
   const inferenceLogs = items
     .filter((item) =>
-      item.address.hash === SUPPORTED_INFERENCE_ADDRESSES.SettlementRelay ||
-      item.address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub,
+      item.address.hash === SUPPORTED_INFERENCE_ADDRESSES.InferenceHub ||
+      item.address.hash === SUPPORTED_INFERENCE_ADDRESSES.LLMInference,
     )
     .map((item) => {
-      // Settlement logs from SettlementRelay are ready to use as-is
-      if (item.address.hash === SUPPORTED_INFERENCE_ADDRESSES.SettlementRelay) {
+      // Settlement logs from LLMInference don't need precompile pairing
+      if (item.address.hash === SUPPORTED_INFERENCE_ADDRESSES.LLMInference) {
         return item;
       }
 
