@@ -201,7 +201,7 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
                     </Badge>
                   </Flex>
                 </AccordionItemTrigger>
-                <AccordionItemContent pb={ 4 }>
+                <AccordionItemContent px={ 2 } pt={ 2 } pb={ 4 }>
                   { isSettlement ? (
                     <SettlementInferenceItem
                       { ...item }
