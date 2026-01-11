@@ -126,11 +126,15 @@ const TxSubHeading = ({ hash, hasTag, txQuery }: Props) => {
           alignItems="center"
           gap={ 2.5 }
           fontFamily="system-ui, -apple-system, sans-serif"
+          w="100%"
+          minW={ 0 }
         >
-          <Skeleton loading={ txQuery.isPlaceholderData }>
+          <Skeleton loading={ txQuery.isPlaceholderData } w="100%" minW={ 0 }>
             <Flex
               alignItems="center"
               gap={ 2 }
+              w="100%"
+              minW={ 0 }
             >
               <Badge
                 colorPalette="gray"
@@ -150,10 +154,13 @@ const TxSubHeading = ({ hash, hasTag, txQuery }: Props) => {
                   _dark: 'rgba(148, 163, 184, 0.2)',
                 }}
                 color={{ _light: 'rgba(30, 58, 138, 0.95)', _dark: 'rgba(255, 255, 255, 0.95)' }}
+                flex="1"
+                minW={ 0 }
+                overflow="hidden"
               >
                 <HashStringShortenDynamic hash={ hash }/>
               </Badge>
-              <CopyToClipboard text={ hash } isLoading={ txQuery.isPlaceholderData }/>
+              <CopyToClipboard text={ hash } isLoading={ txQuery.isPlaceholderData } flexShrink={ 0 }/>
             </Flex>
           </Skeleton>
         </Flex>
