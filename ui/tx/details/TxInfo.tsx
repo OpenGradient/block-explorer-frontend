@@ -211,7 +211,7 @@ const TxInfo = ({ data, isLoading, socketStatus }: Props) => {
       </DetailedInfo.ItemValue>
 
       <DetailedInfo.ItemLabel
-        hint="Type of ML inference for this transaction, if any"
+        hint="Type of inference (ML, LLM, settlement, etc.) associated with this transaction, if any"
         isLoading={ isLoading }
       >
         Inference
