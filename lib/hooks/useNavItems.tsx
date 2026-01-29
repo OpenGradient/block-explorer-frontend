@@ -299,6 +299,10 @@ export default function useNavItems(): ReturnType {
         url: 'https://hub.opengradient.ai',
         icon: 'apps',
       },
+      {
+        text: 'Testnet V1 Explorer',
+        url: 'https://testnetv1.opengradient.ai',
+      },
     ].filter(Boolean);
 
     const accountNavItems: ReturnType['accountNavItems'] = [
