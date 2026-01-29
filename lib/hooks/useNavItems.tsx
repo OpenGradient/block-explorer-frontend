@@ -244,6 +244,10 @@ export default function useNavItems(): ReturnType {
         nextRoute: { pathname: '/txn-withdrawals' as const },
         isActive: pathname.startsWith('/txn-withdrawals'),
       },
+      {
+        text: 'Docs',
+        url: 'https://docs.opengradient.ai/',
+      },
       ...config.UI.navigation.otherLinks,
     ].filter(Boolean);
 
