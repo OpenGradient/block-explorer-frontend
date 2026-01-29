@@ -71,7 +71,7 @@ const TestnetBadge = ({ className, ml }: Props) => {
           _dark={{ color: 'red.400' }}
           fontFamily="system-ui, -apple-system, sans-serif"
         >
-          Testnet
+          Testnet V2
         </Text>
       </Box>
     </Box>
