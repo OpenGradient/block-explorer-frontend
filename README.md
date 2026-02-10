@@ -1,35 +1,55 @@
-<h1 align="center">Blockscout frontend</h1>
+<h1 align="center">OpenGradient Network Explorer</h1>
 
 <p align="center">
-    <span>Frontend application for </span>
-    <a href="https://github.com/blockscout/blockscout/blob/master/README.md">Blockscout</a>
-    <span> blockchain explorer</span>
+    <span>Blockchain explorer frontend for the </span>
+    <a href="https://opengradient.ai">OpenGradient Network</a>
+    <span> - the network for open intelligence</span>
 </p>
 
-## Running and configuring the app
+<p align="center">
+    <a href="https://explorer.opengradient.ai">explorer.opengradient.ai</a>
+</p>
 
-App is distributed as a docker image. Here you can find information about the [package](https://github.com/blockscout/frontend/pkgs/container/frontend) and its recent [releases](https://github.com/blockscout/frontend/releases).
+## About OpenGradient
 
-You can configure your app by passing necessary environment variables when starting the container. See full list of ENVs and their description [here](./docs/ENVS.md).
+OpenGradient is the network for open intelligence - a decentralized AI platform that enables developers to host, execute, and verify AI models at scale. The OpenGradient Network provides:
+
+- **Verifiable AI Execution**: All inference runs within Trusted Execution Environments (TEEs) with cryptographic attestation
+- **Decentralized Infrastructure**: Permissionless network of compute nodes for AI model hosting and execution
+- **Multi-chain Settlement**: Native support for payment settlement across multiple chains including OpenGradient and Base
+- **On-chain ML**: ZKML-verified on-chain inference for smart contract integration (coming soon)
+
+Learn more at [opengradient.ai](https://opengradient.ai) and explore the network at [explorer.opengradient.ai](https://explorer.opengradient.ai).
+
+## Running and Configuring the Explorer
+
+The explorer is distributed as a docker image. Configure your instance by passing the necessary environment variables when starting the container. See the full list of ENVs and their descriptions [here](./docs/ENVS.md).
 
 ```sh
 docker run -p 3000:3000 --env-file <path-to-your-env-file> ghcr.io/blockscout/frontend:latest
 ```
 
-Alternatively, you can build your own docker image and run your app from that. Please follow this [guide](./docs/CUSTOM_BUILD.md).
-
-For more information on migrating from the previous frontend, please see the [frontend migration docs](https://docs.blockscout.com/for-developers/frontend-migration).
+Alternatively, you can build your own docker image. Please follow this [guide](./docs/CUSTOM_BUILD.md).
 
 ## Contributing
 
-See our [Contribution guide](./docs/CONTRIBUTING.md) for pull request protocol. We expect contributors to follow our [code of conduct](./CODE_OF_CONDUCT.md) when submitting code or comments.
+We welcome contributions! Please see the [Contribution guide](./docs/CONTRIBUTING.md) for pull request protocol and follow our [code of conduct](./CODE_OF_CONDUCT.md) when submitting code or comments.
 
 ## Resources
-- [App ENVs list](./docs/ENVS.md)
+
+### OpenGradient
+- [OpenGradient Website](https://opengradient.ai)
+- [OpenGradient Documentation](https://docs.opengradient.ai)
+- [Network Explorer](https://explorer.opengradient.ai)
+
+### Explorer Configuration
+- [Environment variables](./docs/ENVS.md)
+- [Custom build guide](./docs/CUSTOM_BUILD.md)
 - [Contribution guide](./docs/CONTRIBUTING.md)
-- [Making a custom build](./docs/CUSTOM_BUILD.md)
-- [Frontend migration guide](https://docs.blockscout.com/for-developers/frontend-migration)
-- [Manual deployment guide with backend and microservices](https://docs.blockscout.com/for-developers/deployment/manual-deployment-guide)
+
+## Attribution
+
+This explorer is built on [Blockscout](https://github.com/blockscout/frontend), an open-source blockchain explorer. We're grateful to the Blockscout team for their excellent work on the core explorer infrastructure.
 
 ## License
 
