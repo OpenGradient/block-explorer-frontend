@@ -344,7 +344,7 @@ const HeroBanner = () => {
                   </Skeleton>
                 </LinkBox>
 
-                { /* LLM Batch Settlements */ }
+                { /* LLM Settlement Txns */ }
                 <LinkBox
                   p={ 5 }
                   position="relative"
@@ -377,7 +377,7 @@ const HeroBanner = () => {
                       color={{ _light: 'rgba(6, 182, 212, 0.9)', _dark: 'rgba(125, 211, 252, 1)' }}
                       fontFamily="system-ui, -apple-system, sans-serif"
                     >
-                      LLM Batch Settlements
+                      LLM Settlement Txns
                     </Text>
                     <IconSvg
                       name="transactions_slim"
