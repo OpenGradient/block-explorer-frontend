@@ -1,14 +1,12 @@
 // we use custom heading size for hero banner
 
 import { Box, Flex, VStack, Text, Grid } from '@chakra-ui/react';
-import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
 import { route } from 'nextjs-routes';
 
 import config from 'configs/app';
 import useApiQuery from 'lib/api/useApiQuery';
-import { getAllTasks } from 'lib/opengradient/contracts/scheduler';
 import { HOMEPAGE_STATS, HOMEPAGE_STATS_MICROSERVICE } from 'stubs/stats';
 import { LinkBox, LinkOverlay } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
@@ -46,10 +44,12 @@ const HeroBanner = () => {
     },
   });
 
-  const workflowsQuery = useQuery({
-    queryKey: [ 'opengradient', 'getAllTasks' ],
-    queryFn: getAllTasks,
-    refetchOnMount: false,
+  const settlementContractAddress = '0xAa3bB22c5Ef24fe3837134A25A4D801308E2516d';
+  const settlementQuery = useApiQuery('address_counters', {
+    pathParams: { hash: settlementContractAddress },
+    queryOptions: {
+      refetchOnMount: false,
+    },
   });
 
   const totalTransactions = React.useMemo(() => {
@@ -76,11 +76,13 @@ const HeroBanner = () => {
     return null;
   }, [ statsQuery.data, apiQuery.data ]);
 
-  const activeWorkflowsCount = React.useMemo(() => {
-    const tasks = workflowsQuery.data ?? [];
-    const now = BigInt(Math.floor(Date.now() / 1000));
-    return tasks.filter((t) => t.endTime > now).length;
-  }, [ workflowsQuery.data ]);
+  const llmBatchSettlementsCount = React.useMemo(() => {
+    const countersData = settlementQuery.data;
+    if (countersData?.transactions_count) {
+      return Number(countersData.transactions_count);
+    }
+    return null;
+  }, [ settlementQuery.data ]);
 
   const formatNumber = (num: number | null, decimals: number = 2): string => {
     if (num === null) return '—';
@@ -342,7 +344,7 @@ const HeroBanner = () => {
                   </Skeleton>
                 </LinkBox>
 
-                { /* Active Workflows */ }
+                { /* LLM Batch Settlements */ }
                 <LinkBox
                   p={ 5 }
                   position="relative"
@@ -359,7 +361,7 @@ const HeroBanner = () => {
                   }}
                 >
                   <LinkOverlay
-                    href={ route({ pathname: '/workflows' }) }
+                    href={ route({ pathname: '/address/[hash]', query: { hash: settlementContractAddress } }) }
                     noIcon
                   />
                   <Flex
@@ -375,15 +377,15 @@ const HeroBanner = () => {
                       color={{ _light: 'rgba(6, 182, 212, 0.9)', _dark: 'rgba(125, 211, 252, 1)' }}
                       fontFamily="system-ui, -apple-system, sans-serif"
                     >
-                      AI Workflows
+                      LLM Batch Settlements
                     </Text>
                     <IconSvg
-                      name="opengradient/workflow"
+                      name="transactions_slim"
                       boxSize={ 3 }
                       color={{ _light: 'rgba(6, 182, 212, 0.9)', _dark: 'rgba(125, 211, 252, 1)' }}
                     />
                   </Flex>
-                  <Skeleton loading={ workflowsQuery.isPlaceholderData } w="fit-content">
+                  <Skeleton loading={ settlementQuery.isPlaceholderData } w="fit-content">
                     <Text
                       fontSize="32px"
                       fontWeight={ 200 }
@@ -392,7 +394,7 @@ const HeroBanner = () => {
                       fontFamily="system-ui, -apple-system, sans-serif"
                       lineHeight="1"
                     >
-                      { activeWorkflowsCount.toLocaleString() }
+                      { formatNumber(llmBatchSettlementsCount) }
                     </Text>
                   </Skeleton>
                 </LinkBox>
