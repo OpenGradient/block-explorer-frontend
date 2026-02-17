@@ -64,14 +64,14 @@ const HeroBanner = () => {
     return null;
   }, [ statsQuery.data, apiQuery.data ]);
 
-  const totalAccounts = React.useMemo(() => {
+  const totalBlocks = React.useMemo(() => {
     const statsData = statsQuery.data;
     const apiData = apiQuery.data;
-    if (statsData?.total_addresses?.value) {
-      return Number(statsData.total_addresses.value);
+    if (statsData?.total_blocks?.value) {
+      return Number(statsData.total_blocks.value);
     }
-    if (apiData?.total_addresses) {
-      return Number(apiData.total_addresses);
+    if (apiData?.total_blocks) {
+      return Number(apiData.total_blocks);
     }
     return null;
   }, [ statsQuery.data, apiQuery.data ]);
@@ -289,7 +289,7 @@ const HeroBanner = () => {
                   </Text>
                 </LinkBox>
 
-                { /* Accounts */ }
+                { /* Total Blocks */ }
                 <LinkBox
                   p={ 5 }
                   position="relative"
@@ -306,7 +306,7 @@ const HeroBanner = () => {
                   }}
                 >
                   <LinkOverlay
-                    href={ route({ pathname: '/accounts' }) }
+                    href={ route({ pathname: '/blocks' }) }
                     noIcon
                   />
                   <Flex
@@ -322,10 +322,10 @@ const HeroBanner = () => {
                       color={{ _light: 'rgba(30, 58, 138, 0.9)', _dark: 'rgba(148, 163, 184, 1)' }}
                       fontFamily="system-ui, -apple-system, sans-serif"
                     >
-                      Accounts
+                      Total Blocks
                     </Text>
                     <IconSvg
-                      name="profile"
+                      name="block_slim"
                       boxSize={ 3 }
                       color={{ _light: 'rgba(30, 58, 138, 0.9)', _dark: 'rgba(148, 163, 184, 1)' }}
                     />
@@ -339,7 +339,7 @@ const HeroBanner = () => {
                       fontFamily="system-ui, -apple-system, sans-serif"
                       lineHeight="1"
                     >
-                      { formatNumber(totalAccounts, 1) }
+                      { formatNumber(totalBlocks, 1) }
                     </Text>
                   </Skeleton>
                 </LinkBox>
