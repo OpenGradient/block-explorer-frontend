@@ -377,7 +377,7 @@ const HeroBanner = () => {
                       color={{ _light: 'rgba(6, 182, 212, 0.9)', _dark: 'rgba(125, 211, 252, 1)' }}
                       fontFamily="system-ui, -apple-system, sans-serif"
                     >
-                      AI Settlement Txns
+                      x402 Txns
                     </Text>
                     <IconSvg
                       name="transactions_slim"
