@@ -83,7 +83,9 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
         { /* Badges Row */ }
         <HStack flexWrap="wrap" gap={ 1.5 }>
           <TxType types={ tx.transaction_types } isLoading={ isLoading }/>
-          <TxStatus status={ tx.status } errorText={ tx.status === 'error' ? tx.result : undefined } isLoading={ isLoading }/>
+          { tx.status !== 'error' && (
+            <TxStatus status={ tx.status } isLoading={ isLoading }/>
+          ) }
           { hasInference && (
             <>
               <Badge
