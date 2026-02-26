@@ -45,7 +45,7 @@ export default function useInferenceType(tx: Transaction | undefined, isLoading:
     // Check for LLM Batch Settlement transaction (x402 infrastructure posts proof to blockchain)
     if (isLLMInferenceTx && tx?.raw_input) {
       const methodSelector = tx.raw_input.slice(0, 10).toLowerCase();
-      if (methodSelector === '0x609580f6') {
+      if (methodSelector === '0x609580f6' || methodSelector === '0x1b243ae6') {
         // Transaction failed - don't show inference
         if (isTxFailed) {
           return null;
