@@ -45,8 +45,15 @@ const HeroBanner = () => {
   });
 
   const settlementContractAddress = '0xAa3bB22c5Ef24fe3837134A25A4D801308E2516d';
+  const settlementContractAddressV2 = '0xf1dc0d5Dcf2A01924faC78185B9227CF3EC839A5';
   const settlementQuery = useApiQuery('address_counters', {
     pathParams: { hash: settlementContractAddress },
+    queryOptions: {
+      refetchOnMount: false,
+    },
+  });
+  const settlementQueryV2 = useApiQuery('address_counters', {
+    pathParams: { hash: settlementContractAddressV2 },
     queryOptions: {
       refetchOnMount: false,
     },
@@ -78,11 +85,14 @@ const HeroBanner = () => {
 
   const llmBatchSettlementsCount = React.useMemo(() => {
     const countersData = settlementQuery.data;
-    if (countersData?.transactions_count) {
-      return Number(countersData.transactions_count);
+    const countersDataV2 = settlementQueryV2.data;
+    const v1Count = countersData?.transactions_count ? Number(countersData.transactions_count) : 0;
+    const v2Count = countersDataV2?.transactions_count ? Number(countersDataV2.transactions_count) : 0;
+    if (v1Count === 0 && v2Count === 0) {
+      return null;
     }
-    return null;
-  }, [ settlementQuery.data ]);
+    return v1Count + v2Count;
+  }, [ settlementQuery.data, settlementQueryV2.data ]);
 
   const formatNumber = (num: number | null, decimals: number = 2): string => {
     if (num === null) return '—';
@@ -385,7 +395,7 @@ const HeroBanner = () => {
                       color={{ _light: 'rgba(6, 182, 212, 0.9)', _dark: 'rgba(125, 211, 252, 1)' }}
                     />
                   </Flex>
-                  <Skeleton loading={ settlementQuery.isPlaceholderData } w="fit-content">
+                  <Skeleton loading={ settlementQuery.isPlaceholderData || settlementQueryV2.isPlaceholderData } w="fit-content">
                     <Text
                       fontSize="32px"
                       fontWeight={ 200 }
