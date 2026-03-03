@@ -1,4 +1,4 @@
-<h1 align="center">OpenGradient Network Explorer</h1>
+<h1 align="center">OpenGradient Explorer</h1>
 
 <p align="center">
     <span>Blockchain explorer frontend for the </span>
