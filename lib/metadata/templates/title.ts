@@ -64,6 +64,7 @@ const TEMPLATE_MAP: Record<Route['pathname'], string> = {
 
   // OpenGradient routes
   '/workflows': '%network_name% workflows - %network_name% explorer',
+  '/tee-registry': '%network_name% TEE Registry - %network_name% explorer',
 
   // service routes, added only to make typescript happy
   '/login': '%network_name% login',

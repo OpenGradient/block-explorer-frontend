@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import type { Route } from 'nextjs-routes';
 
 // equal og:description
@@ -67,6 +66,7 @@ const TEMPLATE_MAP: Record<Route['pathname'], string> = {
 
   // OpenGradient routes
   '/workflows': 'View workflows on the %network_title%',
+  '/tee-registry': 'TEE Registry - Trusted Execution Environment nodes on %network_title%',
 
   // service routes, added only to make typescript happy
   '/login': DEFAULT_TEMPLATE,

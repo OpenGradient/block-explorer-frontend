@@ -62,6 +62,7 @@ export const PAGE_TYPE_DICT: Record<Route['pathname'], string> = {
 
   // OpenGradient routes
   '/workflows': 'Workflows',
+  '/tee-registry': 'TEE Registry',
 
   // service routes, added only to make typescript happy
   '/login': 'Login',

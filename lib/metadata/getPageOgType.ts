@@ -64,6 +64,7 @@ const OG_TYPE_DICT: Record<Route['pathname'], OGPageType> = {
 
   // OpenGradient routes
   '/workflows': 'Root page',
+  '/tee-registry': 'Root page',
 
   // service routes, added only to make typescript happy
   '/login': 'Regular page',
