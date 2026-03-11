@@ -127,7 +127,7 @@ const PageTitle = ({ title, contentAfter, withTextAd, backLink, className, isLoa
                 fontSize={{ base: '30px', md: '40px', lg: '44px', xl: '46px' }}
                 fontWeight={ 200 }
                 letterSpacing="-0.04em"
-                lineHeight="1"
+                lineHeight="1.15"
                 color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
                 fontFamily="system-ui, -apple-system, sans-serif"
               >
