@@ -155,7 +155,6 @@ export default function useNavItems(): ReturnType {
           validators,
           verifiedContracts,
           ensLookup,
-          teeRegistry,
         ].filter(Boolean),
       ];
     } else if (rollupFeature.isEnabled && rollupFeature.type === 'shibarium') {
@@ -172,7 +171,6 @@ export default function useNavItems(): ReturnType {
           topAccounts,
           verifiedContracts,
           ensLookup,
-          teeRegistry,
         ].filter(Boolean),
       ];
     } else if (rollupFeature.isEnabled && rollupFeature.type === 'zkSync') {
@@ -189,7 +187,6 @@ export default function useNavItems(): ReturnType {
           validators,
           verifiedContracts,
           ensLookup,
-          teeRegistry,
         ].filter(Boolean),
       ];
     } else {
@@ -202,7 +199,6 @@ export default function useNavItems(): ReturnType {
         validators,
         verifiedContracts,
         ensLookup,
-        teeRegistry,
         config.features.beaconChain.isEnabled && {
           text: 'Withdrawals',
           nextRoute: { pathname: '/withdrawals' as const },
@@ -268,6 +264,7 @@ export default function useNavItems(): ReturnType {
         icon: 'explorer',
         isActive: pathname === '/',
       },
+      teeRegistry,
       {
         text: 'Network',
         icon: 'globe-b',

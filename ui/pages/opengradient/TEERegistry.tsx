@@ -73,7 +73,58 @@ const TEERegistry = () => {
       <PageTitle
         title="TEE Registry"
         withTextAd
+        mb={ 4 }
       />
+
+      { /* Description */ }
+      <Box
+        mb={ 6 }
+        p={{ base: 4, lg: 5 }}
+        bg={{ _light: 'rgba(0, 0, 0, 0.01)', _dark: 'rgba(255, 255, 255, 0.01)' }}
+        borderTop="1px solid"
+        borderBottom="1px solid"
+        borderColor={{ _light: 'rgba(0, 0, 0, 0.04)', _dark: 'rgba(255, 255, 255, 0.04)' }}
+      >
+        <Flex
+          gap={ 3 }
+          alignItems="flex-start"
+          flexDirection={{ base: 'column', lg: 'row' }}
+        >
+          <Box
+            p={ 2 }
+            bg={{ _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(255, 255, 255, 0.02)' }}
+            flexShrink={ 0 }
+          >
+            <IconSvg
+              name="nft_shield"
+              boxSize={ 5 }
+              color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+            />
+          </Box>
+          <Box flex={ 1 }>
+            <Text
+              fontSize={{ base: 'sm', lg: 'md' }}
+              fontWeight={ 500 }
+              mb={ 1.5 }
+              color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.7)' }}
+              fontFamily="system-ui, -apple-system, sans-serif"
+            >
+              Trusted Execution Environment Registry
+            </Text>
+            <Text
+              fontSize={{ base: '12px', md: '13px' }}
+              lineHeight="1.6"
+              color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+              fontFamily="system-ui, -apple-system, sans-serif"
+            >
+              Hardware-rooted chain of trust from AWS Nitro enclaves to on-chain verification.
+              Each TEE node is cryptographically attested, with its signing key and TLS certificate
+              bound to verified enclave code. Heartbeat liveness proofs ensure nodes are actively running
+              approved software. Click on a node to inspect its attestation details.
+            </Text>
+          </Box>
+        </Flex>
+      </Box>
 
       { /* Hero Stats Section */ }
       <Box
@@ -216,53 +267,6 @@ const TEERegistry = () => {
               </Skeleton>
             </LinkBox>
 
-            { /* Active Nodes */ }
-            <LinkBox
-              p={ 5 }
-              position="relative"
-              bgGradient={{
-                _light: 'linear-gradient(135deg, rgba(22, 163, 74, 0.04) 0%, rgba(34, 197, 94, 0.05) 100%)',
-                _dark: 'linear-gradient(135deg, rgba(22, 163, 74, 0.08) 0%, rgba(34, 197, 94, 0.1) 100%)',
-              }}
-              transition="all 0.2s ease"
-              _hover={{
-                bgGradient: {
-                  _light: 'linear-gradient(135deg, rgba(22, 163, 74, 0.06) 0%, rgba(34, 197, 94, 0.08) 100%)',
-                  _dark: 'linear-gradient(135deg, rgba(22, 163, 74, 0.12) 0%, rgba(34, 197, 94, 0.15) 100%)',
-                },
-              }}
-            >
-              <Flex alignItems="center" gap={ 1.5 } mb={ 2 }>
-                <Text
-                  fontSize="10px"
-                  fontWeight={ 600 }
-                  letterSpacing="0.08em"
-                  textTransform="uppercase"
-                  color={{ _light: 'rgba(22, 163, 74, 0.7)', _dark: 'rgba(34, 197, 94, 0.8)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                >
-                  Active Nodes
-                </Text>
-                <IconSvg
-                  name="check"
-                  boxSize={ 3 }
-                  color={{ _light: 'rgba(22, 163, 74, 0.75)', _dark: 'rgba(34, 197, 94, 0.85)' }}
-                />
-              </Flex>
-              <Skeleton loading={ query.isPlaceholderData } w="fit-content">
-                <Text
-                  fontSize="32px"
-                  fontWeight={ 200 }
-                  letterSpacing="-0.02em"
-                  color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                  lineHeight="1"
-                >
-                  { stats.activeNodes.toLocaleString() }
-                </Text>
-              </Skeleton>
-            </LinkBox>
-
             { /* Enabled Nodes */ }
             <LinkBox
               p={ 5 }
@@ -306,6 +310,53 @@ const TEERegistry = () => {
                   lineHeight="1"
                 >
                   { stats.enabledNodes.toLocaleString() }
+                </Text>
+              </Skeleton>
+            </LinkBox>
+
+            { /* Active Nodes */ }
+            <LinkBox
+              p={ 5 }
+              position="relative"
+              bgGradient={{
+                _light: 'linear-gradient(135deg, rgba(22, 163, 74, 0.04) 0%, rgba(34, 197, 94, 0.05) 100%)',
+                _dark: 'linear-gradient(135deg, rgba(22, 163, 74, 0.08) 0%, rgba(34, 197, 94, 0.1) 100%)',
+              }}
+              transition="all 0.2s ease"
+              _hover={{
+                bgGradient: {
+                  _light: 'linear-gradient(135deg, rgba(22, 163, 74, 0.06) 0%, rgba(34, 197, 94, 0.08) 100%)',
+                  _dark: 'linear-gradient(135deg, rgba(22, 163, 74, 0.12) 0%, rgba(34, 197, 94, 0.15) 100%)',
+                },
+              }}
+            >
+              <Flex alignItems="center" gap={ 1.5 } mb={ 2 }>
+                <Text
+                  fontSize="10px"
+                  fontWeight={ 600 }
+                  letterSpacing="0.08em"
+                  textTransform="uppercase"
+                  color={{ _light: 'rgba(22, 163, 74, 0.7)', _dark: 'rgba(34, 197, 94, 0.8)' }}
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                >
+                  Active Nodes
+                </Text>
+                <IconSvg
+                  name="check"
+                  boxSize={ 3 }
+                  color={{ _light: 'rgba(22, 163, 74, 0.75)', _dark: 'rgba(34, 197, 94, 0.85)' }}
+                />
+              </Flex>
+              <Skeleton loading={ query.isPlaceholderData } w="fit-content">
+                <Text
+                  fontSize="32px"
+                  fontWeight={ 200 }
+                  letterSpacing="-0.02em"
+                  color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                  lineHeight="1"
+                >
+                  { stats.activeNodes.toLocaleString() }
                 </Text>
               </Skeleton>
             </LinkBox>
@@ -358,56 +409,6 @@ const TEERegistry = () => {
             </LinkBox>
           </Grid>
         </VStack>
-      </Box>
-
-      { /* Description */ }
-      <Box
-        mb={ 6 }
-        p={{ base: 4, lg: 5 }}
-        bg={{ _light: 'rgba(0, 0, 0, 0.01)', _dark: 'rgba(255, 255, 255, 0.01)' }}
-        borderTop="1px solid"
-        borderBottom="1px solid"
-        borderColor={{ _light: 'rgba(0, 0, 0, 0.04)', _dark: 'rgba(255, 255, 255, 0.04)' }}
-      >
-        <Flex
-          gap={ 3 }
-          alignItems="flex-start"
-          flexDirection={{ base: 'column', lg: 'row' }}
-        >
-          <Box
-            p={ 2 }
-            bg={{ _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(255, 255, 255, 0.02)' }}
-            flexShrink={ 0 }
-          >
-            <IconSvg
-              name="nft_shield"
-              boxSize={ 5 }
-              color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-            />
-          </Box>
-          <Box flex={ 1 }>
-            <Text
-              fontSize={{ base: 'sm', lg: 'md' }}
-              fontWeight={ 500 }
-              mb={ 1.5 }
-              color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.7)' }}
-              fontFamily="system-ui, -apple-system, sans-serif"
-            >
-              Trusted Execution Environment Registry
-            </Text>
-            <Text
-              fontSize={{ base: '12px', md: '13px' }}
-              lineHeight="1.6"
-              color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-              fontFamily="system-ui, -apple-system, sans-serif"
-            >
-              Hardware-rooted chain of trust from AWS Nitro enclaves to on-chain verification.
-              Each TEE node is cryptographically attested, with its signing key and TLS certificate
-              bound to verified enclave code. Heartbeat liveness proofs ensure nodes are actively running
-              approved software. Click on a node to inspect its attestation details.
-            </Text>
-          </Box>
-        </Flex>
       </Box>
 
       { /* TEE Types Grid */ }
