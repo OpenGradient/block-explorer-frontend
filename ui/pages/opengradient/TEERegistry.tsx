@@ -415,8 +415,8 @@ const TEERegistry = () => {
           ) }
         </Flex>
         <Grid
-          templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: `repeat(${ Math.min(types.length, 4) }, 1fr)` }}
-          gap={ 4 }
+          templateColumns="1fr"
+          gap={ 2 }
         >
           { types.map((type) => (
             <TEETypeCard
