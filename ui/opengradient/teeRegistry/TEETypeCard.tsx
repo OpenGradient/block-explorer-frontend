@@ -70,19 +70,31 @@ const TEETypeCard = ({ type, isSelected, isLoading, onClick }: Props) => {
         transition="all 0.2s ease"
       />
 
-      { /* Type Name */ }
-      <Skeleton loading={ isLoading } w="fit-content" flexShrink={ 0 }>
-        <Text
-          fontSize="13px"
-          fontWeight={ 600 }
-          color={{ _light: 'rgba(0, 0, 0, 0.85)', _dark: 'rgba(255, 255, 255, 0.9)' }}
-          fontFamily="system-ui, -apple-system, sans-serif"
-          letterSpacing="-0.01em"
-          whiteSpace="nowrap"
-        >
-          { type.name }
-        </Text>
-      </Skeleton>
+      { /* Name + Stats */ }
+      <Flex alignItems="baseline" gap={ 2 } flexShrink={ 0 }>
+        <Skeleton loading={ isLoading } w="fit-content">
+          <Text
+            fontSize="13px"
+            fontWeight={ 600 }
+            color={{ _light: 'rgba(0, 0, 0, 0.85)', _dark: 'rgba(255, 255, 255, 0.9)' }}
+            fontFamily="system-ui, -apple-system, sans-serif"
+            letterSpacing="-0.01em"
+            whiteSpace="nowrap"
+          >
+            { type.name }
+          </Text>
+        </Skeleton>
+        <Skeleton loading={ isLoading } w="fit-content">
+          <Text
+            fontSize="11px"
+            fontFamily="system-ui, -apple-system, sans-serif"
+            whiteSpace="nowrap"
+            color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+          >
+            { type.activeNodes }/{ type.totalNodes } active
+          </Text>
+        </Skeleton>
+      </Flex>
 
       { /* Health bar */ }
       <Box flex={ 1 } minW="40px">
@@ -104,45 +116,17 @@ const TEETypeCard = ({ type, isSelected, isLoading, onClick }: Props) => {
         </Box>
       </Box>
 
-      { /* Stats inline */ }
-      <Flex gap={ 2.5 } alignItems="center" flexShrink={ 0 }>
-        <Skeleton loading={ isLoading } w="fit-content">
-          <Text
-            fontSize="11px"
-            fontFamily="system-ui, -apple-system, sans-serif"
-            whiteSpace="nowrap"
-            color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-          >
-            <Text as="span" fontWeight={ 500 } color={{ _light: 'rgba(0, 0, 0, 0.8)', _dark: 'rgba(255, 255, 255, 0.85)' }}>
-              { type.totalNodes }
-            </Text>
-            { ' ' }total
-          </Text>
-        </Skeleton>
-        <Skeleton loading={ isLoading } w="fit-content">
-          <Text
-            fontSize="11px"
-            fontFamily="system-ui, -apple-system, sans-serif"
-            whiteSpace="nowrap"
-            color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-          >
-            <Text as="span" fontWeight={ 500 } color={{ _light: 'rgba(22, 163, 74, 0.9)', _dark: 'rgba(34, 197, 94, 0.95)' }}>
-              { type.activeNodes }
-            </Text>
-            { ' ' }active
-          </Text>
-        </Skeleton>
-        <Skeleton loading={ isLoading } w="fit-content">
-          <Text
-            fontSize="10px"
-            fontWeight={ 600 }
-            color={ getHealthColor(activePercent) }
-            fontFamily="system-ui, -apple-system, sans-serif"
-          >
-            { activePercent }%
-          </Text>
-        </Skeleton>
-      </Flex>
+      { /* Health percentage */ }
+      <Skeleton loading={ isLoading } w="fit-content" flexShrink={ 0 }>
+        <Text
+          fontSize="11px"
+          fontWeight={ 600 }
+          color={ getHealthColor(activePercent) }
+          fontFamily="system-ui, -apple-system, sans-serif"
+        >
+          { activePercent }%
+        </Text>
+      </Skeleton>
     </Flex>
   );
 };
