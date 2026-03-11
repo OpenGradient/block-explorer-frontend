@@ -172,7 +172,7 @@ const TEERegistry = () => {
                   fontWeight={ 600 }
                   letterSpacing="0.08em"
                   textTransform="uppercase"
-                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
                   TEE Types
@@ -180,7 +180,7 @@ const TEERegistry = () => {
                 <IconSvg
                   name="apps"
                   boxSize={ 3 }
-                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                 />
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
@@ -219,7 +219,7 @@ const TEERegistry = () => {
                   fontWeight={ 600 }
                   letterSpacing="0.08em"
                   textTransform="uppercase"
-                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
                   Total Nodes
@@ -227,7 +227,7 @@ const TEERegistry = () => {
                 <IconSvg
                   name="validator"
                   boxSize={ 3 }
-                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                 />
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
@@ -266,7 +266,7 @@ const TEERegistry = () => {
                   fontWeight={ 600 }
                   letterSpacing="0.08em"
                   textTransform="uppercase"
-                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
                   Enabled Nodes
@@ -274,7 +274,7 @@ const TEERegistry = () => {
                 <IconSvg
                   name="certified"
                   boxSize={ 3 }
-                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                 />
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
@@ -313,7 +313,7 @@ const TEERegistry = () => {
                   fontWeight={ 600 }
                   letterSpacing="0.08em"
                   textTransform="uppercase"
-                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
                   Active Nodes
@@ -321,7 +321,7 @@ const TEERegistry = () => {
                 <IconSvg
                   name="check"
                   boxSize={ 3 }
-                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                 />
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
@@ -360,7 +360,7 @@ const TEERegistry = () => {
                   fontWeight={ 600 }
                   letterSpacing="0.08em"
                   textTransform="uppercase"
-                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
                   Approved PCRs
@@ -368,7 +368,7 @@ const TEERegistry = () => {
                 <IconSvg
                   name="nft_shield"
                   boxSize={ 3 }
-                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                 />
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
