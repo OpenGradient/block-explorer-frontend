@@ -6,13 +6,13 @@ import { route } from 'nextjs-routes';
 
 import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS } from 'lib/opengradient/contracts/teeRegistry';
 import type { TEERegistryStats, TEETypeSummary, TEENodeWithStatus } from 'lib/opengradient/contracts/teeRegistry';
+import { Heading } from 'toolkit/chakra/heading';
 import { Link, LinkBox } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import TEENodeDetailDrawer from 'ui/opengradient/teeRegistry/TEENodeDetailDrawer';
 import TEENodesTable from 'ui/opengradient/teeRegistry/TEENodesTable';
 import TEETypeCard from 'ui/opengradient/teeRegistry/TEETypeCard';
 import IconSvg from 'ui/shared/IconSvg';
-import PageTitle from 'ui/shared/Page/PageTitle';
 
 const PLACEHOLDER_STATS: TEERegistryStats = {
   totalTypes: 3,
@@ -72,11 +72,19 @@ const TEERegistry = () => {
 
   return (
     <>
-      <PageTitle
-        title="TEE Registry"
-        withTextAd
+      <Heading
+        as="h1"
+        fontSize={{ base: '22px', md: '26px', lg: '28px' }}
+        fontWeight={ 300 }
+        letterSpacing="-0.03em"
+        lineHeight="1.15"
+        color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
+        fontFamily="system-ui, -apple-system, sans-serif"
         mb={ 4 }
-      />
+        mt={{ base: 1, lg: 2 }}
+      >
+        TEE Registry
+      </Heading>
 
       { /* Description */ }
       <Box
