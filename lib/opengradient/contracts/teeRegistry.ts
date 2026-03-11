@@ -4,7 +4,7 @@ import type { Address } from 'viem';
 import TEERegistryAbi from './abi/TEERegistry.json';
 import { ethDevnetProvider } from './providers';
 
-const TEE_REGISTRY_ADDRESS = '0x4e72238852f3c918f4E4e57AeC9280dDB0c80248';
+export const TEE_REGISTRY_ADDRESS = '0x4e72238852f3c918f4E4e57AeC9280dDB0c80248';
 
 const contract = new ethers.Contract(TEE_REGISTRY_ADDRESS, TEERegistryAbi, ethDevnetProvider);
 

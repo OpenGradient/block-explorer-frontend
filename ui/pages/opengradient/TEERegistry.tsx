@@ -2,9 +2,11 @@ import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
-import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY } from 'lib/opengradient/contracts/teeRegistry';
+import { route } from 'nextjs-routes';
+
+import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS } from 'lib/opengradient/contracts/teeRegistry';
 import type { TEERegistryStats, TEETypeSummary, TEENodeWithStatus } from 'lib/opengradient/contracts/teeRegistry';
-import { LinkBox } from 'toolkit/chakra/link';
+import { Link, LinkBox } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import TEENodeDetailDrawer from 'ui/opengradient/teeRegistry/TEENodeDetailDrawer';
 import TEENodesTable from 'ui/opengradient/teeRegistry/TEENodesTable';
@@ -103,15 +105,6 @@ const TEERegistry = () => {
           </Box>
           <Box flex={ 1 }>
             <Text
-              fontSize={{ base: 'sm', lg: 'md' }}
-              fontWeight={ 500 }
-              mb={ 1.5 }
-              color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.7)' }}
-              fontFamily="system-ui, -apple-system, sans-serif"
-            >
-              Trusted Execution Environment Registry
-            </Text>
-            <Text
               fontSize={{ base: '12px', md: '13px' }}
               lineHeight="1.6"
               color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
@@ -122,6 +115,20 @@ const TEERegistry = () => {
               bound to verified enclave code. Heartbeat liveness proofs ensure nodes are actively running
               approved software. Click on a node to inspect its attestation details.
             </Text>
+            <Link
+              href={ route({ pathname: '/address/[hash]', query: { hash: TEE_REGISTRY_ADDRESS } }) }
+              fontSize={{ base: '11px', md: '12px' }}
+              fontWeight={ 500 }
+              fontFamily="system-ui, -apple-system, sans-serif"
+              color="blue.500"
+              mt={ 2 }
+              display="inline-flex"
+              alignItems="center"
+              gap={ 1 }
+            >
+              View Registry Contract
+              <IconSvg name="arrows/east-mini" boxSize={ 3.5 }/>
+            </Link>
           </Box>
         </Flex>
       </Box>
@@ -137,36 +144,6 @@ const TEERegistry = () => {
           align="stretch"
           gap={ 0 }
         >
-          { /* Section Header */ }
-          <Flex
-            alignItems="center"
-            gap={ 2 }
-            mb={ 6 }
-          >
-            <Box
-              position="relative"
-              w="6px"
-              h="6px"
-              borderRadius="50%"
-              bg="green.500"
-              boxShadow="0 0 6px rgba(34, 197, 94, 0.6)"
-              _dark={{
-                boxShadow: '0 0 8px rgba(34, 197, 94, 0.8)',
-              }}
-              animation="pulseOpacity 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
-            />
-            <Text
-              fontSize="11px"
-              fontWeight={ 500 }
-              letterSpacing="0.1em"
-              textTransform="uppercase"
-              color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-              fontFamily="system-ui, -apple-system, sans-serif"
-            >
-              Network Security Overview
-            </Text>
-          </Flex>
-
           { /* Metrics Grid */ }
           <Grid
             templateColumns={{ base: '1fr 1fr', lg: 'repeat(5, 1fr)' }}
@@ -178,14 +155,14 @@ const TEERegistry = () => {
               p={ 5 }
               position="relative"
               bgGradient={{
-                _light: 'linear-gradient(135deg, rgba(124, 58, 237, 0.04) 0%, rgba(139, 92, 246, 0.05) 100%)',
-                _dark: 'linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(139, 92, 246, 0.1) 100%)',
+                _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
+                _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
               }}
               transition="all 0.2s ease"
               _hover={{
                 bgGradient: {
-                  _light: 'linear-gradient(135deg, rgba(124, 58, 237, 0.06) 0%, rgba(139, 92, 246, 0.08) 100%)',
-                  _dark: 'linear-gradient(135deg, rgba(124, 58, 237, 0.12) 0%, rgba(139, 92, 246, 0.15) 100%)',
+                  _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
+                  _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
                 },
               }}
             >
@@ -195,7 +172,7 @@ const TEERegistry = () => {
                   fontWeight={ 600 }
                   letterSpacing="0.08em"
                   textTransform="uppercase"
-                  color={{ _light: 'rgba(124, 58, 237, 0.7)', _dark: 'rgba(139, 92, 246, 0.8)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
                   TEE Types
@@ -203,7 +180,7 @@ const TEERegistry = () => {
                 <IconSvg
                   name="apps"
                   boxSize={ 3 }
-                  color={{ _light: 'rgba(124, 58, 237, 0.75)', _dark: 'rgba(139, 92, 246, 0.85)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
                 />
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
@@ -272,14 +249,14 @@ const TEERegistry = () => {
               p={ 5 }
               position="relative"
               bgGradient={{
-                _light: 'linear-gradient(135deg, rgba(6, 182, 212, 0.04) 0%, rgba(14, 165, 233, 0.05) 100%)',
-                _dark: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(14, 165, 233, 0.1) 100%)',
+                _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
+                _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
               }}
               transition="all 0.2s ease"
               _hover={{
                 bgGradient: {
-                  _light: 'linear-gradient(135deg, rgba(6, 182, 212, 0.06) 0%, rgba(14, 165, 233, 0.08) 100%)',
-                  _dark: 'linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(14, 165, 233, 0.15) 100%)',
+                  _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
+                  _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
                 },
               }}
             >
@@ -289,7 +266,7 @@ const TEERegistry = () => {
                   fontWeight={ 600 }
                   letterSpacing="0.08em"
                   textTransform="uppercase"
-                  color={{ _light: 'rgba(6, 182, 212, 0.7)', _dark: 'rgba(14, 165, 233, 0.8)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
                   Enabled Nodes
@@ -297,7 +274,7 @@ const TEERegistry = () => {
                 <IconSvg
                   name="certified"
                   boxSize={ 3 }
-                  color={{ _light: 'rgba(6, 182, 212, 0.75)', _dark: 'rgba(14, 165, 233, 0.85)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
                 />
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
@@ -319,14 +296,14 @@ const TEERegistry = () => {
               p={ 5 }
               position="relative"
               bgGradient={{
-                _light: 'linear-gradient(135deg, rgba(22, 163, 74, 0.04) 0%, rgba(34, 197, 94, 0.05) 100%)',
-                _dark: 'linear-gradient(135deg, rgba(22, 163, 74, 0.08) 0%, rgba(34, 197, 94, 0.1) 100%)',
+                _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
+                _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
               }}
               transition="all 0.2s ease"
               _hover={{
                 bgGradient: {
-                  _light: 'linear-gradient(135deg, rgba(22, 163, 74, 0.06) 0%, rgba(34, 197, 94, 0.08) 100%)',
-                  _dark: 'linear-gradient(135deg, rgba(22, 163, 74, 0.12) 0%, rgba(34, 197, 94, 0.15) 100%)',
+                  _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
+                  _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
                 },
               }}
             >
@@ -336,7 +313,7 @@ const TEERegistry = () => {
                   fontWeight={ 600 }
                   letterSpacing="0.08em"
                   textTransform="uppercase"
-                  color={{ _light: 'rgba(22, 163, 74, 0.7)', _dark: 'rgba(34, 197, 94, 0.8)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
                   Active Nodes
@@ -344,7 +321,7 @@ const TEERegistry = () => {
                 <IconSvg
                   name="check"
                   boxSize={ 3 }
-                  color={{ _light: 'rgba(22, 163, 74, 0.75)', _dark: 'rgba(34, 197, 94, 0.85)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
                 />
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
@@ -366,14 +343,14 @@ const TEERegistry = () => {
               p={ 5 }
               position="relative"
               bgGradient={{
-                _light: 'linear-gradient(135deg, rgba(217, 119, 6, 0.04) 0%, rgba(245, 158, 11, 0.05) 100%)',
-                _dark: 'linear-gradient(135deg, rgba(217, 119, 6, 0.08) 0%, rgba(245, 158, 11, 0.1) 100%)',
+                _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
+                _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
               }}
               transition="all 0.2s ease"
               _hover={{
                 bgGradient: {
-                  _light: 'linear-gradient(135deg, rgba(217, 119, 6, 0.06) 0%, rgba(245, 158, 11, 0.08) 100%)',
-                  _dark: 'linear-gradient(135deg, rgba(217, 119, 6, 0.12) 0%, rgba(245, 158, 11, 0.15) 100%)',
+                  _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
+                  _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
                 },
               }}
             >
@@ -383,7 +360,7 @@ const TEERegistry = () => {
                   fontWeight={ 600 }
                   letterSpacing="0.08em"
                   textTransform="uppercase"
-                  color={{ _light: 'rgba(217, 119, 6, 0.7)', _dark: 'rgba(245, 158, 11, 0.8)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(51, 65, 85, 0.8)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
                   Approved PCRs
@@ -391,7 +368,7 @@ const TEERegistry = () => {
                 <IconSvg
                   name="nft_shield"
                   boxSize={ 3 }
-                  color={{ _light: 'rgba(217, 119, 6, 0.75)', _dark: 'rgba(245, 158, 11, 0.85)' }}
+                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(51, 65, 85, 0.85)' }}
                 />
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
