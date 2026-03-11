@@ -11,20 +11,7 @@ type Props = {
   onClick: (typeId: number) => void;
 };
 
-function getHealthColor(percent: number) {
-  if (percent >= 80) return { _light: 'rgba(22, 163, 74, 0.8)', _dark: 'rgba(34, 197, 94, 0.9)' };
-  if (percent >= 50) return { _light: 'rgba(217, 119, 6, 0.8)', _dark: 'rgba(245, 158, 11, 0.9)' };
-  return { _light: 'rgba(220, 38, 38, 0.8)', _dark: 'rgba(248, 113, 113, 0.9)' };
-}
-
-function getHealthBarColor(percent: number) {
-  if (percent >= 80) return { _light: 'rgba(22, 163, 74, 0.6)', _dark: 'rgba(34, 197, 94, 0.7)' };
-  if (percent >= 50) return { _light: 'rgba(217, 119, 6, 0.6)', _dark: 'rgba(245, 158, 11, 0.7)' };
-  return { _light: 'rgba(220, 38, 38, 0.6)', _dark: 'rgba(248, 113, 113, 0.7)' };
-}
-
 const TEETypeCard = ({ type, isSelected, isLoading, onClick }: Props) => {
-  const activePercent = type.totalNodes > 0 ? Math.round((type.activeNodes / type.totalNodes) * 100) : 0;
 
   const handleClick = React.useCallback(() => {
     onClick(type.typeId);
@@ -32,8 +19,8 @@ const TEETypeCard = ({ type, isSelected, isLoading, onClick }: Props) => {
 
   return (
     <Flex
-      px={ 3 }
-      py={ 2.5 }
+      px={ 4 }
+      py={ 3 }
       cursor="pointer"
       position="relative"
       overflow="hidden"
@@ -54,7 +41,7 @@ const TEETypeCard = ({ type, isSelected, isLoading, onClick }: Props) => {
       onClick={ handleClick }
       role="group"
       alignItems="center"
-      gap={ 3 }
+      gap={ 4 }
     >
       { /* Active indicator bar at top */ }
       <Box
@@ -71,7 +58,7 @@ const TEETypeCard = ({ type, isSelected, isLoading, onClick }: Props) => {
       />
 
       { /* Name + Stats */ }
-      <Flex alignItems="baseline" gap={ 2 } flexShrink={ 0 }>
+      <Flex alignItems="baseline" gap={ 3 }>
         <Skeleton loading={ isLoading } w="fit-content">
           <Text
             fontSize="13px"
@@ -95,38 +82,6 @@ const TEETypeCard = ({ type, isSelected, isLoading, onClick }: Props) => {
           </Text>
         </Skeleton>
       </Flex>
-
-      { /* Health bar */ }
-      <Box flex={ 1 } minW="40px">
-        <Box
-          h="2px"
-          bg={{ _light: 'rgba(0, 0, 0, 0.04)', _dark: 'rgba(255, 255, 255, 0.04)' }}
-          borderRadius="full"
-          overflow="hidden"
-        >
-          <Skeleton loading={ isLoading } h="100%">
-            <Box
-              h="100%"
-              w={ `${ activePercent }%` }
-              bg={ getHealthBarColor(activePercent) }
-              borderRadius="full"
-              transition="width 0.5s ease"
-            />
-          </Skeleton>
-        </Box>
-      </Box>
-
-      { /* Health percentage */ }
-      <Skeleton loading={ isLoading } w="fit-content" flexShrink={ 0 }>
-        <Text
-          fontSize="11px"
-          fontWeight={ 600 }
-          color={ getHealthColor(activePercent) }
-          fontFamily="system-ui, -apple-system, sans-serif"
-        >
-          { activePercent }%
-        </Text>
-      </Skeleton>
     </Flex>
   );
 };
