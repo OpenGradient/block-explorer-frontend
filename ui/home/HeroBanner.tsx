@@ -295,7 +295,7 @@ const HeroBanner = () => {
                     fontFamily="system-ui, -apple-system, sans-serif"
                     lineHeight="1"
                   >
-                    1500+
+                    2000+
                   </Text>
                 </LinkBox>
 
