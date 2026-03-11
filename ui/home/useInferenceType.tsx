@@ -56,7 +56,7 @@ export default function useInferenceType(tx: Transaction | undefined, isLoading:
           mode: null,
           isLoading: false,
         };
-      } else if (methodSelector === '0xa1ccc828' || methodSelector === '0xd32a9cd9' || methodSelector === '0x74e71a19') {
+      } else if (methodSelector === '0xa1ccc828' || methodSelector === '0xd32a9cd9' || methodSelector === '0x90480ad1') {
         // Transaction failed - don't show inference
         if (isTxFailed) {
           return null;
