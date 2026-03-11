@@ -3,9 +3,11 @@ import React from 'react';
 
 import dayjs from 'lib/date/dayjs';
 import type { TEENodeWithStatus, TEETypeSummary } from 'lib/opengradient/contracts/teeRegistry';
+import { IconButton } from 'toolkit/chakra/icon-button';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { TableBody, TableCell, TableColumnHeader, TableHeaderSticky, TableRoot, TableRow } from 'toolkit/chakra/table';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
+import IconSvg from 'ui/shared/IconSvg';
 
 type Props = {
   nodes: Array<TEENodeWithStatus>;
@@ -96,6 +98,7 @@ const NodeRow = ({ node, typeNameMap, isLoading, onNodeClick }: {
 
   return (
     <TableRow
+      role="group"
       cursor="pointer"
       transition="all 0.15s ease"
       _hover={{
@@ -170,6 +173,20 @@ const NodeRow = ({ node, typeNameMap, isLoading, onNodeClick }: {
           </Text>
         </Skeleton>
       </TableCell>
+      <TableCell>
+        <Skeleton loading={ isLoading }>
+          <IconButton
+            aria-label="Open node details"
+            variant="ghost"
+            size="2xs"
+            borderRadius="full"
+            color={{ _light: 'rgba(0, 0, 0, 0.3)', _dark: 'rgba(255, 255, 255, 0.3)' }}
+            _groupHover={{ color: { _light: 'rgba(124, 58, 237, 0.7)', _dark: 'rgba(139, 92, 246, 0.8)' } }}
+          >
+            <IconSvg name="arrows/east-mini" boxSize={ 5 }/>
+          </IconButton>
+        </Skeleton>
+      </TableCell>
     </TableRow>
   );
 };
@@ -193,6 +210,7 @@ const TEENodesTable = ({ nodes, types, isLoading, onNodeClick }: Props) => {
           <TableColumnHeader w="200px">Endpoint</TableColumnHeader>
           <TableColumnHeader w="120px">Last Heartbeat</TableColumnHeader>
           <TableColumnHeader w="120px">Registered</TableColumnHeader>
+          <TableColumnHeader w="50px"/>
         </TableRow>
       </TableHeaderSticky>
       <TableBody>

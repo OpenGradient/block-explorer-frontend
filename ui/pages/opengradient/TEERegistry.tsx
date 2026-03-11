@@ -185,7 +185,7 @@ const TEERegistry = () => {
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
                 <Text
-                  fontSize="32px"
+                  fontSize="26px"
                   fontWeight={ 200 }
                   letterSpacing="-0.02em"
                   color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
@@ -232,7 +232,7 @@ const TEERegistry = () => {
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
                 <Text
-                  fontSize="32px"
+                  fontSize="26px"
                   fontWeight={ 200 }
                   letterSpacing="-0.02em"
                   color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
@@ -279,7 +279,7 @@ const TEERegistry = () => {
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
                 <Text
-                  fontSize="32px"
+                  fontSize="26px"
                   fontWeight={ 200 }
                   letterSpacing="-0.02em"
                   color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
@@ -326,7 +326,7 @@ const TEERegistry = () => {
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
                 <Text
-                  fontSize="32px"
+                  fontSize="26px"
                   fontWeight={ 200 }
                   letterSpacing="-0.02em"
                   color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
@@ -373,7 +373,7 @@ const TEERegistry = () => {
               </Flex>
               <Skeleton loading={ query.isPlaceholderData } w="fit-content">
                 <Text
-                  fontSize="32px"
+                  fontSize="26px"
                   fontWeight={ 200 }
                   letterSpacing="-0.02em"
                   color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
