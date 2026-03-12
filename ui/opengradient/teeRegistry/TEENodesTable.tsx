@@ -191,6 +191,12 @@ const NodeRow = ({ node, typeNameMap, isLoading, onNodeClick }: {
   );
 };
 
+function statusOrder(node: TEENodeWithStatus): number {
+  if (node.isActive) return 0;
+  if (node.enabled) return 1;
+  return 2;
+}
+
 const TEENodesTable = ({ nodes, types, isLoading, onNodeClick }: Props) => {
   const typeNameMap = React.useMemo(() => {
     const map: Record<number, string> = {};
@@ -199,6 +205,10 @@ const TEENodesTable = ({ nodes, types, isLoading, onNodeClick }: Props) => {
     });
     return map;
   }, [ types ]);
+
+  const sortedNodes = React.useMemo(() =>
+    [ ...nodes ].sort((a, b) => statusOrder(a) - statusOrder(b)),
+  [ nodes ]);
 
   return (
     <TableRoot>
@@ -214,7 +224,7 @@ const TEENodesTable = ({ nodes, types, isLoading, onNodeClick }: Props) => {
         </TableRow>
       </TableHeaderSticky>
       <TableBody>
-        { nodes.map((node) => (
+        { sortedNodes.map((node) => (
           <NodeRow
             key={ node.teeId }
             node={ node }

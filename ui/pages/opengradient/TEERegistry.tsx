@@ -6,6 +6,7 @@ import { route } from 'nextjs-routes';
 
 import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS } from 'lib/opengradient/contracts/teeRegistry';
 import type { TEERegistryStats, TEETypeSummary, TEENodeWithStatus } from 'lib/opengradient/contracts/teeRegistry';
+import { Checkbox } from 'toolkit/chakra/checkbox';
 import { Heading } from 'toolkit/chakra/heading';
 import { Link, LinkBox } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
@@ -53,6 +54,32 @@ const TEERegistry = () => {
     }
     return Object.values(nbt).flat();
   }, [ query.data?.nodesByType, selectedType ]);
+
+  const hasNonDisabledNodes = React.useMemo(
+    () => allNodes.some((n) => n.isActive || n.enabled),
+    [ allNodes ],
+  );
+
+  const [ showDisabled, setShowDisabled ] = React.useState<boolean | null>(null);
+
+  // Reset when allNodes changes (e.g. type filter changed)
+  React.useEffect(() => {
+    setShowDisabled(null);
+  }, [ selectedType ]);
+
+  const resolvedShowDisabled = showDisabled ?? !hasNonDisabledNodes;
+
+  const filteredNodes = React.useMemo(
+    () => resolvedShowDisabled ? allNodes : allNodes.filter((n) => n.isActive || n.enabled),
+    [ allNodes, resolvedShowDisabled ],
+  );
+
+  const handleToggleShowDisabled = React.useCallback(() => {
+    setShowDisabled((prev) => {
+      const current = prev ?? !hasNonDisabledNodes;
+      return !current;
+    });
+  }, [ hasNonDisabledNodes ]);
 
   const handleTypeClick = React.useCallback((typeId: number) => {
     setSelectedType((prev) => prev === typeId ? null : typeId);
@@ -440,35 +467,51 @@ const TEERegistry = () => {
 
       { /* Nodes Table */ }
       <Box>
-        <Flex alignItems="center" gap={ 2 } mb={ 4 }>
-          <Text
-            fontSize="11px"
-            fontWeight={ 500 }
-            letterSpacing="0.1em"
-            textTransform="uppercase"
-            color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-            fontFamily="system-ui, -apple-system, sans-serif"
+        <Flex alignItems="center" justifyContent="space-between" mb={ 4 }>
+          <Flex alignItems="center" gap={ 2 }>
+            <Text
+              fontSize="11px"
+              fontWeight={ 500 }
+              letterSpacing="0.1em"
+              textTransform="uppercase"
+              color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+              fontFamily="system-ui, -apple-system, sans-serif"
+            >
+              { selectedType !== null ?
+                `${ types.find((t) => t.typeId === selectedType)?.name ?? '' } Nodes` :
+                'All Nodes' }
+            </Text>
+            <Text
+              fontSize="11px"
+              fontWeight={ 400 }
+              color={{ _light: 'rgba(0, 0, 0, 0.3)', _dark: 'rgba(255, 255, 255, 0.3)' }}
+              fontFamily="system-ui, -apple-system, sans-serif"
+            >
+              { filteredNodes.length > 0 ? `(${ filteredNodes.length })` : '' }
+            </Text>
+          </Flex>
+          <Checkbox
+            size="sm"
+            checked={ resolvedShowDisabled }
+            onCheckedChange={ handleToggleShowDisabled }
           >
-            { selectedType !== null ?
-              `${ types.find((t) => t.typeId === selectedType)?.name ?? '' } Nodes` :
-              'All Nodes' }
-          </Text>
-          <Text
-            fontSize="11px"
-            fontWeight={ 400 }
-            color={{ _light: 'rgba(0, 0, 0, 0.3)', _dark: 'rgba(255, 255, 255, 0.3)' }}
-            fontFamily="system-ui, -apple-system, sans-serif"
-          >
-            { allNodes.length > 0 ? `(${ allNodes.length })` : '' }
-          </Text>
+            <Text
+              fontSize="11px"
+              fontWeight={ 400 }
+              color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+              fontFamily="system-ui, -apple-system, sans-serif"
+            >
+              Show disabled
+            </Text>
+          </Checkbox>
         </Flex>
         <TEENodesTable
-          nodes={ allNodes }
+          nodes={ filteredNodes }
           types={ types }
           isLoading={ query.isPlaceholderData }
           onNodeClick={ handleNodeClick }
         />
-        { !query.isPlaceholderData && allNodes.length === 0 && (
+        { !query.isPlaceholderData && filteredNodes.length === 0 && (
           <Flex
             justifyContent="center"
             alignItems="center"
