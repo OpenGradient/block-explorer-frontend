@@ -115,7 +115,7 @@ const NodeRow = ({ node, typeNameMap, isLoading, onNodeClick }: {
         <Skeleton loading={ isLoading }>
           <AddressEntity
             address={{ hash: node.owner, is_contract: false }}
-            truncation="constant_long"
+            truncation="constant"
           />
         </Skeleton>
       </TableCell>
@@ -133,6 +133,18 @@ const NodeRow = ({ node, typeNameMap, isLoading, onNodeClick }: {
             fontFamily="system-ui, -apple-system, sans-serif"
           >
             { typeNameMap[node.teeType] ?? `Type ${ node.teeType }` }
+          </Text>
+        </Skeleton>
+      </TableCell>
+      <TableCell>
+        <Skeleton loading={ isLoading }>
+          <Text
+            fontSize="xs"
+            fontFamily="mono"
+            color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+            title={ node.pcrHash }
+          >
+            { node.pcrHash ? `${ node.pcrHash.slice(0, 6) }...${ node.pcrHash.slice(-4) }` : 'N/A' }
           </Text>
         </Skeleton>
       </TableCell>
@@ -215,8 +227,9 @@ const TEENodesTable = ({ nodes, types, isLoading, onNodeClick }: Props) => {
       <TableHeaderSticky top={ 0 }>
         <TableRow>
           <TableColumnHeader w="60px">Status</TableColumnHeader>
-          <TableColumnHeader w="200px">Owner</TableColumnHeader>
+          <TableColumnHeader w="160px">Owner</TableColumnHeader>
           <TableColumnHeader w="120px">Type</TableColumnHeader>
+          <TableColumnHeader w="120px">PCR Hash</TableColumnHeader>
           <TableColumnHeader w="200px">Endpoint</TableColumnHeader>
           <TableColumnHeader w="120px">Last Heartbeat</TableColumnHeader>
           <TableColumnHeader w="120px">Registered</TableColumnHeader>
