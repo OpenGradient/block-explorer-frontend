@@ -38,6 +38,7 @@ export interface TEETypeSummary {
   totalNodes: number;
   enabledNodes: number;
   activeNodes: number;
+  approvedPCRs: number;
   addedAt: bigint;
 }
 
@@ -119,6 +120,12 @@ export const getTEERegistryOverview = async(): Promise<{
   // 2. Get approved PCRs
   const approvedPCRs = await getApprovedPCRs();
 
+  // Count approved PCRs per type
+  const approvedPCRsByType: Record<number, number> = {};
+  for (const pcr of approvedPCRs) {
+    approvedPCRsByType[pcr.teeType] = (approvedPCRsByType[pcr.teeType] ?? 0) + 1;
+  }
+
   // 3. For each type, get all TEE ids, enabled ids, and fetch details
   const nodesByType: Record<number, Array<TEENodeWithStatus>> = {};
   const typeSummaries: Array<TEETypeSummary> = [];
@@ -158,6 +165,7 @@ export const getTEERegistryOverview = async(): Promise<{
       totalNodes: allIds.length,
       enabledNodes: enabledCount,
       activeNodes: activeCount,
+      approvedPCRs: approvedPCRsByType[teeType.typeId] ?? 0,
       addedAt: teeType.addedAt,
     });
 

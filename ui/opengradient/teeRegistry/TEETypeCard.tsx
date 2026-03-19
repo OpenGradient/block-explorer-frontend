@@ -81,6 +81,16 @@ const TEETypeCard = ({ type, isSelected, isLoading, onClick }: Props) => {
             { type.activeNodes }/{ type.totalNodes } active
           </Text>
         </Skeleton>
+        <Skeleton loading={ isLoading } w="fit-content">
+          <Text
+            fontSize="11px"
+            fontFamily="system-ui, -apple-system, sans-serif"
+            whiteSpace="nowrap"
+            color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+          >
+            { type.approvedPCRs } approved PCR{ type.approvedPCRs !== 1 ? 's' : '' }
+          </Text>
+        </Skeleton>
       </Flex>
     </Flex>
   );
