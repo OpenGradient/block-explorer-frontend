@@ -5,6 +5,7 @@ import type { Log } from 'types/api/log';
 
 import { route } from 'nextjs-routes';
 
+import hexToUtf8 from 'lib/hexToUtf8';
 import { space } from 'lib/html-entities';
 import { Alert } from 'toolkit/chakra/alert';
 import { Link } from 'toolkit/chakra/link';
@@ -122,9 +123,9 @@ const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) =
                     >
                       { param.name === 'walrusBlobId' && typeof param.value === 'string' ? (
                         <Flex alignItems="center" gap={ 2 } flexWrap="wrap">
-                          <InferenceOutput value={ param.value } isLoading={ isLoading }/>
+                          <InferenceOutput value={ hexToUtf8(param.value) } isLoading={ isLoading }/>
                           <Link
-                            href={ `https://walruscan.com/mainnet/blob/${ param.value }` }
+                            href={ `https://walruscan.com/mainnet/blob/${ hexToUtf8(param.value) }` }
                             external
                             fontSize="sm"
                             fontWeight={ 500 }
