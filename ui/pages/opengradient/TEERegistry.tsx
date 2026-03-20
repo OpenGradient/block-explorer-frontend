@@ -181,7 +181,7 @@ const TEERegistry = () => {
         >
           { /* Metrics Grid */ }
           <Grid
-            templateColumns={{ base: '1fr 1fr', lg: 'repeat(5, 1fr)' }}
+            templateColumns={{ base: '1fr 1fr', lg: 'repeat(4, 1fr)' }}
             gap={ 0 }
             overflow="hidden"
           >
@@ -232,7 +232,7 @@ const TEERegistry = () => {
               </Skeleton>
             </LinkBox>
 
-            { /* Total Nodes */ }
+            { /* Approved PCRs */ }
             <LinkBox
               p={ 5 }
               position="relative"
@@ -257,10 +257,10 @@ const TEERegistry = () => {
                   color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
-                  Total Nodes
+                  Approved PCRs
                 </Text>
                 <IconSvg
-                  name="validator"
+                  name="nft_shield"
                   boxSize={ 3 }
                   color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                 />
@@ -274,54 +274,7 @@ const TEERegistry = () => {
                   fontFamily="system-ui, -apple-system, sans-serif"
                   lineHeight="1"
                 >
-                  { stats.totalNodes.toLocaleString() }
-                </Text>
-              </Skeleton>
-            </LinkBox>
-
-            { /* Enabled Nodes */ }
-            <LinkBox
-              p={ 5 }
-              position="relative"
-              bgGradient={{
-                _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
-                _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
-              }}
-              transition="all 0.2s ease"
-              _hover={{
-                bgGradient: {
-                  _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
-                  _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
-                },
-              }}
-            >
-              <Flex alignItems="center" gap={ 1.5 } mb={ 2 }>
-                <Text
-                  fontSize="10px"
-                  fontWeight={ 600 }
-                  letterSpacing="0.08em"
-                  textTransform="uppercase"
-                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                >
-                  Enabled Nodes
-                </Text>
-                <IconSvg
-                  name="certified"
-                  boxSize={ 3 }
-                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                />
-              </Flex>
-              <Skeleton loading={ query.isPlaceholderData } w="fit-content">
-                <Text
-                  fontSize="26px"
-                  fontWeight={ 200 }
-                  letterSpacing="-0.02em"
-                  color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                  lineHeight="1"
-                >
-                  { stats.enabledNodes.toLocaleString() }
+                  { stats.approvedPCRs.toLocaleString() }
                 </Text>
               </Skeleton>
             </LinkBox>
@@ -373,7 +326,7 @@ const TEERegistry = () => {
               </Skeleton>
             </LinkBox>
 
-            { /* Approved PCRs */ }
+            { /* Enabled Nodes */ }
             <LinkBox
               p={ 5 }
               position="relative"
@@ -398,10 +351,10 @@ const TEERegistry = () => {
                   color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                   fontFamily="system-ui, -apple-system, sans-serif"
                 >
-                  Approved PCRs
+                  Registered Nodes
                 </Text>
                 <IconSvg
-                  name="nft_shield"
+                  name="certified"
                   boxSize={ 3 }
                   color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(255, 255, 255, 0.5)' }}
                 />
@@ -415,10 +368,11 @@ const TEERegistry = () => {
                   fontFamily="system-ui, -apple-system, sans-serif"
                   lineHeight="1"
                 >
-                  { stats.approvedPCRs.toLocaleString() }
+                  { stats.enabledNodes.toLocaleString() }
                 </Text>
               </Skeleton>
             </LinkBox>
+
           </Grid>
         </VStack>
       </Box>
