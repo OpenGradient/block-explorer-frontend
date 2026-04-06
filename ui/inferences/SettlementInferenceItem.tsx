@@ -13,6 +13,7 @@ import { Skeleton } from 'toolkit/chakra/skeleton';
 import { Tooltip } from 'toolkit/chakra/tooltip';
 import IconSvg from 'ui/shared/IconSvg';
 
+import BatchSettlementTree from './BatchSettlementTree';
 import InferenceOutput from './InferenceOutput';
 import Item from './layout/Item';
 import VStackContainer from './layout/VStackContainer';
@@ -96,6 +97,14 @@ const RowHeader = ({ children, isLoading, tooltip }: { children: React.ReactNode
 );
 
 const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) => {
+  const walrusBlobId = React.useMemo(() => {
+    const param = decoded?.parameters?.find((p) => p.name === 'walrusBlobId');
+    if (param && typeof param.value === 'string') {
+      return hexToUtf8(param.value);
+    }
+    return null;
+  }, [ decoded ]);
+
   const renderGridItems = () => {
     return (
       <>
@@ -205,6 +214,9 @@ const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) =
       >
         { renderGridItems() }
       </Grid>
+      { walrusBlobId && (
+        <BatchSettlementTree walrusBlobId={ walrusBlobId }/>
+      ) }
     </Box>
   );
 };
