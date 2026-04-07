@@ -87,6 +87,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
   const [ loading, setLoading ] = React.useState(false);
   const [ loadingStep, setLoadingStep ] = React.useState<string>('');
   const [ downloadProgress, setDownloadProgress ] = React.useState<number>(0);
+  const [ downloadedBytes, setDownloadedBytes ] = React.useState<number>(0);
   const [ fetchError, setFetchError ] = React.useState<string | null>(null);
   const [ verifications, setVerifications ] = React.useState<Record<number, ItemVerification>>({});
 
@@ -102,6 +103,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
     setLoading(true);
     setFetchError(null);
     setDownloadProgress(0);
+    setDownloadedBytes(0);
     setLoadingStep('Downloading batch data from Walrus...');
 
     (async() => {
@@ -124,19 +126,25 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
 
           chunks.push(value);
           received += value.length;
+          setDownloadedBytes(received);
 
           if (contentLength > 0) {
             setDownloadProgress(Math.min(received / contentLength, 1));
           }
         }
 
+        if (cancelled) return;
+
+        setDownloadProgress(1);
+        setLoadingStep('Parsing Merkle tree...');
+
+        // Yield to browser so the 100% / "Parsing" state renders before heavy sync work
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
         const blob = new Blob(chunks);
         const text = await blob.text();
 
         if (cancelled) return;
-
-        setLoadingStep('Parsing Merkle tree...');
-        setDownloadProgress(1);
 
         const dump = JSON.parse(text) as WalrusBatchTreeDump;
         const result = parseWalrusBatchTree(walrusBlobId, dump);
@@ -263,12 +271,28 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
   const renderContent = () => {
     if (loading) {
       const pct = Math.round(downloadProgress * 100);
+      const hasProgress = downloadProgress > 0;
+      let formattedBytes = '';
+      if (downloadedBytes >= 1_048_576) {
+        formattedBytes = `${ (downloadedBytes / 1_048_576).toFixed(1) } MB`;
+      } else if (downloadedBytes >= 1024) {
+        formattedBytes = `${ Math.round(downloadedBytes / 1024) } KB`;
+      } else if (downloadedBytes > 0) {
+        formattedBytes = `${ downloadedBytes } B`;
+      }
+      let progressText = '';
+      if (hasProgress && downloadProgress < 1) {
+        progressText = pct > 0 ? ` (${ formattedBytes } · ${ pct }%)` : ` (${ formattedBytes })`;
+      } else if (formattedBytes) {
+        progressText = ` (${ formattedBytes })`;
+      }
+
       return (
         <Box py={ 6 }>
           <Flex alignItems="center" justifyContent="center" gap={ 3 } mb={ 3 }>
             <Spinner size="sm"/>
             <Text fontSize="sm" color={{ _light: 'gray.500', _dark: 'gray.400' }}>
-              { loadingStep || 'Loading...' }{ downloadProgress > 0 && downloadProgress < 1 ? ` ${ pct }%` : '' }
+              { loadingStep || 'Loading...' }{ progressText }
             </Text>
           </Flex>
           <Box
@@ -281,9 +305,9 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
               h="100%"
               borderRadius="full"
               bg={{ _light: 'purple.400', _dark: 'purple.300' }}
-              w={ downloadProgress > 0 ? `${ pct }%` : '5%' }
+              w={ hasProgress ? `${ Math.max(pct, 5) }%` : '5%' }
               transition="width 0.3s ease"
-              { ...(downloadProgress === 0 ? { animation: 'pulse 1.5s ease-in-out infinite' } : {}) }
+              { ...(!hasProgress ? { animation: 'pulse 1.5s ease-in-out infinite' } : {}) }
             />
           </Box>
         </Box>
