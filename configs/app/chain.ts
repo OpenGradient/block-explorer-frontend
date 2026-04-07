@@ -29,7 +29,11 @@ const rpcUrls = (() => {
 
   const parsedValue = parseEnvJson<Array<string>>(envValue);
 
-  return Array.isArray(parsedValue) ? parsedValue : [];
+  if (Array.isArray(parsedValue) && parsedValue.length > 0) {
+    return parsedValue;
+  }
+
+  return [ 'https://ogevmdevnet.opengradient.ai' ];
 })();
 
 const chain = Object.freeze({
