@@ -389,10 +389,10 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
             <TableRoot size="sm" whiteSpace="nowrap">
               <TableHeader>
                 <TableRow>
-                  { [ '#', 'TEE ID', 'Input Hash', 'Output Hash', 'Signature', 'Status' ].map((header, i) => (
+                  { [ '#', 'TEE ID', 'Input Hash', 'Output Hash', 'Signature', 'Status' ].map((header) => (
                     <TableColumnHeader
                       key={ header }
-                      px={ 1.5 }
+                      px={ 3 }
                       py={ 2.5 }
                       fontSize="11px"
                       fontWeight={ 600 }
@@ -402,7 +402,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                       bgColor={{ _light: 'gray.50', _dark: 'whiteAlpha.50' }}
                       borderBottom="1px solid"
                       borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.100' }}
-                      { ...(i === 0 || i === 5 ? { w: '1px' } : {}) }
+                      w="1px"
                     >
                       { header }
                     </TableColumnHeader>
@@ -420,10 +420,10 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                     _hover={{ bgColor: { _light: 'purple.50/50', _dark: 'purple.900/10' } }}
                     transition="background 0.15s ease"
                   >
-                    <TableCell px={ 1.5 } py={ 2.5 } fontSize="xs" fontFamily="mono" color={{ _light: 'gray.400', _dark: 'gray.500' }}>
+                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono" color={{ _light: 'gray.400', _dark: 'gray.500' }}>
                       { item.index + 1 }
                     </TableCell>
-                    <TableCell px={ 1.5 } py={ 2.5 } fontSize="xs" fontFamily="mono">
+                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
                       <Flex alignItems="center" gap={ 1 }>
                         <Tooltip content={ item.tee_id }>
                           <Text>{ shortenHash(item.tee_id, 4) }</Text>
@@ -431,7 +431,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                         <CopyToClipboard text={ item.tee_id } boxSize={ 3 }/>
                       </Flex>
                     </TableCell>
-                    <TableCell px={ 1.5 } py={ 2.5 } fontSize="xs" fontFamily="mono">
+                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
                       <Flex alignItems="center" gap={ 1 }>
                         <Tooltip content={ item.input_hash }>
                           <Text>{ shortenHash(item.input_hash, 4) }</Text>
@@ -439,7 +439,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                         <CopyToClipboard text={ item.input_hash } boxSize={ 3 }/>
                       </Flex>
                     </TableCell>
-                    <TableCell px={ 1.5 } py={ 2.5 } fontSize="xs" fontFamily="mono">
+                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
                       <Flex alignItems="center" gap={ 1 }>
                         <Tooltip content={ item.output_hash }>
                           <Text>{ shortenHash(item.output_hash, 4) }</Text>
@@ -447,7 +447,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                         <CopyToClipboard text={ item.output_hash } boxSize={ 3 }/>
                       </Flex>
                     </TableCell>
-                    <TableCell px={ 1.5 } py={ 2.5 } fontSize="xs" fontFamily="mono">
+                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
                       <Flex alignItems="center" gap={ 1 }>
                         <Tooltip content={ item.tee_signature }>
                           <Text>{ shortenHash(item.tee_signature, 4) }</Text>
@@ -455,7 +455,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                         <CopyToClipboard text={ item.tee_signature } boxSize={ 3 }/>
                       </Flex>
                     </TableCell>
-                    <TableCell px={ 1.5 } py={ 2.5 }>
+                    <TableCell px={ 3 } py={ 2.5 }>
                       { renderVerifyStatus(item.index) }
                     </TableCell>
                   </TableRow>
