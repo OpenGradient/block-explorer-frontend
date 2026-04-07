@@ -9,7 +9,6 @@ import { SUPPORTED_INFERENCE_ADDRESSES } from 'lib/inferences/address';
 import { getInferenceEvent } from 'lib/inferences/event';
 import { LOG } from 'stubs/log';
 import { generateListStub } from 'stubs/utils';
-import { AccordionItem, AccordionItemContent, AccordionItemTrigger, AccordionRoot } from 'toolkit/chakra/accordion';
 import { Badge } from 'toolkit/chakra/badge';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import InferenceItem from 'ui/inferences/InferenceItem';
@@ -25,11 +24,6 @@ import TxSocketAlert from 'ui/tx/TxSocketAlert';
 import type { TxQuery } from './useTxQuery';
 
 const calculateAccordionKeyValue = (hash: string, index: number) => `${ hash }-${ index }`;
-
-interface AccordionItem {
-  label: string;
-  content: React.ReactNode;
-}
 
 interface Props {
   txQuery: TxQuery;
@@ -134,92 +128,77 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
         </ActionBar>
       ) }
       <Skeleton loading={ isPlaceholderData }>
-        { /* Skeleton doesn't work for accordion, so this is a placeholder. */ }
         { isPlaceholderData && 'Loading...' }
-        <AccordionRoot defaultValue={ inferenceLogs.map((it) => calculateAccordionKeyValue(it.address.hash, it.index)) } multiple>
-          { inferenceLogs.map((item, index) => {
-            const keyValue = calculateAccordionKeyValue(item.address.hash, item.index);
-            const inferenceType = renderInferenceType(item.decoded);
-            const isSettlement = isSettlementInference(item.decoded);
+        { inferenceLogs.map((item, index) => {
+          const keyValue = calculateAccordionKeyValue(item.address.hash, item.index);
+          const inferenceType = renderInferenceType(item.decoded);
+          const isSettlement = isSettlementInference(item.decoded);
 
-            return (
-              <AccordionItem key={ keyValue } value={ keyValue }>
-                <AccordionItemTrigger
-                  indicatorPlacement="end"
-                  mb={ 3 }
-                  bgColor={{ _light: 'rgba(255, 255, 255, 0.8)', _dark: 'rgba(255, 255, 255, 0.04)' }}
-                  borderWidth="1px"
-                  borderColor={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
-                  borderRadius="xl"
-                  px={ 5 }
-                  py={ 4 }
-                  fontWeight={ 500 }
-                  transition="all 0.2s ease"
-                  _hover={{
-                    bgColor: { _light: 'rgba(255, 255, 255, 1)', _dark: 'rgba(255, 255, 255, 0.06)' },
-                    borderColor: { _light: 'gray.200', _dark: 'whiteAlpha.200' },
-                    boxShadow: { _light: '0 4px 12px rgba(0, 0, 0, 0.05)', _dark: '0 4px 12px rgba(0, 0, 0, 0.2)' },
-                    transform: 'translateY(-1px)',
-                  }}
-                  _expanded={{
-                    bgColor: { _light: 'rgba(255, 255, 255, 1)', _dark: 'rgba(255, 255, 255, 0.06)' },
-                    borderColor: { _light: 'blue.200', _dark: 'blue.700' },
-                    boxShadow: { _light: '0 4px 12px rgba(66, 153, 225, 0.1)', _dark: '0 4px 12px rgba(66, 153, 225, 0.15)' },
-                  }}
+          return (
+            <Box
+              key={ keyValue }
+              mb={ 3 }
+              bgColor={{ _light: 'rgba(255, 255, 255, 0.8)', _dark: 'rgba(255, 255, 255, 0.04)' }}
+              borderWidth="1px"
+              borderColor={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
+              borderRadius="xl"
+              overflow="hidden"
+            >
+              <Flex
+                alignItems="center"
+                gap={ 3 }
+                px={ 5 }
+                py={ 4 }
+              >
+                <Flex
+                  alignItems="center"
+                  justifyContent="center"
+                  w={ 8 }
+                  h={ 8 }
+                  borderRadius="lg"
+                  bgColor={{ _light: isSettlement ? 'purple.50' : 'blue.50', _dark: isSettlement ? 'purple.900' : 'blue.900' }}
+                  flexShrink={ 0 }
                 >
-                  <Flex flex="1" alignItems="center" gap={ 3 } textAlign="left">
-                    <Flex
-                      alignItems="center"
-                      justifyContent="center"
-                      w={ 8 }
-                      h={ 8 }
-                      borderRadius="lg"
-                      bgColor={{ _light: isSettlement ? 'purple.50' : 'blue.50', _dark: isSettlement ? 'purple.900' : 'blue.900' }}
-                      flexShrink={ 0 }
-                    >
-                      <IconSvg
-                        name={ isSettlement ? 'check' : 'lightning' }
-                        boxSize={ 4 }
-                        color={{ _light: isSettlement ? 'purple.500' : 'blue.500', _dark: isSettlement ? 'purple.300' : 'blue.300' }}
-                      />
-                    </Flex>
-                    <Box>
-                      <Text fontSize="sm" fontWeight={ 600 } color={{ _light: 'gray.800', _dark: 'gray.100' }}>
-                        { inferenceType }
-                      </Text>
-                      <Text fontSize="xs" color={{ _light: 'gray.500', _dark: 'gray.400' }}>
-                        Event #{ index + 1 }
-                      </Text>
-                    </Box>
-                    <Badge
-                      ml="auto"
-                      mr={ 2 }
-                      colorPalette={ isSettlement ? 'purple' : 'blue' }
-                      variant="subtle"
-                    >
-                      { isSettlement ? 'Settlement' : 'Inference' }
-                    </Badge>
-                  </Flex>
-                </AccordionItemTrigger>
-                <AccordionItemContent px={ 2 } pt={ 2 } pb={ 4 }>
-                  { isSettlement ? (
-                    <SettlementInferenceItem
-                      { ...item }
-                      type="transaction"
-                      isLoading={ isPlaceholderData }
-                    />
-                  ) : (
-                    <InferenceItem
-                      { ...item }
-                      type="transaction"
-                      isLoading={ isPlaceholderData }
-                    />
-                  ) }
-                </AccordionItemContent>
-              </AccordionItem>
-            );
-          }) }
-        </AccordionRoot>
+                  <IconSvg
+                    name={ isSettlement ? 'check' : 'lightning' }
+                    boxSize={ 4 }
+                    color={{ _light: isSettlement ? 'purple.500' : 'blue.500', _dark: isSettlement ? 'purple.300' : 'blue.300' }}
+                  />
+                </Flex>
+                <Box>
+                  <Text fontSize="sm" fontWeight={ 600 } color={{ _light: 'gray.800', _dark: 'gray.100' }}>
+                    { inferenceType }
+                  </Text>
+                  <Text fontSize="xs" color={{ _light: 'gray.500', _dark: 'gray.400' }}>
+                    Event #{ index + 1 }
+                  </Text>
+                </Box>
+                <Badge
+                  ml="auto"
+                  colorPalette={ isSettlement ? 'purple' : 'blue' }
+                  variant="subtle"
+                >
+                  { isSettlement ? 'Settlement' : 'Inference' }
+                </Badge>
+              </Flex>
+              <Box px={ 5 } pb={ 4 }>
+                { isSettlement ? (
+                  <SettlementInferenceItem
+                    { ...item }
+                    type="transaction"
+                    isLoading={ isPlaceholderData }
+                  />
+                ) : (
+                  <InferenceItem
+                    { ...item }
+                    type="transaction"
+                    isLoading={ isPlaceholderData }
+                  />
+                ) }
+              </Box>
+            </Box>
+          );
+        }) }
       </Skeleton>
     </Box>
   );
