@@ -16,12 +16,6 @@ const shortenHash = (hash: string, chars = 8): string => {
   return `${ hash.slice(0, chars + 2) }...${ hash.slice(-chars) }`;
 };
 
-const formatTimestamp = (timestamp: string): string => {
-  const seconds = Number(timestamp);
-  if (Number.isNaN(seconds) || seconds === 0) return timestamp;
-  return new Date(seconds * 1000).toLocaleString();
-};
-
 type VerifyStatus = 'idle' | 'loading' | 'verified' | 'failed' | 'error';
 
 interface ItemVerification {
@@ -72,6 +66,8 @@ const VerifyCell = ({ item, verification, onVerify, renderStatus }: VerifyCellPr
       colorPalette="purple"
       onClick={ handleClick }
       fontWeight={ 500 }
+      px={ 3 }
+      py={ 1 }
     >
       <IconSvg name="verified" boxSize={ 3 }/>
       Verify
@@ -445,7 +441,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
             <TableRoot size="sm" whiteSpace="nowrap">
               <TableHeader>
                 <TableRow>
-                  { [ '#', 'TEE ID', 'Input Hash', 'Output Hash', 'Timestamp', 'Verify' ].map((header, i) => (
+                  { [ '#', 'TEE ID', 'Input Hash', 'Output Hash', 'Signature', 'Verify' ].map((header, i) => (
                     <TableColumnHeader
                       key={ header }
                       px={ 3 }
@@ -504,9 +500,12 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                       </Flex>
                     </TableCell>
                     <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
-                      <Tooltip content={ item.tee_timestamp }>
-                        <Text>{ formatTimestamp(item.tee_timestamp) }</Text>
-                      </Tooltip>
+                      <Flex alignItems="center" gap={ 1 }>
+                        <Tooltip content={ item.tee_signature }>
+                          <Text>{ shortenHash(item.tee_signature, 4) }</Text>
+                        </Tooltip>
+                        <CopyToClipboard text={ item.tee_signature } boxSize={ 3 }/>
+                      </Flex>
                     </TableCell>
                     <TableCell px={ 3 } py={ 2.5 }>
                       <VerifyCell
