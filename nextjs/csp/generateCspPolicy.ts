@@ -23,6 +23,7 @@ function generateCspPolicy() {
 
     // OpenGradient descriptors
     ogDescriptors.ethereumRpc(),
+    ogDescriptors.walrusAggregator(),
   );
 
   return makePolicyString(policyDescriptor);
