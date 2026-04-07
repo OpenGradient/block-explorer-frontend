@@ -82,9 +82,10 @@ interface Props {
 }
 
 const BatchSettlementTree = ({ walrusBlobId }: Props) => {
-  const [ expanded, setExpanded ] = React.useState(false);
+  const [ expanded, setExpanded ] = React.useState(true);
   const [ tree, setTree ] = React.useState<LoadedWalrusBatchTree | null>(null);
   const [ loading, setLoading ] = React.useState(false);
+  const [ loadingStep, setLoadingStep ] = React.useState<string>('');
   const [ fetchError, setFetchError ] = React.useState<string | null>(null);
   const [ verifications, setVerifications ] = React.useState<Record<number, ItemVerification>>({});
 
@@ -99,18 +100,22 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
 
     setLoading(true);
     setFetchError(null);
+    setLoadingStep('Downloading batch data from Walrus...');
 
     fetchWalrusBatchTree(walrusBlobId)
       .then((result) => {
         if (!cancelled) {
+          setLoadingStep('Parsing Merkle tree...');
           setTree(result);
           setLoading(false);
+          setLoadingStep('');
         }
       })
       .catch((err) => {
         if (!cancelled) {
           setFetchError(err instanceof Error ? err.message : 'Failed to fetch batch tree');
           setLoading(false);
+          setLoadingStep('');
         }
       });
 
@@ -147,6 +152,19 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
       }));
     }
   }, []);
+
+  const verifiedCount = React.useMemo(() => {
+    if (!tree) return 0;
+    return tree.items.filter((item) => {
+      const s = verifications[item.index]?.status;
+      return s === 'verified' || s === 'failed' || s === 'error';
+    }).length;
+  }, [ tree, verifications ]);
+
+  const verifyingAll = React.useMemo(() => {
+    if (!tree) return false;
+    return tree.items.some((item) => verifications[item.index]?.status === 'loading');
+  }, [ tree, verifications ]);
 
   const handleVerifyAll = React.useCallback(async() => {
     if (!tree || !publicClient) return;
@@ -209,12 +227,28 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
   const renderContent = () => {
     if (loading) {
       return (
-        <Flex alignItems="center" justifyContent="center" py={ 6 } gap={ 3 }>
-          <Spinner size="sm"/>
-          <Text fontSize="sm" color={{ _light: 'gray.500', _dark: 'gray.400' }}>
-            Loading batch tree from Walrus...
-          </Text>
-        </Flex>
+        <Box py={ 6 }>
+          <Flex alignItems="center" justifyContent="center" gap={ 3 } mb={ 3 }>
+            <Spinner size="sm"/>
+            <Text fontSize="sm" color={{ _light: 'gray.500', _dark: 'gray.400' }}>
+              { loadingStep || 'Loading...' }
+            </Text>
+          </Flex>
+          <Box
+            h="4px"
+            borderRadius="full"
+            bg={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
+            overflow="hidden"
+          >
+            <Box
+              h="100%"
+              borderRadius="full"
+              bg={{ _light: 'purple.400', _dark: 'purple.300' }}
+              w="60%"
+              animation="pulse 1.5s ease-in-out infinite"
+            />
+          </Box>
+        </Box>
       );
     }
 
@@ -246,13 +280,35 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
               variant="outline"
               colorPalette="purple"
               onClick={ handleVerifyAll }
-              loading={ tree.items.some((item) => verifications[item.index]?.status === 'loading') }
-              loadingText="Verifying..."
+              loading={ verifyingAll }
+              loadingText={ `Verifying ${ verifiedCount }/${ tree.items.length }...` }
             >
               Verify All
             </Button>
           ) }
         </Flex>
+
+        { verifyingAll && (
+          <Box mb={ 3 }>
+            <Text fontSize="xs" color={{ _light: 'gray.500', _dark: 'gray.400' }} mb={ 1 }>
+              Verifying signatures on-chain... { verifiedCount }/{ tree.items.length }
+            </Text>
+            <Box
+              h="4px"
+              borderRadius="full"
+              bg={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
+              overflow="hidden"
+            >
+              <Box
+                h="100%"
+                borderRadius="full"
+                bg={{ _light: 'purple.400', _dark: 'purple.300' }}
+                w={ `${ tree.items.length > 0 ? (verifiedCount / tree.items.length) * 100 : 0 }%` }
+                transition="width 0.3s ease"
+              />
+            </Box>
+          </Box>
+        ) }
 
         <Box
           borderRadius="lg"
@@ -348,7 +404,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
           transition="transform 0.2s ease"
         />
         <Text fontSize="sm" fontWeight={ 600 } color={{ _light: 'purple.700', _dark: 'purple.200' }}>
-          Batch Inferences{ tree ? ` (${ tree.items.length })` : '' }
+          Verify Batch Signatures{ tree ? ` (${ tree.items.length })` : '' }
         </Text>
       </Box>
 
