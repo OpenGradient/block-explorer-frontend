@@ -95,78 +95,62 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
     setExpanded((prev) => !prev);
   }, []);
 
-  React.useEffect(() => {
-    if (!expanded || tree || loading) return;
+  const handleStartVerification = React.useCallback(async() => {
+    if (tree || loading) return;
 
-    let cancelled = false;
-
+    setExpanded(true);
     setLoading(true);
     setFetchError(null);
     setDownloadProgress(0);
     setDownloadedBytes(0);
     setLoadingStep('Downloading batch data from Walrus...');
 
-    (async() => {
-      try {
-        const response = await fetchWalrusBlob(walrusBlobId);
-        const contentLength = Number(response.headers.get('content-length') || 0);
-        const reader = response.body?.getReader();
+    try {
+      const response = await fetchWalrusBlob(walrusBlobId);
+      const contentLength = Number(response.headers.get('content-length') || 0);
+      const reader = response.body?.getReader();
 
-        if (!reader) {
-          throw new Error('Response body is not readable');
-        }
+      if (!reader) {
+        throw new Error('Response body is not readable');
+      }
 
-        const chunks: Array<Uint8Array> = [];
-        let received = 0;
+      const chunks: Array<Uint8Array> = [];
+      let received = 0;
 
-        for (;;) {
-          const { done, value } = await reader.read();
-          if (cancelled) return;
-          if (done) break;
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-          chunks.push(value);
-          received += value.length;
-          setDownloadedBytes(received);
+        chunks.push(value);
+        received += value.length;
+        setDownloadedBytes(received);
 
-          if (contentLength > 0) {
-            setDownloadProgress(Math.min(received / contentLength, 1));
-          }
-        }
-
-        if (cancelled) return;
-
-        setDownloadProgress(1);
-        setLoadingStep('Parsing Merkle tree...');
-
-        // Yield to browser so the 100% / "Parsing" state renders before heavy sync work
-        await new Promise((resolve) => setTimeout(resolve, 0));
-
-        const blob = new Blob(chunks);
-        const text = await blob.text();
-
-        if (cancelled) return;
-
-        const dump = JSON.parse(text) as WalrusBatchTreeDump;
-        const result = parseWalrusBatchTree(walrusBlobId, dump);
-
-        if (!cancelled) {
-          setTree(result);
-          setLoading(false);
-          setLoadingStep('');
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setFetchError(err instanceof Error ? err.message : 'Failed to fetch batch tree');
-          setLoading(false);
-          setLoadingStep('');
+        if (contentLength > 0) {
+          setDownloadProgress(Math.min(received / contentLength, 1));
         }
       }
-    })();
 
-    return () => {
-      cancelled = true;
-    };
-  }, [ expanded, walrusBlobId, tree, loading ]);
+      setDownloadProgress(1);
+      setLoadingStep('Parsing Merkle tree...');
+
+      // Yield to browser so the 100% / "Parsing" state renders before heavy sync work
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      const blob = new Blob(chunks);
+      const text = await blob.text();
+
+      const dump = JSON.parse(text) as WalrusBatchTreeDump;
+      const result = parseWalrusBatchTree(walrusBlobId, dump);
+
+      setTree(result);
+      setLoading(false);
+      setLoadingStep('');
+    } catch (err) {
+      setFetchError(err instanceof Error ? err.message : 'Failed to fetch batch tree');
+      setLoading(false);
+      setLoadingStep('');
+    }
+  }, [ walrusBlobId, tree, loading ]);
 
   const handleVerifyItem = React.useCallback(async(item: WalrusBatchTreeItem) => {
     if (!publicClient) return;
@@ -322,7 +306,22 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
       );
     }
 
-    if (!tree || tree.items.length === 0) {
+    if (!tree) {
+      return (
+        <Box py={ 4 }>
+          <Button
+            size="sm"
+            variant="outline"
+            colorPalette="purple"
+            onClick={ handleStartVerification }
+          >
+            Download & Verify Batch
+          </Button>
+        </Box>
+      );
+    }
+
+    if (tree.items.length === 0) {
       return (
         <Text fontSize="sm" color={{ _light: 'gray.500', _dark: 'gray.400' }} py={ 4 }>
           No items found in batch tree.
