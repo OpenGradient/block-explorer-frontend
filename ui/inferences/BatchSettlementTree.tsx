@@ -54,7 +54,7 @@ const VerifyCell = ({ item, verification, onVerify, renderStatus }: VerifyCellPr
         { publicClient && (
           <Button
             size="xs"
-            variant="outline"
+            variant="ghost"
             colorPalette="purple"
             onClick={ handleClick }
           >
@@ -68,10 +68,12 @@ const VerifyCell = ({ item, verification, onVerify, renderStatus }: VerifyCellPr
   return publicClient ? (
     <Button
       size="xs"
-      variant="outline"
+      variant="ghost"
       colorPalette="purple"
       onClick={ handleClick }
+      fontWeight={ 500 }
     >
+      <IconSvg name="verified" boxSize={ 3 }/>
       Verify
     </Button>
   ) : null;
@@ -214,7 +216,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
       return (
         <Tooltip content="Signature verified on-chain">
           <Flex alignItems="center" gap={ 1 } color="green.500">
-            <IconSvg name="check" boxSize={ 4 }/>
+            <IconSvg name="check" boxSize={ 3.5 }/>
             <Text fontSize="xs" fontWeight={ 600 }>Verified</Text>
           </Flex>
         </Tooltip>
@@ -225,7 +227,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
       return (
         <Tooltip content="Signature verification failed">
           <Flex alignItems="center" gap={ 1 } color="red.500">
-            <IconSvg name="cross" boxSize={ 4 }/>
+            <IconSvg name="cross" boxSize={ 3.5 }/>
             <Text fontSize="xs" fontWeight={ 600 }>Failed</Text>
           </Flex>
         </Tooltip>
@@ -236,7 +238,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
       return (
         <Tooltip content={ v.error || 'Verification error' }>
           <Flex alignItems="center" gap={ 1 } color="orange.500">
-            <IconSvg name="info" boxSize={ 4 }/>
+            <IconSvg name="info" boxSize={ 3.5 }/>
             <Text fontSize="xs" fontWeight={ 600 }>Error</Text>
           </Flex>
         </Tooltip>
@@ -266,29 +268,35 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
       }
 
       return (
-        <Box py={ 6 }>
-          <Flex alignItems="center" justifyContent="center" gap={ 3 } mb={ 3 }>
-            <Spinner size="sm"/>
-            <Text fontSize="sm" color={{ _light: 'gray.500', _dark: 'gray.400' }}>
-              { loadingStep || 'Loading...' }{ progressText }
-            </Text>
-          </Flex>
-          <Box
-            h="4px"
-            borderRadius="full"
-            bg={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
-            overflow="hidden"
-          >
+        <Flex
+          direction="column"
+          alignItems="center"
+          py={ 8 }
+          px={ 4 }
+          gap={ 4 }
+        >
+          <Spinner size="md" color={{ _light: 'purple.500', _dark: 'purple.300' }}/>
+          <Text fontSize="sm" fontWeight={ 500 } color={{ _light: 'gray.600', _dark: 'gray.300' }}>
+            { loadingStep || 'Loading...' }{ progressText }
+          </Text>
+          <Box w="200px">
             <Box
-              h="100%"
+              h="3px"
               borderRadius="full"
-              bg={{ _light: 'purple.400', _dark: 'purple.300' }}
-              w={ hasProgress ? `${ Math.max(pct, 5) }%` : '5%' }
-              transition="width 0.3s ease"
-              { ...(!hasProgress ? { animation: 'pulse 1.5s ease-in-out infinite' } : {}) }
-            />
+              bg={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
+              overflow="hidden"
+            >
+              <Box
+                h="100%"
+                borderRadius="full"
+                bg={{ _light: 'purple.500', _dark: 'purple.400' }}
+                w={ hasProgress ? `${ Math.max(pct, 5) }%` : '5%' }
+                transition="width 0.3s ease"
+                { ...(!hasProgress ? { animation: 'pulse 1.5s ease-in-out infinite' } : {}) }
+              />
+            </Box>
           </Box>
-        </Box>
+        </Flex>
       );
     }
 
@@ -302,15 +310,23 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
 
     if (!tree) {
       return (
-        <Button
-          size="md"
-          variant="solid"
-          colorPalette="purple"
-          onClick={ handleStartVerification }
+        <Flex
+          alignItems="center"
+          justifyContent="center"
+          py={ 6 }
         >
-          <IconSvg name="arrows/down-right" boxSize={ 4 }/>
-          Download & Verify Batch
-        </Button>
+          <Button
+            size="lg"
+            variant="solid"
+            colorPalette="purple"
+            onClick={ handleStartVerification }
+            fontWeight={ 600 }
+            px={ 6 }
+          >
+            <IconSvg name="verified" boxSize={ 5 }/>
+            Download & Verify Batch
+          </Button>
+        </Flex>
       );
     }
 
@@ -323,35 +339,57 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
     }
 
     return (
-      <>
+      <Box>
+        { /* Merkle Root Header */ }
         <Flex
-          alignItems="center"
+          alignItems={{ base: 'flex-start', md: 'center' }}
           justifyContent="space-between"
+          flexDirection={{ base: 'column', md: 'row' }}
+          gap={ 3 }
+          px={ 4 }
+          py={ 3 }
           mb={ 3 }
-          p={ 3 }
           borderRadius="lg"
           bgColor={{ _light: 'purple.50', _dark: 'purple.900/20' }}
           border="1px solid"
           borderColor={{ _light: 'purple.100', _dark: 'purple.800/40' }}
         >
-          <Flex alignItems="center" gap={ 2 }>
-            <IconSvg name="verified" boxSize={ 4 } color={{ _light: 'purple.500', _dark: 'purple.300' }}/>
-            <Box>
-              <Text fontSize="xs" fontWeight={ 600 } color={{ _light: 'purple.700', _dark: 'purple.200' }}>
+          <Flex alignItems="center" gap={ 3 } minW={ 0 }>
+            <Flex
+              alignItems="center"
+              justifyContent="center"
+              w={ 8 }
+              h={ 8 }
+              borderRadius="lg"
+              bgColor={{ _light: 'purple.100', _dark: 'purple.800/40' }}
+              flexShrink={ 0 }
+            >
+              <IconSvg name="verified" boxSize={ 4 } color={{ _light: 'purple.600', _dark: 'purple.300' }}/>
+            </Flex>
+            <Box minW={ 0 }>
+              <Text fontSize="xs" fontWeight={ 500 } color={{ _light: 'purple.500', _dark: 'purple.400' }} mb={ 0.5 }>
                 Merkle Root
               </Text>
               <Flex alignItems="center" gap={ 1 }>
                 <Tooltip content={ tree.merkleRoot }>
-                  <Text fontSize="xs" fontFamily="mono" color={{ _light: 'purple.600', _dark: 'purple.300' }}>
-                    { shortenHash(tree.merkleRoot, 10) }
+                  <Text
+                    fontSize="sm"
+                    fontFamily="mono"
+                    fontWeight={ 600 }
+                    color={{ _light: 'purple.700', _dark: 'purple.200' }}
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    whiteSpace="nowrap"
+                  >
+                    { shortenHash(tree.merkleRoot, 12) }
                   </Text>
                 </Tooltip>
-                <CopyToClipboard text={ tree.merkleRoot } boxSize={ 3 }/>
+                <CopyToClipboard text={ tree.merkleRoot } boxSize={ 3.5 }/>
               </Flex>
             </Box>
           </Flex>
-          <Flex alignItems="center" gap={ 3 }>
-            <Text fontSize="xs" color={{ _light: 'purple.600', _dark: 'purple.300' }} fontWeight={ 500 }>
+          <Flex alignItems="center" gap={ 3 } flexShrink={ 0 }>
+            <Text fontSize="sm" color={{ _light: 'purple.600', _dark: 'purple.300' }} fontWeight={ 500 }>
               { tree.items.length } { tree.items.length === 1 ? 'inference' : 'inferences' }
             </Text>
             { publicClient && (
@@ -362,35 +400,41 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                 onClick={ handleVerifyAll }
                 loading={ verifyingAll }
                 loadingText={ `${ verifiedCount }/${ tree.items.length }` }
+                fontWeight={ 600 }
               >
+                <IconSvg name="verified" boxSize={ 3.5 }/>
                 Verify All
               </Button>
             ) }
           </Flex>
         </Flex>
 
+        { /* Verification progress */ }
         { verifyingAll && (
-          <Box mb={ 3 }>
-            <Text fontSize="xs" color={{ _light: 'gray.500', _dark: 'gray.400' }} mb={ 1 }>
-              Verifying signatures on-chain... { verifiedCount }/{ tree.items.length }
-            </Text>
-            <Box
-              h="4px"
-              borderRadius="full"
-              bg={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
-              overflow="hidden"
-            >
+          <Flex alignItems="center" gap={ 3 } mb={ 3 } px={ 1 }>
+            <Box flex={ 1 }>
               <Box
-                h="100%"
+                h="3px"
                 borderRadius="full"
-                bg={{ _light: 'purple.400', _dark: 'purple.300' }}
-                w={ `${ tree.items.length > 0 ? (verifiedCount / tree.items.length) * 100 : 0 }%` }
-                transition="width 0.3s ease"
-              />
+                bg={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
+                overflow="hidden"
+              >
+                <Box
+                  h="100%"
+                  borderRadius="full"
+                  bg={{ _light: 'purple.500', _dark: 'purple.400' }}
+                  w={ `${ tree.items.length > 0 ? (verifiedCount / tree.items.length) * 100 : 0 }%` }
+                  transition="width 0.3s ease"
+                />
+              </Box>
             </Box>
-          </Box>
+            <Text fontSize="xs" fontWeight={ 500 } color={{ _light: 'gray.500', _dark: 'gray.400' }} flexShrink={ 0 }>
+              { verifiedCount }/{ tree.items.length }
+            </Text>
+          </Flex>
         ) }
 
+        { /* Table */ }
         <Box
           borderRadius="lg"
           border="1px solid"
@@ -401,62 +445,24 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
             <TableRoot size="sm" whiteSpace="nowrap">
               <TableHeader>
                 <TableRow>
-                  <TableColumnHeader
-                    px={ 3 } py={ 2 } fontSize="xs" fontWeight={ 600 }
-                    textTransform="uppercase" letterSpacing="0.05em"
-                    bgColor={{ _light: 'gray.50', _dark: 'whiteAlpha.50' }}
-                    borderBottom="2px solid"
-                    borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.100' }}
-                    w="1px"
-                  >
-                    #
-                  </TableColumnHeader>
-                  <TableColumnHeader
-                    px={ 3 } py={ 2 } fontSize="xs" fontWeight={ 600 }
-                    textTransform="uppercase" letterSpacing="0.05em"
-                    bgColor={{ _light: 'gray.50', _dark: 'whiteAlpha.50' }}
-                    borderBottom="2px solid"
-                    borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.100' }}
-                  >
-                    TEE ID
-                  </TableColumnHeader>
-                  <TableColumnHeader
-                    px={ 3 } py={ 2 } fontSize="xs" fontWeight={ 600 }
-                    textTransform="uppercase" letterSpacing="0.05em"
-                    bgColor={{ _light: 'gray.50', _dark: 'whiteAlpha.50' }}
-                    borderBottom="2px solid"
-                    borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.100' }}
-                  >
-                    Input Hash
-                  </TableColumnHeader>
-                  <TableColumnHeader
-                    px={ 3 } py={ 2 } fontSize="xs" fontWeight={ 600 }
-                    textTransform="uppercase" letterSpacing="0.05em"
-                    bgColor={{ _light: 'gray.50', _dark: 'whiteAlpha.50' }}
-                    borderBottom="2px solid"
-                    borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.100' }}
-                  >
-                    Output Hash
-                  </TableColumnHeader>
-                  <TableColumnHeader
-                    px={ 3 } py={ 2 } fontSize="xs" fontWeight={ 600 }
-                    textTransform="uppercase" letterSpacing="0.05em"
-                    bgColor={{ _light: 'gray.50', _dark: 'whiteAlpha.50' }}
-                    borderBottom="2px solid"
-                    borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.100' }}
-                  >
-                    Timestamp
-                  </TableColumnHeader>
-                  <TableColumnHeader
-                    px={ 3 } py={ 2 } fontSize="xs" fontWeight={ 600 }
-                    textTransform="uppercase" letterSpacing="0.05em"
-                    bgColor={{ _light: 'gray.50', _dark: 'whiteAlpha.50' }}
-                    borderBottom="2px solid"
-                    borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.100' }}
-                    w="1px"
-                  >
-                    Verify
-                  </TableColumnHeader>
+                  { [ '#', 'TEE ID', 'Input Hash', 'Output Hash', 'Timestamp', 'Verify' ].map((header, i) => (
+                    <TableColumnHeader
+                      key={ header }
+                      px={ 3 }
+                      py={ 2.5 }
+                      fontSize="11px"
+                      fontWeight={ 600 }
+                      textTransform="uppercase"
+                      letterSpacing="0.06em"
+                      color={{ _light: 'gray.500', _dark: 'gray.400' }}
+                      bgColor={{ _light: 'gray.50', _dark: 'whiteAlpha.50' }}
+                      borderBottom="1px solid"
+                      borderColor={{ _light: 'gray.200', _dark: 'whiteAlpha.100' }}
+                      { ...(i === 0 || i === 5 ? { w: '1px' } : {}) }
+                    >
+                      { header }
+                    </TableColumnHeader>
+                  )) }
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -465,15 +471,15 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                     key={ item.index }
                     bgColor={ idx % 2 === 0 ?
                       { _light: 'white', _dark: 'transparent' } :
-                      { _light: 'gray.50/60', _dark: 'whiteAlpha.50/30' }
+                      { _light: 'gray.50/50', _dark: 'whiteAlpha.50/20' }
                     }
-                    _hover={{ bgColor: { _light: 'purple.50/40', _dark: 'purple.900/10' } }}
+                    _hover={{ bgColor: { _light: 'purple.50/50', _dark: 'purple.900/10' } }}
                     transition="background 0.15s ease"
                   >
-                    <TableCell px={ 3 } py={ 2 } fontSize="xs" fontFamily="mono" color={{ _light: 'gray.400', _dark: 'gray.500' }}>
+                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono" color={{ _light: 'gray.400', _dark: 'gray.500' }}>
                       { item.index + 1 }
                     </TableCell>
-                    <TableCell px={ 3 } py={ 2 } fontSize="xs" fontFamily="mono">
+                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
                       <Flex alignItems="center" gap={ 1 }>
                         <Tooltip content={ item.tee_id }>
                           <Text>{ shortenHash(item.tee_id, 4) }</Text>
@@ -481,7 +487,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                         <CopyToClipboard text={ item.tee_id } boxSize={ 3 }/>
                       </Flex>
                     </TableCell>
-                    <TableCell px={ 3 } py={ 2 } fontSize="xs" fontFamily="mono">
+                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
                       <Flex alignItems="center" gap={ 1 }>
                         <Tooltip content={ item.input_hash }>
                           <Text>{ shortenHash(item.input_hash, 4) }</Text>
@@ -489,7 +495,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                         <CopyToClipboard text={ item.input_hash } boxSize={ 3 }/>
                       </Flex>
                     </TableCell>
-                    <TableCell px={ 3 } py={ 2 } fontSize="xs" fontFamily="mono">
+                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
                       <Flex alignItems="center" gap={ 1 }>
                         <Tooltip content={ item.output_hash }>
                           <Text>{ shortenHash(item.output_hash, 4) }</Text>
@@ -497,12 +503,12 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                         <CopyToClipboard text={ item.output_hash } boxSize={ 3 }/>
                       </Flex>
                     </TableCell>
-                    <TableCell px={ 3 } py={ 2 } fontSize="xs" fontFamily="mono">
+                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
                       <Tooltip content={ item.tee_timestamp }>
                         <Text>{ formatTimestamp(item.tee_timestamp) }</Text>
                       </Tooltip>
                     </TableCell>
-                    <TableCell px={ 3 } py={ 2 }>
+                    <TableCell px={ 3 } py={ 2.5 }>
                       <VerifyCell
                         item={ item }
                         verification={ verifications[item.index] }
@@ -516,7 +522,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
             </TableRoot>
           </Box>
         </Box>
-      </>
+      </Box>
     );
   };
 
