@@ -23,58 +23,6 @@ interface ItemVerification {
   error?: string;
 }
 
-interface VerifyCellProps {
-  item: WalrusBatchTreeItem;
-  verification: ItemVerification | undefined;
-  onVerify: (item: WalrusBatchTreeItem) => void;
-  renderStatus: (index: number) => React.ReactNode;
-}
-
-const VerifyCell = ({ item, verification, onVerify, renderStatus }: VerifyCellProps) => {
-  const handleClick = React.useCallback(() => {
-    onVerify(item);
-  }, [ onVerify, item ]);
-
-  const status = verification?.status;
-
-  if (status === 'loading' || status === 'verified') {
-    return <>{ renderStatus(item.index) }</>;
-  }
-
-  if (status === 'failed' || status === 'error') {
-    return (
-      <Flex alignItems="center" gap={ 2 }>
-        { renderStatus(item.index) }
-        { publicClient && (
-          <Button
-            size="xs"
-            variant="ghost"
-            colorPalette="purple"
-            onClick={ handleClick }
-          >
-            Retry
-          </Button>
-        ) }
-      </Flex>
-    );
-  }
-
-  return publicClient ? (
-    <Button
-      size="xs"
-      variant="ghost"
-      colorPalette="purple"
-      onClick={ handleClick }
-      fontWeight={ 500 }
-      px={ 3 }
-      py={ 1 }
-    >
-      <IconSvg name="verified" boxSize={ 3 }/>
-      Verify
-    </Button>
-  ) : null;
-};
-
 interface Props {
   walrusBlobId: string;
 }
@@ -441,10 +389,10 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
             <TableRoot size="sm" whiteSpace="nowrap">
               <TableHeader>
                 <TableRow>
-                  { [ '#', 'TEE ID', 'Input Hash', 'Output Hash', 'Signature', 'Verify' ].map((header, i) => (
+                  { [ '#', 'TEE ID', 'Input Hash', 'Output Hash', 'Signature', 'Status' ].map((header, i) => (
                     <TableColumnHeader
                       key={ header }
-                      px={ 3 }
+                      px={ 1.5 }
                       py={ 2.5 }
                       fontSize="11px"
                       fontWeight={ 600 }
@@ -472,10 +420,10 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                     _hover={{ bgColor: { _light: 'purple.50/50', _dark: 'purple.900/10' } }}
                     transition="background 0.15s ease"
                   >
-                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono" color={{ _light: 'gray.400', _dark: 'gray.500' }}>
+                    <TableCell px={ 1.5 } py={ 2.5 } fontSize="xs" fontFamily="mono" color={{ _light: 'gray.400', _dark: 'gray.500' }}>
                       { item.index + 1 }
                     </TableCell>
-                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
+                    <TableCell px={ 1.5 } py={ 2.5 } fontSize="xs" fontFamily="mono">
                       <Flex alignItems="center" gap={ 1 }>
                         <Tooltip content={ item.tee_id }>
                           <Text>{ shortenHash(item.tee_id, 4) }</Text>
@@ -483,7 +431,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                         <CopyToClipboard text={ item.tee_id } boxSize={ 3 }/>
                       </Flex>
                     </TableCell>
-                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
+                    <TableCell px={ 1.5 } py={ 2.5 } fontSize="xs" fontFamily="mono">
                       <Flex alignItems="center" gap={ 1 }>
                         <Tooltip content={ item.input_hash }>
                           <Text>{ shortenHash(item.input_hash, 4) }</Text>
@@ -491,7 +439,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                         <CopyToClipboard text={ item.input_hash } boxSize={ 3 }/>
                       </Flex>
                     </TableCell>
-                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
+                    <TableCell px={ 1.5 } py={ 2.5 } fontSize="xs" fontFamily="mono">
                       <Flex alignItems="center" gap={ 1 }>
                         <Tooltip content={ item.output_hash }>
                           <Text>{ shortenHash(item.output_hash, 4) }</Text>
@@ -499,7 +447,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                         <CopyToClipboard text={ item.output_hash } boxSize={ 3 }/>
                       </Flex>
                     </TableCell>
-                    <TableCell px={ 3 } py={ 2.5 } fontSize="xs" fontFamily="mono">
+                    <TableCell px={ 1.5 } py={ 2.5 } fontSize="xs" fontFamily="mono">
                       <Flex alignItems="center" gap={ 1 }>
                         <Tooltip content={ item.tee_signature }>
                           <Text>{ shortenHash(item.tee_signature, 4) }</Text>
@@ -507,13 +455,8 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                         <CopyToClipboard text={ item.tee_signature } boxSize={ 3 }/>
                       </Flex>
                     </TableCell>
-                    <TableCell px={ 3 } py={ 2.5 }>
-                      <VerifyCell
-                        item={ item }
-                        verification={ verifications[item.index] }
-                        onVerify={ handleVerifyItem }
-                        renderStatus={ renderVerifyStatus }
-                      />
+                    <TableCell px={ 1.5 } py={ 2.5 }>
+                      { renderVerifyStatus(item.index) }
                     </TableCell>
                   </TableRow>
                 )) }
