@@ -303,11 +303,12 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
     if (!tree) {
       return (
         <Button
-          size="sm"
-          variant="outline"
+          size="md"
+          variant="solid"
           colorPalette="purple"
           onClick={ handleStartVerification }
         >
+          <IconSvg name="arrows/down-right" boxSize={ 4 }/>
           Download & Verify Batch
         </Button>
       );
@@ -369,7 +370,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
           borderColor={{ _light: 'gray.100', _dark: 'whiteAlpha.100' }}
           overflowX="auto"
         >
-          <TableRoot size="sm">
+          <TableRoot size="sm" whiteSpace="nowrap">
             <TableHeader>
               <TableRow>
                 <TableColumnHeader px={ 2 } py={ 1.5 } fontSize="xs" textTransform="uppercase" letterSpacing="0.05em">#</TableColumnHeader>
@@ -377,7 +378,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                 <TableColumnHeader px={ 2 } py={ 1.5 } fontSize="xs" textTransform="uppercase" letterSpacing="0.05em">Input Hash</TableColumnHeader>
                 <TableColumnHeader px={ 2 } py={ 1.5 } fontSize="xs" textTransform="uppercase" letterSpacing="0.05em">Output Hash</TableColumnHeader>
                 <TableColumnHeader px={ 2 } py={ 1.5 } fontSize="xs" textTransform="uppercase" letterSpacing="0.05em">Timestamp</TableColumnHeader>
-                <TableColumnHeader px={ 2 } py={ 1.5 } fontSize="xs" textTransform="uppercase" letterSpacing="0.05em">Verify</TableColumnHeader>
+                <TableColumnHeader px={ 2 } py={ 1.5 } fontSize="xs" textTransform="uppercase" letterSpacing="0.05em" w="1px">Verify</TableColumnHeader>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -389,7 +390,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                   <TableCell px={ 2 } py={ 1 } fontSize="xs" fontFamily="mono">
                     <Flex alignItems="center" gap={ 1 }>
                       <Tooltip content={ item.tee_id }>
-                        <Text>{ shortenHash(item.tee_id, 6) }</Text>
+                        <Text>{ shortenHash(item.tee_id, 4) }</Text>
                       </Tooltip>
                       <CopyToClipboard text={ item.tee_id } boxSize={ 3 }/>
                     </Flex>
@@ -397,7 +398,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                   <TableCell px={ 2 } py={ 1 } fontSize="xs" fontFamily="mono">
                     <Flex alignItems="center" gap={ 1 }>
                       <Tooltip content={ item.input_hash }>
-                        <Text>{ shortenHash(item.input_hash, 6) }</Text>
+                        <Text>{ shortenHash(item.input_hash, 4) }</Text>
                       </Tooltip>
                       <CopyToClipboard text={ item.input_hash } boxSize={ 3 }/>
                     </Flex>
@@ -405,7 +406,7 @@ const BatchSettlementTree = ({ walrusBlobId }: Props) => {
                   <TableCell px={ 2 } py={ 1 } fontSize="xs" fontFamily="mono">
                     <Flex alignItems="center" gap={ 1 }>
                       <Tooltip content={ item.output_hash }>
-                        <Text>{ shortenHash(item.output_hash, 6) }</Text>
+                        <Text>{ shortenHash(item.output_hash, 4) }</Text>
                       </Tooltip>
                       <CopyToClipboard text={ item.output_hash } boxSize={ 3 }/>
                     </Flex>
