@@ -1,6 +1,6 @@
 import { Box, Flex, Text, Spinner } from '@chakra-ui/react';
-import type { WalrusBatchTreeItem, LoadedWalrusBatchTree, WalrusSignatureVerificationClient } from 'og-fe-settlement-verify';
-import { fetchWalrusBatchTree, verifyWalrusBatchTreeItemSignature } from 'og-fe-settlement-verify';
+import type { WalrusBatchTreeItem, LoadedWalrusBatchTree, WalrusSignatureVerificationClient } from 'og-fe-tee-verification';
+import { fetchWalrusBatchTree, verifyWalrusBatchTreeItemSignature } from 'og-fe-tee-verification';
 import React from 'react';
 
 import { publicClient } from 'lib/web3/client';
