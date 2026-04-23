@@ -10,6 +10,7 @@ export const InferenceEvents = {
 
   // x402 events - https://github.com/OpenGradient/inference-facilitator/blob/main/contracts/settlement.sol
   BatchSettlement: 'BatchSettlement',
+  IndividualSettlement: 'IndividualSettlement',
   InferenceSettlement: 'Settlement',
   SettlementWithMetadata: 'SettlementWithMetadata',
 } as const;

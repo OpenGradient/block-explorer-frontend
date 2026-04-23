@@ -73,6 +73,8 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
       return 'LLM Completion Inference';
     } else if (event === InferenceEvents.BatchSettlement) {
       return 'LLM Batch Settlement';
+    } else if (event === InferenceEvents.IndividualSettlement) {
+      return 'TEE Individual Settlement';
     } else if (event === InferenceEvents.InferenceSettlement) {
       return 'LLM Individual Settlement';
     } else if (event === InferenceEvents.SettlementWithMetadata) {
@@ -85,6 +87,7 @@ const TxInferences = ({ txQuery, logsFilter }: Props) => {
   const isSettlementInference = (decoded: DecodedInput | null): boolean => {
     const event = getInferenceEvent(decoded?.method_call);
     return event === InferenceEvents.BatchSettlement ||
+           event === InferenceEvents.IndividualSettlement ||
            event === InferenceEvents.InferenceSettlement ||
            event === InferenceEvents.SettlementWithMetadata;
   };
