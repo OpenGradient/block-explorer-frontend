@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, Flex } from '@chakra-ui/react';
+import { Box, Grid, GridItem, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 
 import type { Log } from 'types/api/log';
@@ -216,6 +216,25 @@ const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) =
         mt: 4,
       }}
     >
+      { isIndividualSettlement && (
+        <Flex alignItems="center" gap={ 2 } mb={ 3 }>
+          <Box
+            w={ 1.5 }
+            h={ 1.5 }
+            borderRadius="full"
+            bgColor={{ _light: 'green.500', _dark: 'green.400' }}
+          />
+          <Text
+            fontSize="xs"
+            fontWeight={ 600 }
+            textTransform="uppercase"
+            letterSpacing="0.06em"
+            color={{ _light: 'gray.500', _dark: 'gray.400' }}
+          >
+            On-Chain Event Data
+          </Text>
+        </Flex>
+      ) }
       <Grid
         gridTemplateColumns={{ base: 'minmax(0, 1fr)', lg: '180px minmax(0, 1fr)' }}
         gap={{ base: 3, lg: 6 }}
