@@ -2,11 +2,13 @@ import { Box, Grid, GridItem, Flex } from '@chakra-ui/react';
 import React from 'react';
 
 import type { Log } from 'types/api/log';
+import { InferenceEvents } from 'types/client/inference/event';
 
 import { route } from 'nextjs-routes';
 
 import hexToUtf8 from 'lib/hexToUtf8';
 import { space } from 'lib/html-entities';
+import { getInferenceEvent } from 'lib/inferences/event';
 import { Alert } from 'toolkit/chakra/alert';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
@@ -14,6 +16,7 @@ import { Tooltip } from 'toolkit/chakra/tooltip';
 import IconSvg from 'ui/shared/IconSvg';
 
 import BatchSettlementTree from './BatchSettlementTree';
+import IndividualSettlementView from './IndividualSettlementView';
 import InferenceOutput from './InferenceOutput';
 import Item from './layout/Item';
 import VStackContainer from './layout/VStackContainer';
@@ -108,6 +111,8 @@ const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) =
     }
     return null;
   }, [ decoded ]);
+
+  const isIndividualSettlement = getInferenceEvent(decoded?.method_call) === InferenceEvents.IndividualSettlement;
 
   const renderGridItems = () => {
     return (
@@ -219,7 +224,11 @@ const SettlementInferenceItem = ({ type, address, decoded, isLoading }: Props) =
         { renderGridItems() }
       </Grid>
       { walrusBlobId && (
-        <BatchSettlementTree walrusBlobId={ walrusBlobId }/>
+        isIndividualSettlement ? (
+          <IndividualSettlementView walrusBlobId={ walrusBlobId }/>
+        ) : (
+          <BatchSettlementTree walrusBlobId={ walrusBlobId }/>
+        )
       ) }
     </Box>
   );
