@@ -47,12 +47,16 @@ const NetworkLogo = ({ isCollapsed, onClick, className }: Props) => {
     <chakra.a
       className={ className }
       href={ route({ pathname: '/' }) }
-      width={{ base: '180px', lg: isCollapsed === false ? '180px' : '30px', xl: isCollapsed ? '30px' : '180px' }}
+      width={{
+        base: 'clamp(96px, calc(100vw - 220px), 180px)',
+        lg: isCollapsed === false ? '180px' : '30px',
+        xl: isCollapsed ? '30px' : '180px',
+      }}
       height={{ base: '36px', lg: isCollapsed === false ? '36px' : '30px', xl: isCollapsed ? '30px' : '36px' }}
       display="inline-flex"
       overflow="hidden"
       onClick={ onClick }
-      flexShrink={ 0 }
+      flexShrink={{ base: 1, lg: 0 }}
       aria-label="Link to main page"
       transition="transform 0.2s ease, opacity 0.2s ease"
       _hover={{

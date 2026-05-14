@@ -92,7 +92,9 @@ const VerifiedContracts = () => {
 
   const filterInput = (
     <FilterInput
-      w={{ base: '100%', lg: '350px' }}
+      flex={{ base: 1, lg: 'unset' }}
+      minW={ 0 }
+      w={{ base: 'auto', lg: '350px' }}
       size="sm"
       onChange={ handleSearchTermChange }
       placeholder="Search by contract name or address"

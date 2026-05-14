@@ -14,6 +14,7 @@ const MainColumn = ({ children, className }: Props) => {
       className={ className }
       flexDir="column"
       flexGrow={ 1 }
+      minW={ 0 }
       w={{ base: '100%', lg: config.UI.navigation.layout === 'horizontal' ? '100%' : 'auto' }}
       paddingX={{ base: 3, lg: config.UI.navigation.layout === 'horizontal' ? 6 : 12 }}
       paddingRight={{ '2xl': 6 }}
