@@ -6,7 +6,7 @@ import scrollbar from './globals/scrollbar';
 
 const webkitAutofillOverrides = {
   WebkitTextFillColor: 'var(--chakra-colors-input-fg)',
-  '-webkit-box-shadow': '0 0 0px 1000px var(--chakra-colors-input-bg) inset',
+  WebkitBoxShadow: '0 0 0px 1000px var(--chakra-colors-input-bg) inset',
   transition: 'background-color 5000s ease-in-out 0s',
 };
 
@@ -20,9 +20,14 @@ const globalCss: SystemConfig['globalCss'] = {
   body: {
     bg: 'global.body.bg',
     color: 'global.body.fg',
+    fontFamily: 'body',
     WebkitTapHighlightColor: 'transparent',
     fontVariantLigatures: 'no-contextual',
     focusRingStyle: 'hidden',
+  },
+  '::selection': {
+    bg: 'blue.200',
+    color: 'blue.900',
   },
   mark: {
     bg: 'global.mark.bg',

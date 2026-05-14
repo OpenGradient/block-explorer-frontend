@@ -1,23 +1,20 @@
-import type { IconProps } from '@chakra-ui/react';
-import { Icon } from '@chakra-ui/react';
+import { chakra, type BoxProps } from '@chakra-ui/react';
 import React from 'react';
 
-// eslint-disable-next-line no-restricted-imports
-import logoIcon from 'icons/networks/logo-placeholder.svg';
-
-const ChartWatermarkIcon = (props: IconProps) => {
+const ChartWatermarkIcon = (props: BoxProps) => {
   return (
-    <Icon
+    <chakra.img
+      src="/static/opengradient/opengradient-logo-dark.svg"
+      alt=""
+      aria-hidden
       { ...props }
-      as={ logoIcon }
       position="absolute"
-      opacity={ 0.1 }
+      opacity={{ _light: 0.08, _dark: 0.1 }}
       top="50%"
       left="50%"
       transform="translate(-50%, -50%)"
       pointerEvents="none"
-      viewBox="0 0 114 20"
-      color={{ _light: 'link', _dark: 'white' }}
+      objectFit="contain"
     />
   );
 };

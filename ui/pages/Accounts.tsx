@@ -9,7 +9,8 @@ import AddressesListItem from 'ui/addresses/AddressesListItem';
 import AddressesTable from 'ui/addresses/AddressesTable';
 import ActionBar, { ACTION_BAR_HEIGHT_DESKTOP } from 'ui/shared/ActionBar';
 import DataListDisplay from 'ui/shared/DataListDisplay';
-import PageTitle from 'ui/shared/Page/PageTitle';
+import ExplorerPageSurface from 'ui/shared/Page/ExplorerPageSurface';
+import ExplorerPageTitle from 'ui/shared/Page/ExplorerPageTitle';
 import Pagination from 'ui/shared/pagination/Pagination';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 
@@ -33,7 +34,7 @@ const Accounts = () => {
   });
 
   const actionBar = pagination.isVisible && (
-    <ActionBar mt={ -6 }>
+    <ActionBar>
       <Pagination ml="auto" { ...pagination }/>
     </ActionBar>
   );
@@ -72,14 +73,23 @@ const Accounts = () => {
 
   return (
     <>
-      <PageTitle title="Top accounts" withTextAd/>
+      <ExplorerPageTitle
+        eyebrow="Accounts"
+        title="Top accounts"
+        description="Ranked accounts by native balance, share of supply, and transaction activity."
+        withTextAd
+      />
       <DataListDisplay
         isError={ isError }
         itemsNum={ data?.items.length }
         emptyText="There are no accounts."
         actionBar={ actionBar }
       >
-        { content }
+        { content && (
+          <ExplorerPageSurface overflowX="auto">
+            { content }
+          </ExplorerPageSurface>
+        ) }
       </DataListDisplay>
     </>
   );

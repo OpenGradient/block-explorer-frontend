@@ -22,14 +22,13 @@ const CHART_MARGIN = { bottom: 0, left: 0, right: 0, top: 0 };
 const ChainIndicatorChartContent = ({ data, isEmpty = false }: Props) => {
   const overlayRef = React.useRef<SVGRectElement>(null);
 
-  // Use subtle colors matching the design system
   const lineColor = useColorModeValue(
-    'rgba(79, 172, 254, 0.5)',
-    'rgba(96, 165, 250, 0.5)',
+    'rgba(29, 150, 182, 0.78)',
+    'rgba(80, 201, 233, 0.78)',
   );
   const areaColor = useColorModeValue(
-    'rgba(79, 172, 254, 0.15)',
-    'rgba(96, 165, 250, 0.15)',
+    'rgba(36, 188, 227, 0.22)',
+    'rgba(36, 188, 227, 0.18)',
   );
 
   const axesConfig = React.useMemo(() => {
@@ -47,7 +46,6 @@ const ChainIndicatorChartContent = ({ data, isEmpty = false }: Props) => {
 
   const hasData = !isEmpty && data[0]?.items.length > 0;
 
-  // For ghost chart, render a flat line at the baseline (0 or middle of domain)
   const ghostLineY = React.useMemo(() => {
     if (!isEmpty) return null;
     const domain = axes.y.scale.domain();
@@ -58,7 +56,6 @@ const ChainIndicatorChartContent = ({ data, isEmpty = false }: Props) => {
   return (
     <svg width="100%" height="100%" ref={ ref } style={{ overflow: 'visible' }}>
       <g transform={ `translate(${ chartMargin.left || 0 },${ chartMargin.top || 0 })` } opacity={ rect ? 1 : 0 }>
-        { /* Always render grid lines and axes (ghost chart) */ }
         <ChartGridLine
           type="horizontal"
           scale={ axes.y.scale }
@@ -79,7 +76,6 @@ const ChainIndicatorChartContent = ({ data, isEmpty = false }: Props) => {
           ticks={ 0 }
           noAnimation
         />
-        { /* Render flat line for ghost chart */ }
         { isEmpty && ghostLineY !== null && (
           <line
             x1={ 0 }
@@ -91,7 +87,6 @@ const ChainIndicatorChartContent = ({ data, isEmpty = false }: Props) => {
             opacity={ 0.5 }
           />
         ) }
-        { /* Only render data visualization if there's actual data */ }
         { hasData && (
           <>
             <ChartArea

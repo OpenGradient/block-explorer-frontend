@@ -1,4 +1,4 @@
-import { Box, Flex, Container } from '@chakra-ui/react';
+import { Box, Flex, Container, VStack } from '@chakra-ui/react';
 import React from 'react';
 
 import config from 'configs/app';
@@ -31,41 +31,41 @@ const Home = () => {
     <Box
       as="main"
       position="relative"
-      bg={{ _light: '#ffffff', _dark: '#0a0a0a' }}
+      bg={{ _light: '#f4fcfe', _dark: '#0a0f19' }}
       minH="100vh"
     >
       <Box position="relative" zIndex={ 1 }>
         <HeroBanner/>
-        <Container maxW="container.xl" px={{ base: 2, lg: 2 }}>
+        <Container maxW="1600px" px={{ base: 4, lg: 0 }}>
           <AdBanner
-            mt={{ base: 6, lg: 8 }}
+            mt={{ base: 5, lg: 6 }}
             mx="auto"
             display={{ base: 'flex', lg: 'none' }}
             justifyContent="center"
           />
 
           <Flex
-            mt={{ base: 4, lg: 6 }}
+            mt={{ base: 5, lg: 6 }}
             direction={{ base: 'column', lg: 'row' }}
-            columnGap={{ base: 6, lg: 8 }}
-            rowGap={{ base: 6, lg: 8 }}
+            columnGap={{ base: 5, lg: 6, xl: 8 }}
+            rowGap={{ base: 5, lg: 6 }}
+            alignItems={{ base: 'stretch', lg: 'stretch' }}
           >
-            { /* Left Column: Chain Indicators + Latest Blocks */ }
             <Box
-              width={{ base: '100%', lg: '320px' }}
+              width={{ base: '100%', lg: '360px' }}
               flexShrink={ 0 }
-              height="fit-content"
             >
-              <Box mb={{ base: 5, lg: 6 }}>
+              <VStack align="stretch" gap={{ base: 5, lg: 6 }}>
                 <ChainIndicators/>
-              </Box>
-              { leftWidget }
+                { leftWidget }
+              </VStack>
             </Box>
 
-            { /* Right Column: Transactions */ }
             <Box
               flexGrow={ 1 }
               position="relative"
+              display="flex"
+              minW={ 0 }
             >
               <Transactions/>
             </Box>

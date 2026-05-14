@@ -5,6 +5,7 @@ import { useInView } from 'react-intersection-observer';
 import config from 'configs/app';
 import { useScrollDirection } from 'lib/contexts/scrollDirection';
 import RewardsButton from 'ui/rewards/RewardsButton';
+import ColorModeToggle from 'ui/snippets/colorMode/ColorModeToggle';
 import NetworkLogo from 'ui/snippets/networkMenu/NetworkLogo';
 import SearchBar from 'ui/snippets/searchBar/SearchBar';
 import UserProfileMobile from 'ui/snippets/user/profile/UserProfileMobile';
@@ -49,6 +50,7 @@ const HeaderMobile = ({ hideSearchBar, renderSearchBar }: Props) => {
         <Burger/>
         <NetworkLogo ml={ 2 } mr="auto"/>
         <Flex columnGap={ 2 }>
+          <ColorModeToggle/>
           { config.features.rewards.isEnabled && <RewardsButton/> }
           {
             (config.features.account.isEnabled && <UserProfileMobile/>) ||

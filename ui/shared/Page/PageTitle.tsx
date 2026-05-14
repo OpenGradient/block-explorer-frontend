@@ -7,6 +7,7 @@ import { Heading } from 'toolkit/chakra/heading';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { Tooltip } from 'toolkit/chakra/tooltip';
 import { useDisclosure } from 'toolkit/hooks/useDisclosure';
+import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 import TextAd from 'ui/shared/ad/TextAd';
 import ButtonBackTo from 'ui/shared/buttons/ButtonBackTo';
 
@@ -113,7 +114,6 @@ const PageTitle = ({ title, contentAfter, withTextAd, backLink, className, isLoa
                 ref={ headingRef }
                 level="1"
                 whiteSpace="normal"
-                wordBreak="break-all"
                 style={{
                   WebkitLineClamp: TEXT_MAX_LINES,
                   WebkitBoxOrient: 'vertical',
@@ -124,12 +124,14 @@ const PageTitle = ({ title, contentAfter, withTextAd, backLink, className, isLoa
                 onMouseEnter={ tooltip.onOpen }
                 onMouseLeave={ tooltip.onClose }
                 onClick={ isMobile ? tooltip.onToggle : undefined }
-                fontSize={{ base: '30px', md: '40px', lg: '44px', xl: '46px' }}
-                fontWeight={ 200 }
-                letterSpacing="-0.04em"
-                lineHeight="1.15"
-                color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                fontFamily="system-ui, -apple-system, sans-serif"
+                fontSize={{ base: '28px', md: '34px', lg: '38px' }}
+                fontWeight={ 600 }
+                letterSpacing="0"
+                lineHeight="1.14"
+                color={ OPENGRADIENT_BRAND.text.primary }
+                fontFamily={ OPENGRADIENT_BRAND.fonts.sans }
+                wordBreak="normal"
+                overflowWrap="anywhere"
               >
                 <span ref={ textRef }>
                   { title }

@@ -12,16 +12,22 @@ export const recipe = defineSlotRecipe({
       textAlign: 'start',
       verticalAlign: 'top',
       overflow: 'unset',
+      bg: 'transparent',
     },
     cell: {
       textAlign: 'start',
       alignItems: 'center',
       verticalAlign: 'top',
       fontWeight: 'medium',
+      color: 'text.primary',
     },
     columnHeader: {
-      fontWeight: 'medium',
+      fontFamily: 'mono',
+      fontSize: 'xs',
+      fontWeight: '700',
+      letterSpacing: '0',
       textAlign: 'start',
+      textTransform: 'uppercase',
     },
   },
 
@@ -43,7 +49,12 @@ export const recipe = defineSlotRecipe({
           borderColor: 'border.divider',
         },
         row: {
-          bg: 'bg',
+          bg: 'transparent',
+          transitionProperty: 'background-color,color',
+          transitionDuration: 'fast',
+          _hover: {
+            bg: { _light: 'rgba(36, 188, 227, 0.045)', _dark: 'rgba(36, 188, 227, 0.055)' },
+          },
         },
       },
     },

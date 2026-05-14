@@ -17,4 +17,8 @@ export const keyframes = {
     '0%, 100%': { opacity: 1 },
     '50%': { opacity: 0.7 },
   },
+  signalScan: {
+    from: { backgroundPosition: '0 0, 0 0, 0 0' },
+    to: { backgroundPosition: '120px 0, 0 120px, 160px 160px' },
+  },
 };

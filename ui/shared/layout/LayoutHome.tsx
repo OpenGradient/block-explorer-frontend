@@ -4,6 +4,7 @@ import type { Props } from './types';
 
 import AppErrorBoundary from 'ui/shared/AppError/AppErrorBoundary';
 import HeaderAlert from 'ui/snippets/header/HeaderAlert';
+import HeaderDesktop from 'ui/snippets/header/HeaderDesktop';
 import HeaderMobile from 'ui/snippets/header/HeaderMobile';
 
 import * as Layout from './components';
@@ -19,6 +20,7 @@ const LayoutHome = ({ children }: Props) => {
           paddingTop={{ base: 3, lg: 6 }}
         >
           <HeaderAlert/>
+          <HeaderDesktop hideSearchBar/>
           <AppErrorBoundary>
             { children }
           </AppErrorBoundary>

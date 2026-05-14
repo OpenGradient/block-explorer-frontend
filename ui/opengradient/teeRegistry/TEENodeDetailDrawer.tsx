@@ -4,6 +4,7 @@ import React from 'react';
 import dayjs from 'lib/date/dayjs';
 import type { TEENodeWithStatus } from 'lib/opengradient/contracts/teeRegistry';
 import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerHeader, DrawerRoot, DrawerTitle } from 'toolkit/chakra/drawer';
+import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import * as EntityBase from 'ui/shared/entities/base/components';
 
@@ -13,19 +14,21 @@ type Props = {
   onClose: () => void;
 };
 
+const { colors, fonts, panel, text } = OPENGRADIENT_BRAND;
+
 const DetailRow = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <Box
     py={ 3 }
     borderBottom="1px solid"
-    borderColor={{ _light: 'rgba(0, 0, 0, 0.04)', _dark: 'rgba(255, 255, 255, 0.04)' }}
+    borderColor={ panel.border }
   >
     <Text
       fontSize="10px"
-      fontWeight={ 600 }
+      fontWeight={ 500 }
       textTransform="uppercase"
       letterSpacing="0.08em"
-      color={{ _light: 'rgba(0, 0, 0, 0.35)', _dark: 'rgba(255, 255, 255, 0.35)' }}
-      fontFamily="system-ui, -apple-system, sans-serif"
+      color={ text.muted }
+      fontFamily={ fonts.mono }
       mb={ 1 }
     >
       { label }
@@ -35,15 +38,15 @@ const DetailRow = ({ label, children }: { label: string; children: React.ReactNo
 );
 
 function getStatusBg(isActive: boolean, enabled: boolean) {
-  if (isActive) return 'green.500';
-  if (enabled) return 'orange.400';
-  return 'gray.400';
+  if (isActive) return '#61d199';
+  if (enabled) return '#d6a33d';
+  return '#708195';
 }
 
 function getStatusColor(isActive: boolean, enabled: boolean) {
-  if (isActive) return { _light: 'rgba(22, 163, 74, 0.9)', _dark: 'rgba(34, 197, 94, 0.95)' };
-  if (enabled) return { _light: 'rgba(217, 119, 6, 0.8)', _dark: 'rgba(245, 158, 11, 0.9)' };
-  return { _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' };
+  if (isActive) return { _light: '#23824f', _dark: '#61d199' };
+  if (enabled) return { _light: '#9d6d10', _dark: '#d6a33d' };
+  return text.muted;
 }
 
 function getStatusLabel(isActive: boolean, enabled: boolean) {
@@ -73,7 +76,11 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
   return (
     <DrawerRoot open={ true } onOpenChange={ handleOpenChange } placement="end" size="lg">
       <DrawerBackdrop/>
-      <DrawerContent>
+      <DrawerContent
+        bg={{ _light: '#ffffff', _dark: '#0a0f19' }}
+        borderLeft="1px solid"
+        borderColor={ panel.border }
+      >
         <DrawerCloseTrigger/>
         <DrawerHeader>
           <DrawerTitle>
@@ -82,8 +89,8 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
                 <Text
                   fontSize="lg"
                   fontWeight={ 600 }
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                  color={{ _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.95)' }}
+                  fontFamily={ fonts.sans }
+                  color={ text.primary }
                 >
                   TEE Node Details
                 </Text>
@@ -100,7 +107,7 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
                     fontSize="xs"
                     fontWeight={ 500 }
                     color={ getStatusColor(node.isActive, node.enabled) }
-                    fontFamily="system-ui, -apple-system, sans-serif"
+                    fontFamily={ fonts.mono }
                   >
                     { getStatusLabel(node.isActive, node.enabled) }
                   </Text>
@@ -109,10 +116,10 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
                     fontWeight={ 500 }
                     px={ 2 }
                     py={ 0.5 }
-                    borderRadius="sm"
-                    bg={{ _light: 'rgba(124, 58, 237, 0.06)', _dark: 'rgba(139, 92, 246, 0.1)' }}
-                    color={{ _light: 'rgba(124, 58, 237, 0.8)', _dark: 'rgba(139, 92, 246, 0.9)' }}
-                    fontFamily="system-ui, -apple-system, sans-serif"
+                    borderRadius="6px"
+                    bg={{ _light: 'rgba(36, 188, 227, 0.10)', _dark: 'rgba(36, 188, 227, 0.13)' }}
+                    color={ text.accent }
+                    fontFamily={ fonts.mono }
                   >
                     { typeName }
                   </Text>
@@ -128,8 +135,8 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
               <Flex alignItems="center" gap={ 2 }>
                 <Text
                   fontSize="xs"
-                  fontFamily="mono"
-                  color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.75)' }}
+                  fontFamily={ fonts.mono }
+                  color={ text.secondary }
                   wordBreak="break-all"
                 >
                   { node.teeId }
@@ -158,8 +165,8 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
             <DetailRow label="Endpoint">
               <Text
                 fontSize="sm"
-                fontFamily="mono"
-                color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.75)' }}
+                fontFamily={ fonts.mono }
+                color={ text.secondary }
                 wordBreak="break-all"
               >
                 { node.endpoint || 'N/A' }
@@ -171,8 +178,8 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
               <Flex alignItems="center" gap={ 2 }>
                 <Text
                   fontSize="xs"
-                  fontFamily="mono"
-                  color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.75)' }}
+                  fontFamily={ fonts.mono }
+                  color={ text.secondary }
                   wordBreak="break-all"
                 >
                   { node.pcrHash }
@@ -186,8 +193,8 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
               <Flex alignItems="center" gap={ 2 }>
                 <Text
                   fontSize="xs"
-                  fontFamily="mono"
-                  color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.75)' }}
+                  fontFamily={ fonts.mono }
+                  color={ text.secondary }
                 >
                   { truncateBytes(node.publicKey, 40) }
                 </Text>
@@ -200,8 +207,8 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
               <Flex alignItems="center" gap={ 2 }>
                 <Text
                   fontSize="xs"
-                  fontFamily="mono"
-                  color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.75)' }}
+                  fontFamily={ fonts.mono }
+                  color={ text.secondary }
                 >
                   { truncateBytes(node.tlsCertificate, 40) }
                 </Text>
@@ -213,8 +220,8 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
             <DetailRow label="Registered">
               <Text
                 fontSize="sm"
-                color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.75)' }}
-                fontFamily="system-ui, -apple-system, sans-serif"
+                color={ text.secondary }
+                fontFamily={ fonts.sans }
               >
                 { formatTimestamp(node.registeredAt) }
               </Text>
@@ -224,8 +231,8 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
               <Flex alignItems="center" gap={ 2 }>
                 <Text
                   fontSize="sm"
-                  color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.75)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
+                  color={ text.secondary }
+                  fontFamily={ fonts.sans }
                 >
                   { formatTimestamp(node.lastHeartbeatAt) }
                 </Text>
@@ -234,7 +241,7 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
                     w="6px"
                     h="6px"
                     borderRadius="50%"
-                    bg="green.500"
+                    bgColor={ colors.cyan }
                     boxShadow="0 0 4px rgba(34, 197, 94, 0.5)"
                   />
                 ) }
@@ -245,11 +252,11 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
             <Box mt={ 6 } mb={ 2 }>
               <Text
                 fontSize="10px"
-                fontWeight={ 600 }
+                fontWeight={ 500 }
                 textTransform="uppercase"
                 letterSpacing="0.08em"
-                color={{ _light: 'rgba(0, 0, 0, 0.35)', _dark: 'rgba(255, 255, 255, 0.35)' }}
-                fontFamily="system-ui, -apple-system, sans-serif"
+                color={ text.muted }
+                fontFamily={ fonts.mono }
                 mb={ 3 }
               >
                 Chain of Trust
@@ -257,18 +264,19 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
               <VStack
                 align="stretch"
                 gap={ 0 }
-                bg={{ _light: 'rgba(0, 0, 0, 0.01)', _dark: 'rgba(255, 255, 255, 0.01)' }}
+                bg={ panel.bg }
                 border="1px solid"
-                borderColor={{ _light: 'rgba(0, 0, 0, 0.04)', _dark: 'rgba(255, 255, 255, 0.04)' }}
+                borderColor={ panel.border }
+                borderRadius="8px"
                 p={ 4 }
               >
                 { [
-                  { label: 'AWS Nitro Hardware', desc: 'Root of trust', color: 'rgba(124, 58, 237' },
-                  { label: 'Attestation Document', desc: 'Hardware-signed proof', color: 'rgba(6, 182, 212' },
-                  { label: 'PCR Verification', desc: 'Enclave code identity check', color: 'rgba(22, 163, 74' },
-                  { label: 'Key Binding', desc: 'Signing key + TLS cert bound to enclave', color: 'rgba(30, 58, 138' },
-                  { label: 'On-Chain Record', desc: 'Immutable registration', color: 'rgba(217, 119, 6' },
-                  { label: 'Heartbeat Liveness', desc: 'Ongoing cryptographic proof', color: 'rgba(22, 163, 74' },
+                  { label: 'AWS Nitro Hardware', desc: 'Root of trust', color: '#50c9e9' },
+                  { label: 'Attestation Document', desc: 'Hardware-signed proof', color: '#24bce3' },
+                  { label: 'PCR Verification', desc: 'Enclave code identity check', color: '#61d199' },
+                  { label: 'Key Binding', desc: 'Signing key + TLS cert bound to enclave', color: '#1d96b6' },
+                  { label: 'On-Chain Record', desc: 'Immutable registration', color: '#d6a33d' },
+                  { label: 'Heartbeat Liveness', desc: 'Ongoing cryptographic proof', color: '#61d199' },
                 ].map((step, i) => (
                   <Flex key={ i } alignItems="center" gap={ 3 } py={ 2 }>
                     <Flex
@@ -280,15 +288,16 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
                         w="8px"
                         h="8px"
                         borderRadius="50%"
-                        bg={{ _light: `${ step.color }, 0.3)`, _dark: `${ step.color }, 0.5)` }}
+                        bg={ step.color }
                         border="1.5px solid"
-                        borderColor={{ _light: `${ step.color }, 0.5)`, _dark: `${ step.color }, 0.7)` }}
+                        borderColor={ step.color }
+                        opacity={ 0.8 }
                       />
                       { i < 5 && (
                         <Box
                           w="1px"
                           h="20px"
-                          bg={{ _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(255, 255, 255, 0.08)' }}
+                          bg={ panel.border }
                         />
                       ) }
                     </Flex>
@@ -296,15 +305,15 @@ const TEENodeDetailDrawer = ({ node, typeName, onClose }: Props) => {
                       <Text
                         fontSize="xs"
                         fontWeight={ 600 }
-                        color={{ _light: `${ step.color }, 0.8)`, _dark: `${ step.color }, 0.9)` }}
-                        fontFamily="system-ui, -apple-system, sans-serif"
+                        color={ text.primary }
+                        fontFamily={ fonts.sans }
                       >
                         { step.label }
                       </Text>
                       <Text
                         fontSize="11px"
-                        color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-                        fontFamily="system-ui, -apple-system, sans-serif"
+                        color={ text.muted }
+                        fontFamily={ fonts.sans }
                       >
                         { step.desc }
                       </Text>

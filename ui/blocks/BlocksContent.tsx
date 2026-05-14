@@ -17,12 +17,13 @@ import BlocksTable from 'ui/blocks/BlocksTable';
 import ActionBar from 'ui/shared/ActionBar';
 import DataListDisplay from 'ui/shared/DataListDisplay';
 import IconSvg from 'ui/shared/IconSvg';
+import ExplorerPageSurface from 'ui/shared/Page/ExplorerPageSurface';
 import Pagination from 'ui/shared/pagination/Pagination';
 import type { QueryWithPagesResult } from 'ui/shared/pagination/useQueryWithPages';
 import * as SocketNewItemsNotice from 'ui/shared/SocketNewItemsNotice';
 
 const OVERLOAD_COUNT = 75;
-const TABS_HEIGHT = 88;
+const TABS_HEIGHT = 68;
 
 interface Props {
   type?: BlockType;
@@ -114,7 +115,7 @@ const BlocksContent = ({ type, query, enableSocket = true, top }: Props) => {
   ) : null;
 
   const actionBar = isMobile ? (
-    <ActionBar mt={ -6 }>
+    <ActionBar>
       <Link href={ route({ pathname: '/block/countdown' }) }>
         <IconSvg name="hourglass" boxSize={ 5 } mr={ 2 }/>
         <span>Block countdown</span>
@@ -130,7 +131,11 @@ const BlocksContent = ({ type, query, enableSocket = true, top }: Props) => {
       emptyText="There are no blocks."
       actionBar={ actionBar }
     >
-      { content }
+      { content && (
+        <ExplorerPageSurface overflowX="auto">
+          { content }
+        </ExplorerPageSurface>
+      ) }
     </DataListDisplay>
   );
 };

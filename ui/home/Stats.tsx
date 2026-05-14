@@ -4,7 +4,6 @@ import React from 'react';
 
 import { route } from 'nextjs-routes';
 
-import config from 'configs/app';
 import useApiQuery from 'lib/api/useApiQuery';
 import { getAllTasks } from 'lib/opengradient/contracts/scheduler';
 import { HOMEPAGE_STATS, HOMEPAGE_STATS_MICROSERVICE } from 'stubs/stats';
@@ -12,15 +11,17 @@ import { LinkBox, LinkOverlay } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import IconSvg from 'ui/shared/IconSvg';
 
-const isStatsFeatureEnabled = config.features.stats.isEnabled;
+import { HOME_BRAND } from './brand';
+import isStatsMicroserviceEnabled from './utils/isStatsMicroserviceEnabled';
+
+const { fonts, text } = HOME_BRAND;
 
 const Stats = () => {
-  // Fetch stats data
   const statsQuery = useApiQuery('stats_main', {
     queryOptions: {
       refetchOnMount: false,
-      placeholderData: isStatsFeatureEnabled ? HOMEPAGE_STATS_MICROSERVICE : undefined,
-      enabled: isStatsFeatureEnabled,
+      placeholderData: isStatsMicroserviceEnabled ? HOMEPAGE_STATS_MICROSERVICE : undefined,
+      enabled: isStatsMicroserviceEnabled,
     },
   });
 
@@ -31,19 +32,15 @@ const Stats = () => {
     },
   });
 
-  const isPlaceholderData = statsQuery.isPlaceholderData || apiQuery.isPlaceholderData;
-
-  // Fetch active AI workflows
   const workflowsQuery = useQuery({
     queryKey: [ 'opengradient', 'getAllTasks' ],
     queryFn: getAllTasks,
     refetchOnMount: false,
   });
 
-  // Get total transactions from either microservice or regular API
   const totalTransactions = React.useMemo(() => {
-    const statsData = statsQuery.data;
-    const apiData = apiQuery.data;
+    const statsData = statsQuery.isPlaceholderData ? undefined : statsQuery.data;
+    const apiData = apiQuery.isPlaceholderData ? undefined : apiQuery.data;
 
     if (statsData?.total_transactions?.value) {
       return Number(statsData.total_transactions.value);
@@ -54,19 +51,17 @@ const Stats = () => {
     }
 
     return null;
-  }, [ statsQuery.data, apiQuery.data ]);
+  }, [ statsQuery.data, statsQuery.isPlaceholderData, apiQuery.data, apiQuery.isPlaceholderData ]);
 
-  // Calculate active AI workflows count
   const activeWorkflowsCount = React.useMemo(() => {
     const tasks = workflowsQuery.data ?? [];
     const now = BigInt(Math.floor(Date.now() / 1000));
     return tasks.filter((t) => t.endTime > now).length;
   }, [ workflowsQuery.data ]);
 
-  // Format number with compact notation
   const formatTransactionCount = (count: number | null): string => {
     if (count === null) {
-      return '—';
+      return '-';
     }
 
     if (count >= 1_000_000) {
@@ -90,7 +85,7 @@ const Stats = () => {
     {
       label: 'Transactions',
       value: formatTransactionCount(totalTransactions),
-      isLoading: isPlaceholderData,
+      isLoading: totalTransactions === null && (statsQuery.isPending || apiQuery.isPending),
       href: route({ pathname: '/txs' }),
       external: false,
     },
@@ -128,10 +123,10 @@ const Stats = () => {
               <Text
                 fontSize={{ base: '10px', lg: '11px' }}
                 fontWeight={ 500 }
-                letterSpacing="0.05em"
+                letterSpacing="0.16em"
                 textTransform="uppercase"
-                color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                fontFamily="system-ui, -apple-system, sans-serif"
+                color={ text.accent }
+                fontFamily={ fonts.mono }
               >
                 { metric.label }
               </Text>
@@ -139,7 +134,7 @@ const Stats = () => {
                 <IconSvg
                   name={ metric.external ? 'link_external' : 'link' }
                   boxSize={ 3 }
-                  color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+                  color={ text.accent }
                 />
               ) }
             </Flex>
@@ -149,11 +144,11 @@ const Stats = () => {
             >
               <Text
                 fontSize={{ base: '24px', lg: '36px' }}
-                fontWeight={ 300 }
-                letterSpacing="-0.02em"
-                color={{ _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.95)' }}
+                fontWeight={ 500 }
+                letterSpacing="0"
+                color={ text.primary }
                 lineHeight="1.1"
-                fontFamily="system-ui, -apple-system, sans-serif"
+                fontFamily={ fonts.mono }
               >
                 { metric.value }
               </Text>
@@ -165,7 +160,7 @@ const Stats = () => {
           p: { base: 3, lg: 4 },
           borderBottom: { base: !isLastItem ? '1px solid' : 'none', md: !isLastRow ? '1px solid' : 'none' },
           borderRight: { base: 'none', md: isEvenIndex && !isLastItem ? '1px solid' : 'none' },
-          borderColor: { _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' },
+          borderColor: { _light: 'rgba(36, 188, 227, 0.15)', _dark: 'rgba(36, 188, 227, 0.10)' },
         };
 
         if (metric.href) {

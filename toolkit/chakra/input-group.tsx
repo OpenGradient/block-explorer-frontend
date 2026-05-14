@@ -70,8 +70,8 @@ export const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
           return React.cloneElement(child, {
             ...(startElement && { ps: startOffset ?? (inlinePaddings?.start ? `${ inlinePaddings.start }px` : undefined) }),
             ...(endElement && { pe: endOffset ?? (inlinePaddings?.end ? `${ inlinePaddings.end }px` : undefined) }),
-            // hide input value and placeholder for the first render
-            value: inlinePaddings ? child.props.value : undefined,
+            // keep value controlled while hiding text until paddings are measured
+            value: inlinePaddings ? child.props.value : '',
             placeholder: inlinePaddings ? child.props.placeholder : undefined,
           });
         }) }

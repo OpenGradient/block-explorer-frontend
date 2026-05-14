@@ -10,6 +10,7 @@ import { IconButton } from 'toolkit/chakra/icon-button';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { Tooltip } from 'toolkit/chakra/tooltip';
+import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 import IconSvg from 'ui/shared/IconSvg';
 
 import ChartMenu from './ChartMenu';
@@ -95,9 +96,12 @@ const ChartWidget = ({
       ref={ ref }
       flexDir="column"
       padding={{ base: 3, lg: 4 }}
-      borderRadius="lg"
+      bg={ OPENGRADIENT_BRAND.panel.bg }
+      backdropFilter="blur(10px)"
+      borderRadius="8px"
       borderWidth="1px"
-      borderColor={{ _light: 'gray.200', _dark: 'gray.600' }}
+      borderColor={ OPENGRADIENT_BRAND.panel.border }
+      boxShadow={ OPENGRADIENT_BRAND.panel.shadow }
       className={ className }
     >
       <Flex columnGap={ 6 } mb={ 2 } alignItems="flex-start">

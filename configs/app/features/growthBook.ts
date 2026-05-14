@@ -7,7 +7,7 @@ const clientKey = getEnvValue('NEXT_PUBLIC_GROWTH_BOOK_CLIENT_KEY');
 const title = 'GrowthBook feature flagging and A/B testing';
 
 const config: Feature<{ clientKey: string }> = (() => {
-  if (clientKey) {
+  if (clientKey && clientKey !== 'xxx') {
     return Object.freeze({
       title,
       isEnabled: true,

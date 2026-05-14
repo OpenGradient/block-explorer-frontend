@@ -22,8 +22,8 @@ export default function useNavLinkStyleProps({ isActive }: Props) {
       fontWeight: isActive ? 500 : 400,
       lineHeight: '1.3',
       opacity: 1,
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      letterSpacing: '0.02em',
+      fontFamily: '"Geist Mono", ui-monospace, monospace',
+      letterSpacing: '0.08em',
       textTransform: 'uppercase',
     },
   };

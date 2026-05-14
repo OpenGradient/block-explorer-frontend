@@ -10,15 +10,29 @@ import useNewTxsSocket from 'lib/hooks/useNewTxsSocket';
 import { TX } from 'stubs/tx';
 import { Link } from 'toolkit/chakra/link';
 
+import { HOME_BRAND } from './brand';
 import LatestTxsItem from './LatestTxsItem';
 import LatestTxsItemMobile from './LatestTxsItemMobile';
 
+const { colors, fonts, panel, text } = HOME_BRAND;
+
 const LatestTransactions = () => {
   const isMobile = useIsMobile();
-  const txsCount = isMobile ? 2 : 6;
+  const txsCount = isMobile ? 2 : 11;
   const { data, isPlaceholderData, isError } = useApiQuery('homepage_txs', {
     queryOptions: {
       placeholderData: Array(txsCount).fill(TX),
+    },
+  });
+  const validatedTxsQuery = useApiQuery('txs_validated', {
+    queryParams: {
+      filter: 'validated',
+    },
+    queryOptions: {
+      placeholderData: {
+        items: Array(txsCount).fill(TX),
+        next_page_params: null,
+      },
     },
   });
 
@@ -27,39 +41,41 @@ const LatestTransactions = () => {
 
   let content;
 
-  if (isError) {
+  const txs = isMobile ? data : validatedTxsQuery.data?.items;
+  const isTxsPlaceholderData = isMobile ? isPlaceholderData : validatedTxsQuery.isPlaceholderData;
+  const isTxsError = isMobile ? isError : validatedTxsQuery.isError;
+
+  if (isTxsError) {
     content = (
       <Box px={{ base: 4, lg: 6 }} py={ 8 }>
         <Text
           fontSize="sm"
-          color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-          fontFamily="system-ui, -apple-system, sans-serif"
+          color={ text.secondary }
+          fontFamily={ fonts.sans }
         >
           No data. Please reload the page.
         </Text>
       </Box>
     );
-  }
-
-  if (data) {
+  } else if (txs) {
     content = (
       <>
         <Box
           display={{ base: 'block', lg: 'none' }}
           width="100%"
-          bg={{ _light: '#ffffff', _dark: '#0a0a0a' }}
+          bg="transparent"
           borderRadius="0"
           overflow="hidden"
         >
-          { data.slice(0, txsCount).map(((tx, index) => (
+          { txs.slice(0, txsCount).map(((tx, index) => (
             <Box
-              key={ tx.hash + (isPlaceholderData ? index : '') }
+              key={ tx.hash + (isTxsPlaceholderData ? index : '') }
               borderBottom={ index < txsCount - 1 ? '1px solid' : 'none' }
-              borderColor={{ _light: 'rgba(0, 0, 0, 0.1)', _dark: 'rgba(255, 255, 255, 0.1)' }}
+              borderColor={ panel.border }
             >
               <LatestTxsItemMobile
                 tx={ tx }
-                isLoading={ isPlaceholderData }
+                isLoading={ isTxsPlaceholderData }
               />
             </Box>
           ))) }
@@ -68,36 +84,21 @@ const LatestTransactions = () => {
           <Box
             display={{ base: 'none', lg: 'block' }}
             width="100%"
-            bg={{ _light: '#ffffff', _dark: '#0a0a0a' }}
+            bg="transparent"
             borderRadius="0"
             overflow="hidden"
             position="relative"
           >
-            { /* Subtle grid pattern overlay */ }
-            <Box
-              position="absolute"
-              top={ 0 }
-              left={ 0 }
-              right={ 0 }
-              bottom={ 0 }
-              opacity={{ _light: 0.005, _dark: 0.015 }}
-              backgroundImage={{
-                _light: 'repeating-linear-gradient(0deg, transparent, transparent 99px, rgba(0, 0, 0, 0.02) 99px, rgba(0, 0, 0, 0.02) 100px), repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(0, 0, 0, 0.02) 99px, rgba(0, 0, 0, 0.02) 100px)',
-                _dark: 'repeating-linear-gradient(0deg, transparent, transparent 99px, rgba(64, 209, 219, 0.02) 99px, rgba(64, 209, 219, 0.02) 100px), repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(64, 209, 219, 0.02) 99px, rgba(64, 209, 219, 0.02) 100px)',
-              }}
-              backgroundSize="100px 100px"
-              pointerEvents="none"
-            />
-            <Box position="relative" zIndex={ 1 }>
-              { data.slice(0, txsCount).map(((tx, index) => (
+            <Box>
+              { txs.slice(0, txsCount).map(((tx, index) => (
                 <Box
-                  key={ tx.hash + (isPlaceholderData ? index : '') }
+                  key={ tx.hash + (isTxsPlaceholderData ? index : '') }
                   borderBottom={ index < txsCount - 1 ? '1px solid' : 'none' }
-                  borderColor={{ _light: 'rgba(0, 0, 0, 0.1)', _dark: 'rgba(255, 255, 255, 0.1)' }}
+                  borderColor={ panel.border }
                 >
                   <LatestTxsItem
                     tx={ tx }
-                    isLoading={ isPlaceholderData }
+                    isLoading={ isTxsPlaceholderData }
                   />
                 </Box>
               ))) }
@@ -105,10 +106,10 @@ const LatestTransactions = () => {
           </Box>
         </AddressHighlightProvider>
         <Box
-          mt={ 3 }
-          px={{ base: 4, lg: 6 }}
-          pb={{ base: 4, lg: 5 }}
-          pt={ 2 }
+          mt={ 2 }
+          px={{ base: 4, lg: 4 }}
+          pb={{ base: 4, lg: 4 }}
+          pt={ 1 }
         >
           <Link
             href={ txsUrl }
@@ -116,8 +117,8 @@ const LatestTransactions = () => {
             fontWeight={ 500 }
             letterSpacing="0.08em"
             textTransform="uppercase"
-            color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-            fontFamily="system-ui, -apple-system, sans-serif"
+            color={ text.muted }
+            fontFamily={ fonts.mono }
             width="100%"
             display="block"
             textAlign="center"
@@ -126,7 +127,7 @@ const LatestTransactions = () => {
             _hover={{
               textDecoration: 'none',
               opacity: 0.7,
-              color: { _light: 'rgba(0, 0, 0, 0.6)', _dark: 'rgba(255, 255, 255, 0.6)' },
+              color: text.accent,
             }}
           >
             View all transactions
@@ -139,38 +140,46 @@ const LatestTransactions = () => {
   const statusText = socketAlert || (num ? `${ num.toLocaleString() } new txns` : 'Monitoring...');
 
   return (
-    <Box width="100%">
-      { /* Premium Header Section */ }
+    <Box
+      width="100%"
+      height="100%"
+      border="1px solid"
+      borderColor={ panel.border }
+      borderRadius="8px"
+      bg={ panel.bg }
+      boxShadow={ panel.shadow }
+      backdropFilter="blur(18px)"
+      overflow="hidden"
+    >
       <Flex
         alignItems="center"
         gap={ 2 }
-        px={{ base: 4, lg: 6 }}
-        pt={{ base: 4, lg: 6 }}
-        pb={ 5 }
+        px={{ base: 4, lg: 4 }}
+        pt={{ base: 4, lg: 4 }}
+        pb={ 3 }
+        borderBottom="1px solid"
+        borderColor={ panel.border }
       >
         <Box
           position="relative"
           w="6px"
           h="6px"
           borderRadius="50%"
-          bg="green.500"
-          boxShadow="0 0 6px rgba(34, 197, 94, 0.6)"
-          _dark={{
-            boxShadow: '0 0 8px rgba(34, 197, 94, 0.8)',
-          }}
+          bg={ colors.cyan }
+          boxShadow="0 0 10px rgba(36, 188, 227, 0.8), 0 0 20px rgba(36, 188, 227, 0.4)"
           animation="pulseOpacity 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
         />
         <Text
-          fontSize="13px"
+          fontSize="11px"
           fontWeight={ 500 }
-          letterSpacing="0.1em"
+          letterSpacing="0.12em"
           textTransform="uppercase"
-          color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-          fontFamily="system-ui, -apple-system, sans-serif"
+          color={ text.accent }
+          fontFamily={ fonts.mono }
         >
-          Latest transactions
+          / Latest transactions
         </Text>
-        { (num || socketAlert) && !isPlaceholderData && (
+        { (num || socketAlert) && !isTxsPlaceholderData && (
           <Link
             href={ txsUrl }
             display="inline-flex"
@@ -178,19 +187,18 @@ const LatestTransactions = () => {
             px={ 2.5 }
             py={ 1 }
             borderRadius="full"
-            bg={{ _light: 'rgba(59, 130, 246, 0.1)', _dark: 'rgba(59, 130, 246, 0.2)' }}
+            bg={{ _light: 'rgba(36, 188, 227, 0.10)', _dark: 'rgba(36, 188, 227, 0.16)' }}
             border="1px solid"
-            borderColor={{ _light: 'rgba(59, 130, 246, 0.2)', _dark: 'rgba(59, 130, 246, 0.3)' }}
+            borderColor={{ _light: 'rgba(36, 188, 227, 0.24)', _dark: 'rgba(80, 201, 233, 0.28)' }}
             fontSize="10px"
             fontWeight={ 500 }
-            color={{ _light: 'rgba(59, 130, 246, 0.9)', _dark: 'rgba(147, 197, 253, 0.9)' }}
-            fontFamily="system-ui, -apple-system, sans-serif"
+            color={ text.accent }
+            fontFamily={ fonts.mono }
             transition="all 0.2s ease"
             _hover={{
-              bg: { _light: 'rgba(59, 130, 246, 0.15)', _dark: 'rgba(59, 130, 246, 0.25)' },
-              borderColor: { _light: 'rgba(59, 130, 246, 0.3)', _dark: 'rgba(59, 130, 246, 0.4)' },
+              bg: { _light: 'rgba(36, 188, 227, 0.16)', _dark: 'rgba(36, 188, 227, 0.24)' },
+              borderColor: { _light: 'rgba(36, 188, 227, 0.34)', _dark: 'rgba(80, 201, 233, 0.42)' },
               textDecoration: 'none',
-              transform: 'scale(1.05)',
             }}
           >
             { statusText }

@@ -1,4 +1,4 @@
-import { Box, Flex, Text, HStack, VStack } from '@chakra-ui/react';
+import { Box, Flex, Text, HStack } from '@chakra-ui/react';
 import React from 'react';
 
 import type { Block } from 'types/api/block';
@@ -8,12 +8,12 @@ import { route } from 'nextjs-routes';
 import config from 'configs/app';
 import getNetworkValidatorTitle from 'lib/networks/getNetworkValidatorTitle';
 import { LinkBox, LinkOverlay } from 'toolkit/chakra/link';
-import { Skeleton } from 'toolkit/chakra/skeleton';
-import { Tooltip } from 'toolkit/chakra/tooltip';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
-import BlockEntity from 'ui/shared/entities/block/BlockEntity';
-import IconSvg from 'ui/shared/IconSvg';
 import TimeAgoWithTooltip from 'ui/shared/TimeAgoWithTooltip';
+
+import { HOME_BRAND } from './brand';
+
+const { colors, fonts, text } = HOME_BRAND;
 
 type Props = {
   block: Block;
@@ -24,211 +24,120 @@ type Props = {
 
 const LatestBlocksItem = ({ block, isLoading, animation, isFirst = false }: Props) => {
   const blockUrl = route({ pathname: '/block/[height_or_hash]', query: { height_or_hash: block.height.toString() } });
+  const txCount = block.transaction_count;
+  const barPct = Math.min(100, Math.round((Math.log(Math.max(txCount, 1) + 1) / Math.log(400)) * 100));
 
   return (
-    <Box
+    <LinkBox
+      animation={ animation }
       position="relative"
       width="100%"
-      css={{
-        '& a': {
-          outline: 'none !important',
-          '&:hover': {
-            outline: 'none !important',
-          },
-          '&:focus': {
-            outline: 'none !important',
-          },
-          '&:focus-visible': {
-            outline: 'none !important',
-          },
-        },
+      py={ 3 }
+      px={ 3.5 }
+      borderRadius="6px"
+      borderBottom="1px solid"
+      borderColor={{ _light: 'rgba(36, 188, 227, 0.10)', _dark: 'rgba(189, 235, 247, 0.06)' }}
+      transition="all 0.18s ease"
+      _hover={{
+        bg: { _light: 'rgba(36, 188, 227, 0.04)', _dark: 'rgba(36, 188, 227, 0.05)' },
+        borderColor: { _light: 'rgba(36, 188, 227, 0.35)', _dark: 'rgba(36, 188, 227, 0.30)' },
       }}
     >
-      <LinkBox
-        animation={ animation }
-        position="relative"
-        width="100%"
-        transition="all 0.25s cubic-bezier(0.4, 0, 0.2, 1)"
-        outline="none"
-        _hover={{
-          transform: 'translateX(2px)',
-          outline: 'none',
-        }}
-        _focus={{
-          outline: 'none',
-        }}
-        _focusVisible={{
-          outline: 'none',
-        }}
-      >
-        <LinkOverlay
-          href={ blockUrl }
-          noIcon
-        />
-        <Flex
-          gap={ 3 }
-          alignItems="flex-start"
-          position="relative"
-          p={ 3.5 }
-          bg={{ _light: '#ffffff', _dark: '#0a0a0a' }}
-          _hover={{
-            bg: { _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(64, 209, 219, 0.08)' },
-          }}
-        >
-          { /* Visual Block Indicator */ }
-          <Box
-            position="relative"
-            flexShrink={ 0 }
-            mt={ 0.5 }
-          >
-            <IconSvg
-              name="block_slim"
-              boxSize={ 5 }
-              color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-              isLoading={ isLoading }
+      <LinkOverlay href={ blockUrl } noIcon/>
+
+      <Flex alignItems="baseline" justifyContent="space-between" gap={ 3 } mb={ 1.5 }>
+        <HStack gap={ 2 } alignItems="baseline">
+          { isFirst && (
+            <Box
+              w="6px"
+              h="6px"
+              borderRadius="50%"
+              bg={ colors.cyan }
+              boxShadow="0 0 10px rgba(36, 188, 227, 0.8)"
+              flexShrink={ 0 }
+              alignSelf="center"
             />
-            { /* New block indicator for first block */ }
-            { isFirst && (
-              <Box
-                position="absolute"
-                top="-2px"
-                right="-2px"
-                width="8px"
-                height="8px"
-                bg="green.500"
-                borderRadius="50%"
-                boxShadow="0 0 4px rgba(34, 197, 94, 0.6)"
-                _dark={{
-                  boxShadow: '0 0 6px rgba(34, 197, 94, 0.8)',
-                }}
-              />
-            ) }
-            { /* Epoch indicator */ }
-            { block.celo?.is_epoch_block && (
-              <Tooltip content={ `Finalized epoch #${ block.celo.epoch_number }` }>
-                <Box
-                  position="absolute"
-                  top="-4px"
-                  right="-4px"
-                  bg="orange.500"
-                  borderRadius="50%"
-                  width="12px"
-                  height="12px"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <IconSvg
-                    name="checkered_flag"
-                    boxSize={ 2.5 }
-                    color="white"
-                    isLoading={ isLoading }
-                  />
-                </Box>
-              </Tooltip>
-            ) }
-          </Box>
-
-          { /* Content Section */ }
-          <VStack
-            align="stretch"
-            gap={ 2.5 }
-            flex={ 1 }
-            minW={ 0 }
+          ) }
+          <Text
+            fontFamily={ fonts.mono }
+            fontSize="15px"
+            fontWeight={ 500 }
+            color={ text.primary }
+            letterSpacing="0"
+            lineHeight="1"
           >
-            { /* Header: Block Number & Time */ }
-            <Flex
-              alignItems="center"
-              justifyContent="space-between"
-              gap={ 3 }
-              flexWrap="wrap"
-            >
-              <BlockEntity
-                isLoading={ isLoading }
-                number={ block.height }
-                tailLength={ 2 }
-                fontSize="sm"
-                fontWeight={ 500 }
-                fontFamily="system-ui, -apple-system, sans-serif"
-                color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                noIcon
-              />
-              <TimeAgoWithTooltip
-                timestamp={ block.timestamp }
-                enableIncrement={ !isLoading }
-                isLoading={ isLoading }
-                color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-                fontSize="11px"
-                fontWeight={ 400 }
-                fontFamily="system-ui, -apple-system, sans-serif"
-                flexShrink={ 0 }
-              />
-            </Flex>
+            #{ block.height.toLocaleString() }
+          </Text>
+        </HStack>
+        <TimeAgoWithTooltip
+          timestamp={ block.timestamp }
+          enableIncrement={ !isLoading }
+          isLoading={ isLoading }
+          color={ text.muted }
+          fontSize="11px"
+          fontWeight={ 400 }
+          fontFamily={ fonts.mono }
+          flexShrink={ 0 }
+        />
+      </Flex>
 
-            { /* Stats Row */ }
-            <HStack
-              gap={ 4 }
-              flexWrap="wrap"
-              alignItems="center"
-            >
-              { /* Transaction Count - Prominent Display */ }
-              <Skeleton loading={ isLoading }>
-                <HStack gap={ 1.5 }>
-                  <Text
-                    fontSize="11px"
-                    fontWeight={ 500 }
-                    letterSpacing="0.02em"
-                    color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                    fontFamily="system-ui, -apple-system, sans-serif"
-                  >
-                    Txn
-                  </Text>
-                  <Text
-                    fontSize="12px"
-                    fontWeight={ 500 }
-                    color={{ _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.95)' }}
-                    fontFamily="system-ui, -apple-system, sans-serif"
-                  >
-                    { block.transaction_count.toLocaleString() }
-                  </Text>
-                </HStack>
-              </Skeleton>
+      <Flex alignItems="center" gap={ 2.5 } mb={ 1.5 }>
+        <Box
+          flex={ 1 }
+          h="3px"
+          borderRadius="2px"
+          bg={{ _light: 'rgba(36, 188, 227, 0.10)', _dark: 'rgba(36, 188, 227, 0.10)' }}
+          position="relative"
+          overflow="hidden"
+        >
+          <Box
+            position="absolute"
+            top={ 0 }
+            left={ 0 }
+            h="100%"
+            w={ `${ barPct }%` }
+            bgGradient={ `linear-gradient(90deg, ${ colors.tealMid } 0%, ${ colors.cyan } 100%)` }
+            borderRadius="2px"
+            transition="width 0.4s ease"
+          />
+        </Box>
+        <Text
+          fontFamily={ fonts.mono }
+          fontSize="11px"
+          fontWeight={ 500 }
+          color={ text.secondary }
+          flexShrink={ 0 }
+        >
+          { txCount.toLocaleString() } { txCount === 1 ? 'tx' : 'txs' }
+        </Text>
+      </Flex>
 
-              { /* Miner/Validator */ }
-              { !config.features.rollup.isEnabled && !config.UI.views.block.hiddenFields?.miner && (
-                <Skeleton loading={ isLoading }>
-                  <HStack gap={ 1.5 }>
-                    <Text
-                      fontSize="11px"
-                      fontWeight={ 500 }
-                      letterSpacing="0.02em"
-                      color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                      fontFamily="system-ui, -apple-system, sans-serif"
-                      textTransform="capitalize"
-                    >
-                      { getNetworkValidatorTitle() }
-                    </Text>
-                    <Box display="inline-block" maxW="120px">
-                      <AddressEntity
-                        address={ block.miner }
-                        isLoading={ isLoading }
-                        noIcon
-                        noCopy
-                        truncation="constant"
-                        fontSize="11px"
-                        fontWeight={ 500 }
-                        fontFamily="system-ui, -apple-system, sans-serif"
-                        color={{ _light: 'rgba(0, 0, 0, 0.8)', _dark: 'rgba(255, 255, 255, 0.8)' }}
-                      />
-                    </Box>
-                  </HStack>
-                </Skeleton>
-              ) }
-            </HStack>
-          </VStack>
-        </Flex>
-      </LinkBox>
-    </Box>
+      { !config.features.rollup.isEnabled && !config.UI.views.block.hiddenFields?.miner && (
+        <HStack gap={ 1.5 } alignItems="center" minH="16px">
+          <Text
+            fontFamily={ fonts.mono }
+            fontSize="10px"
+            color={ text.muted }
+            letterSpacing="0.08em"
+            textTransform="uppercase"
+          >
+            { getNetworkValidatorTitle() }
+          </Text>
+          <Box maxW="160px" minW={ 0 } flex={ 1 }>
+            <AddressEntity
+              address={ block.miner }
+              isLoading={ isLoading }
+              noIcon
+              noCopy
+              truncation="constant"
+              fontSize="11px"
+              fontFamily={ fonts.mono }
+              color={ text.secondary }
+            />
+          </Box>
+        </HStack>
+      ) }
+    </LinkBox>
   );
 };
 

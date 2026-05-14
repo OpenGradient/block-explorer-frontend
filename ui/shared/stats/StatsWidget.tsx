@@ -6,6 +6,7 @@ import { route } from 'nextjs-routes';
 
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
+import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 import Hint from 'ui/shared/Hint';
 import IconSvg, { type IconName } from 'ui/shared/IconSvg';
 import TruncatedValue from 'ui/shared/TruncatedValue';
@@ -58,36 +59,37 @@ const StatsWidget = ({
       <Flex
         className={ className }
         alignItems="center"
-        bgColor={ isLoading ? { _light: 'blackAlpha.50', _dark: 'whiteAlpha.50' } : { _light: 'rgba(255, 255, 255, 0.6)', _dark: 'rgba(255, 255, 255, 0.05)' } }
+        bgColor={ isLoading ? { _light: 'blackAlpha.50', _dark: 'whiteAlpha.50' } : OPENGRADIENT_BRAND.panel.bg }
         backdropFilter={ isLoading ? 'none' : 'blur(10px)' }
         p={ 4 }
         border="1px solid"
-        borderColor={{ _light: 'rgba(102, 126, 234, 0.15)', _dark: 'rgba(255, 255, 255, 0.1)' }}
+        borderColor={ OPENGRADIENT_BRAND.panel.border }
+        borderRadius="8px"
+        boxShadow={ isLoading ? 'none' : OPENGRADIENT_BRAND.panel.shadow }
         justifyContent="space-between"
         columnGap={ 3 }
         w="100%"
-        transition="all 0.2s ease"
+        transition="border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease"
         _hover={{
-          borderColor: { _light: 'rgba(102, 126, 234, 0.3)', _dark: 'rgba(255, 255, 255, 0.2)' },
-          transform: 'translateY(-2px)',
-          boxShadow: { _light: '0 4px 12px rgba(102, 126, 234, 0.1)', _dark: '0 4px 12px rgba(0, 0, 0, 0.3)' },
+          borderColor: { _light: 'rgba(36, 188, 227, 0.34)', _dark: 'rgba(80, 201, 233, 0.28)' },
         }}
         cursor={ href ? 'pointer' : 'default' }
       >
         { icon && (
           <Box
             p={ 2.5 }
-            bg={{ _light: 'rgba(102, 126, 234, 0.1)', _dark: 'rgba(66, 153, 225, 0.15)' }}
+            bg={{ _light: 'rgba(36, 188, 227, 0.10)', _dark: 'rgba(80, 201, 233, 0.12)' }}
             display={{ base: 'none', lg: 'flex' }}
             flexShrink={ 0 }
             alignItems="center"
             justifyContent="center"
+            borderRadius="8px"
           >
             <IconSvg
               name={ icon }
               boxSize="24px"
               isLoading={ isLoading }
-              color={{ _light: 'blue.600', _dark: 'blue.400' }}
+              color={ OPENGRADIENT_BRAND.text.accent }
             />
           </Box>
         ) }
@@ -127,7 +129,7 @@ const StatsWidget = ({
         </Box>
         { typeof hint === 'string' ? (
           <Skeleton loading={ isLoading } alignSelf="center" borderRadius="none">
-            <Hint label={ hint } boxSize={ 6 } color={{ _light: 'gray.600', _dark: 'gray.400' }}/>
+            <Hint label={ hint } boxSize={ 6 } color={ OPENGRADIENT_BRAND.text.secondary }/>
           </Skeleton>
         ) : hint }
       </Flex>

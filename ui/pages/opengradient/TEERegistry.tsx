@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, Text, VStack } from '@chakra-ui/react';
+import { Box, Flex, Grid, HStack, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
@@ -7,13 +7,13 @@ import { route } from 'nextjs-routes';
 import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS } from 'lib/opengradient/contracts/teeRegistry';
 import type { TEERegistryStats, TEETypeSummary, TEENodeWithStatus } from 'lib/opengradient/contracts/teeRegistry';
 import { Checkbox } from 'toolkit/chakra/checkbox';
-import { Heading } from 'toolkit/chakra/heading';
-import { Link, LinkBox } from 'toolkit/chakra/link';
+import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
+import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 import TEENodeDetailDrawer from 'ui/opengradient/teeRegistry/TEENodeDetailDrawer';
 import TEENodesTable from 'ui/opengradient/teeRegistry/TEENodesTable';
 import TEETypeCard from 'ui/opengradient/teeRegistry/TEETypeCard';
-import IconSvg from 'ui/shared/IconSvg';
+import IconSvg, { type IconName } from 'ui/shared/IconSvg';
 
 const PLACEHOLDER_STATS: TEERegistryStats = {
   totalTypes: 3,
@@ -28,6 +28,85 @@ const PLACEHOLDER_TYPES: Array<TEETypeSummary> = [
   { typeId: 1, name: 'Agent Execution', totalNodes: 4, enabledNodes: 3, activeNodes: 3, approvedPCRs: 2, addedAt: BigInt(0) },
   { typeId: 2, name: 'Model Training', totalNodes: 3, enabledNodes: 3, activeNodes: 2, approvedPCRs: 1, addedAt: BigInt(0) },
 ];
+
+const { colors, fonts, panel, text } = OPENGRADIENT_BRAND;
+
+type MetricCardProps = {
+  label: string;
+  value: number;
+  iconName: IconName;
+  helper: string;
+  loading?: boolean;
+};
+
+const SectionLabel = ({ children }: { children: React.ReactNode }) => (
+  <HStack gap={ 2 }>
+    <Box
+      w="6px"
+      h="6px"
+      borderRadius="50%"
+      bg={ colors.cyan }
+      boxShadow="0 0 10px rgba(36, 188, 227, 0.65)"
+      flexShrink={ 0 }
+    />
+    <Text
+      fontFamily={ fonts.mono }
+      fontSize="11px"
+      fontWeight={ 500 }
+      letterSpacing="0.12em"
+      textTransform="uppercase"
+      color={ text.accent }
+    >
+      { children }
+    </Text>
+  </HStack>
+);
+
+const MetricCard = ({ label, value, iconName, helper, loading }: MetricCardProps) => (
+  <Box
+    border="1px solid"
+    borderColor={ panel.border }
+    borderRadius="8px"
+    bg={ panel.bg }
+    px={ 4 }
+    py={ 3.5 }
+    minH="112px"
+  >
+    <Flex alignItems="center" justifyContent="space-between" gap={ 3 } mb={ 3 }>
+      <Text
+        fontFamily={ fonts.mono }
+        fontSize="10px"
+        fontWeight={ 500 }
+        letterSpacing="0.08em"
+        textTransform="uppercase"
+        color={ text.secondary }
+      >
+        { label }
+      </Text>
+      <IconSvg name={ iconName } boxSize={ 3.5 } color={ text.accent }/>
+    </Flex>
+    <Skeleton loading={ loading } w="fit-content">
+      <Text
+        fontFamily={ fonts.mono }
+        fontSize={{ base: '24px', lg: '30px' }}
+        fontWeight={ 500 }
+        lineHeight="1"
+        color={ text.primary }
+      >
+        { value.toLocaleString() }
+      </Text>
+    </Skeleton>
+    <Text
+      mt={ 2 }
+      fontFamily={ fonts.sans }
+      fontSize="12px"
+      lineHeight="1.35"
+      color={ text.muted }
+    >
+      { helper }
+    </Text>
+  </Box>
+);
 
 const TEERegistry = () => {
   const [ selectedNode, setSelectedNode ] = React.useState<TEENodeWithStatus | null>(null);
@@ -46,23 +125,21 @@ const TEERegistry = () => {
   const stats = query.data?.stats ?? PLACEHOLDER_STATS;
   const types = query.data?.types ?? PLACEHOLDER_TYPES;
 
-  // All nodes flat list for the table
   const allNodes = React.useMemo(() => {
-    const nbt = query.data?.nodesByType ?? {};
+    const nodesByType = query.data?.nodesByType ?? {};
     if (selectedType !== null) {
-      return nbt[selectedType] ?? [];
+      return nodesByType[selectedType] ?? [];
     }
-    return Object.values(nbt).flat();
+    return Object.values(nodesByType).flat();
   }, [ query.data?.nodesByType, selectedType ]);
 
   const hasNonDisabledNodes = React.useMemo(
-    () => allNodes.some((n) => n.isActive || n.enabled),
+    () => allNodes.some((node) => node.isActive || node.enabled),
     [ allNodes ],
   );
 
   const [ showDisabled, setShowDisabled ] = React.useState<boolean | null>(null);
 
-  // Reset when allNodes changes (e.g. type filter changed)
   React.useEffect(() => {
     setShowDisabled(null);
   }, [ selectedType ]);
@@ -70,8 +147,21 @@ const TEERegistry = () => {
   const resolvedShowDisabled = showDisabled ?? !hasNonDisabledNodes;
 
   const filteredNodes = React.useMemo(
-    () => resolvedShowDisabled ? allNodes : allNodes.filter((n) => n.isActive || n.enabled),
+    () => resolvedShowDisabled ? allNodes : allNodes.filter((node) => node.isActive || node.enabled),
     [ allNodes, resolvedShowDisabled ],
+  );
+
+  const tableTitle = selectedType !== null ?
+    `${ types.find((type) => type.typeId === selectedType)?.name ?? 'Selected' } nodes` :
+    'All nodes';
+
+  const tableSubtitle = resolvedShowDisabled ?
+    'Showing active, enabled, and disabled registry records.' :
+    'Showing active and enabled registry records.';
+
+  const activeVisibleCount = React.useMemo(
+    () => filteredNodes.filter((node) => node.isActive).length,
+    [ filteredNodes ],
   );
 
   const handleToggleShowDisabled = React.useCallback(() => {
@@ -98,314 +188,137 @@ const TEERegistry = () => {
   }, []);
 
   return (
-    <>
-      <Heading
-        as="h1"
-        fontSize={{ base: '22px', md: '26px', lg: '28px' }}
-        fontWeight={ 300 }
-        letterSpacing="-0.03em"
-        lineHeight="1.15"
-        color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-        fontFamily="system-ui, -apple-system, sans-serif"
-        mb={ 4 }
-        mt={{ base: 1, lg: 2 }}
-      >
-        TEE Registry
-      </Heading>
-
-      { /* Description */ }
-      <Box
+    <Box>
+      <Flex
+        alignItems={{ base: 'stretch', lg: 'flex-end' }}
+        justifyContent="space-between"
+        gap={ 5 }
+        flexDirection={{ base: 'column', lg: 'row' }}
         mb={ 6 }
-        p={{ base: 4, lg: 5 }}
-        bg={{ _light: 'rgba(0, 0, 0, 0.01)', _dark: 'rgba(255, 255, 255, 0.01)' }}
-        borderTop="1px solid"
-        borderBottom="1px solid"
-        borderColor={{ _light: 'rgba(0, 0, 0, 0.04)', _dark: 'rgba(255, 255, 255, 0.04)' }}
       >
-        <Flex
-          gap={ 3 }
-          alignItems="flex-start"
-          flexDirection={{ base: 'column', lg: 'row' }}
-        >
-          <Box
-            p={ 2 }
-            bg={{ _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(255, 255, 255, 0.02)' }}
-            flexShrink={ 0 }
-          >
-            <IconSvg
-              name="nft_shield"
-              boxSize={ 5 }
-              color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-            />
-          </Box>
-          <Box flex={ 1 }>
-            <Text
-              fontSize={{ base: '12px', md: '13px' }}
-              lineHeight="1.6"
-              color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-              fontFamily="system-ui, -apple-system, sans-serif"
-            >
-              Hardware-rooted chain of trust from AWS Nitro enclaves to on-chain verification.
-              Each TEE node is cryptographically attested, with its signing key and TLS certificate
-              bound to verified enclave code. Heartbeat liveness proofs ensure nodes are actively running
-              approved software. Click on a node to inspect its attestation details.
-            </Text>
-            <Link
-              href={ route({ pathname: '/address/[hash]', query: { hash: TEE_REGISTRY_ADDRESS } }) }
-              fontSize={{ base: '11px', md: '12px' }}
-              fontWeight={ 500 }
-              fontFamily="system-ui, -apple-system, sans-serif"
-              color="blue.500"
-              mt={ 2 }
-              display="inline-flex"
-              alignItems="center"
-              gap={ 1 }
-            >
-              View Registry Contract
-              <IconSvg name="arrows/east-mini" boxSize={ 3.5 }/>
-            </Link>
-          </Box>
-        </Flex>
-      </Box>
-
-      { /* Hero Stats Section */ }
-      <Box
-        position="relative"
-        mb={ 8 }
-        w="100%"
-        overflow="hidden"
-      >
-        <VStack
-          align="stretch"
-          gap={ 0 }
-        >
-          { /* Metrics Grid */ }
-          <Grid
-            templateColumns={{ base: '1fr 1fr', lg: 'repeat(4, 1fr)' }}
-            gap={ 0 }
-            overflow="hidden"
-          >
-            { /* TEE Types */ }
-            <LinkBox
-              p={ 5 }
-              position="relative"
-              bgGradient={{
-                _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
-                _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
-              }}
-              transition="all 0.2s ease"
-              _hover={{
-                bgGradient: {
-                  _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
-                  _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
-                },
-              }}
-            >
-              <Flex alignItems="center" gap={ 1.5 } mb={ 2 }>
-                <Text
-                  fontSize="10px"
-                  fontWeight={ 600 }
-                  letterSpacing="0.08em"
-                  textTransform="uppercase"
-                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                >
-                  TEE Types
-                </Text>
-                <IconSvg
-                  name="apps"
-                  boxSize={ 3 }
-                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                />
-              </Flex>
-              <Skeleton loading={ query.isPlaceholderData } w="fit-content">
-                <Text
-                  fontSize="26px"
-                  fontWeight={ 200 }
-                  letterSpacing="-0.02em"
-                  color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                  lineHeight="1"
-                >
-                  { stats.totalTypes.toLocaleString() }
-                </Text>
-              </Skeleton>
-            </LinkBox>
-
-            { /* Approved PCRs */ }
-            <LinkBox
-              p={ 5 }
-              position="relative"
-              bgGradient={{
-                _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
-                _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
-              }}
-              transition="all 0.2s ease"
-              _hover={{
-                bgGradient: {
-                  _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
-                  _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
-                },
-              }}
-            >
-              <Flex alignItems="center" gap={ 1.5 } mb={ 2 }>
-                <Text
-                  fontSize="10px"
-                  fontWeight={ 600 }
-                  letterSpacing="0.08em"
-                  textTransform="uppercase"
-                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                >
-                  Approved PCRs
-                </Text>
-                <IconSvg
-                  name="nft_shield"
-                  boxSize={ 3 }
-                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                />
-              </Flex>
-              <Skeleton loading={ query.isPlaceholderData } w="fit-content">
-                <Text
-                  fontSize="26px"
-                  fontWeight={ 200 }
-                  letterSpacing="-0.02em"
-                  color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                  lineHeight="1"
-                >
-                  { stats.approvedPCRs.toLocaleString() }
-                </Text>
-              </Skeleton>
-            </LinkBox>
-
-            { /* Active Nodes */ }
-            <LinkBox
-              p={ 5 }
-              position="relative"
-              bgGradient={{
-                _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
-                _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
-              }}
-              transition="all 0.2s ease"
-              _hover={{
-                bgGradient: {
-                  _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
-                  _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
-                },
-              }}
-            >
-              <Flex alignItems="center" gap={ 1.5 } mb={ 2 }>
-                <Text
-                  fontSize="10px"
-                  fontWeight={ 600 }
-                  letterSpacing="0.08em"
-                  textTransform="uppercase"
-                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                >
-                  Active Nodes
-                </Text>
-                <IconSvg
-                  name="check"
-                  boxSize={ 3 }
-                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                />
-              </Flex>
-              <Skeleton loading={ query.isPlaceholderData } w="fit-content">
-                <Text
-                  fontSize="26px"
-                  fontWeight={ 200 }
-                  letterSpacing="-0.02em"
-                  color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                  lineHeight="1"
-                >
-                  { stats.activeNodes.toLocaleString() }
-                </Text>
-              </Skeleton>
-            </LinkBox>
-
-            { /* Enabled Nodes */ }
-            <LinkBox
-              p={ 5 }
-              position="relative"
-              bgGradient={{
-                _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
-                _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
-              }}
-              transition="all 0.2s ease"
-              _hover={{
-                bgGradient: {
-                  _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
-                  _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
-                },
-              }}
-            >
-              <Flex alignItems="center" gap={ 1.5 } mb={ 2 }>
-                <Text
-                  fontSize="10px"
-                  fontWeight={ 600 }
-                  letterSpacing="0.08em"
-                  textTransform="uppercase"
-                  color={{ _light: 'rgba(30, 58, 138, 0.7)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                >
-                  Registered Nodes
-                </Text>
-                <IconSvg
-                  name="certified"
-                  boxSize={ 3 }
-                  color={{ _light: 'rgba(30, 58, 138, 0.75)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                />
-              </Flex>
-              <Skeleton loading={ query.isPlaceholderData } w="fit-content">
-                <Text
-                  fontSize="26px"
-                  fontWeight={ 200 }
-                  letterSpacing="-0.02em"
-                  color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                  lineHeight="1"
-                >
-                  { stats.enabledNodes.toLocaleString() }
-                </Text>
-              </Skeleton>
-            </LinkBox>
-
-          </Grid>
-        </VStack>
-      </Box>
-
-      { /* TEE Types Grid */ }
-      <Box mb={ 8 }>
-        <Flex alignItems="center" gap={ 2 } mb={ 4 }>
+        <Box maxW="780px">
           <Text
+            fontFamily={ fonts.mono }
             fontSize="11px"
             fontWeight={ 500 }
-            letterSpacing="0.1em"
+            letterSpacing="0.12em"
             textTransform="uppercase"
-            color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-            fontFamily="system-ui, -apple-system, sans-serif"
+            color={ text.accent }
+            mb={ 2 }
           >
-            TEE Types
+            / Trusted execution registry
           </Text>
+          <Text
+            as="h1"
+            fontFamily={ fonts.sans }
+            fontSize={{ base: '28px', md: '36px', lg: '42px' }}
+            fontWeight={ 500 }
+            letterSpacing="0"
+            lineHeight="1.08"
+            color={ text.primary }
+          >
+            TEE Registry
+          </Text>
+          <Text
+            mt={ 3 }
+            fontFamily={ fonts.sans }
+            fontSize={{ base: '14px', md: '15px' }}
+            lineHeight="1.6"
+            color={ text.secondary }
+          >
+            Monitor attested OpenGradient TEE operators, approved PCR identities, endpoints, and heartbeat liveness from the on-chain registry.
+          </Text>
+        </Box>
+
+        <Link
+          href={ route({ pathname: '/address/[hash]', query: { hash: TEE_REGISTRY_ADDRESS } }) }
+          display="inline-flex"
+          alignItems="center"
+          justifyContent="center"
+          gap={ 2 }
+          px={ 3 }
+          py={ 2 }
+          border="1px solid"
+          borderColor={ panel.border }
+          borderRadius="8px"
+          bg={ panel.bg }
+          color={ text.secondary }
+          fontFamily={ fonts.mono }
+          fontSize="11px"
+          fontWeight={ 500 }
+          letterSpacing="0.08em"
+          textTransform="uppercase"
+          whiteSpace="nowrap"
+          _hover={{
+            textDecoration: 'none',
+            color: text.accent,
+            borderColor: { _light: 'rgba(36, 188, 227, 0.38)', _dark: 'rgba(80, 201, 233, 0.32)' },
+          }}
+        >
+          Registry contract
+          <IconSvg name="arrows/east" boxSize={ 4 }/>
+        </Link>
+      </Flex>
+
+      <Grid
+        templateColumns={{ base: '1fr', md: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(4, minmax(0, 1fr))' }}
+        gap={ 3 }
+        mb={ 7 }
+      >
+        <MetricCard
+          label="TEE Types"
+          value={ stats.totalTypes }
+          iconName="apps"
+          helper="Registered execution classes"
+          loading={ query.isPlaceholderData }
+        />
+        <MetricCard
+          label="Approved PCRs"
+          value={ stats.approvedPCRs }
+          iconName="nft_shield"
+          helper="Allowed enclave identities"
+          loading={ query.isPlaceholderData }
+        />
+        <MetricCard
+          label="Active Nodes"
+          value={ stats.activeNodes }
+          iconName="check"
+          helper="Heartbeat within liveness window"
+          loading={ query.isPlaceholderData }
+        />
+        <MetricCard
+          label="Enabled Nodes"
+          value={ stats.enabledNodes }
+          iconName="certified"
+          helper="Enabled registry operators"
+          loading={ query.isPlaceholderData }
+        />
+      </Grid>
+
+      <Box mb={ 7 }>
+        <Flex alignItems="center" justifyContent="space-between" gap={ 3 } mb={ 3 }>
+          <SectionLabel>TEE types</SectionLabel>
           { selectedType !== null && (
             <Text
-              fontSize="11px"
+              as="button"
+              fontFamily={ fonts.mono }
+              fontSize="10px"
               fontWeight={ 500 }
+              letterSpacing="0.08em"
+              textTransform="uppercase"
+              color={ text.muted }
               cursor="pointer"
-              color="blue.500"
               onClick={ handleClearFilter }
-              fontFamily="system-ui, -apple-system, sans-serif"
+              _hover={{ color: text.accent }}
             >
               Clear filter
             </Text>
           ) }
         </Flex>
         <Grid
-          templateColumns="1fr"
-          gap={ 2 }
+          templateColumns={{ base: '1fr', md: 'repeat(auto-fit, minmax(240px, 320px))' }}
+          gap={ 3 }
+          alignItems="stretch"
         >
           { types.map((type) => (
             <TEETypeCard
@@ -419,75 +332,87 @@ const TEERegistry = () => {
         </Grid>
       </Box>
 
-      { /* Nodes Table */ }
-      <Box>
-        <Flex alignItems="center" justifyContent="space-between" mb={ 4 }>
-          <Flex alignItems="center" gap={ 2 }>
-            <Text
-              fontSize="11px"
-              fontWeight={ 500 }
-              letterSpacing="0.1em"
-              textTransform="uppercase"
-              color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-              fontFamily="system-ui, -apple-system, sans-serif"
-            >
-              { selectedType !== null ?
-                `${ types.find((t) => t.typeId === selectedType)?.name ?? '' } Nodes` :
-                'All Nodes' }
+      <Box
+        border="1px solid"
+        borderColor={ panel.border }
+        borderRadius="8px"
+        bg={ panel.bg }
+        overflow="hidden"
+      >
+        <Flex
+          alignItems={{ base: 'stretch', md: 'center' }}
+          justifyContent="space-between"
+          gap={ 4 }
+          flexDirection={{ base: 'column', md: 'row' }}
+          px={ 4 }
+          py={ 3.5 }
+          borderBottom="1px solid"
+          borderColor={ panel.border }
+        >
+          <Box>
+            <Flex alignItems="center" gap={ 3 } mb={ 1 }>
+              <SectionLabel>{ tableTitle }</SectionLabel>
+              <Text
+                fontFamily={ fonts.mono }
+                fontSize="11px"
+                color={ text.muted }
+              >
+                { filteredNodes.length } shown / { allNodes.length } total
+              </Text>
+            </Flex>
+            <Text fontFamily={ fonts.sans } fontSize="12px" color={ text.muted }>
+              { tableSubtitle } { activeVisibleCount > 0 ? `${ activeVisibleCount } currently active.` : '' }
             </Text>
-            <Text
-              fontSize="11px"
-              fontWeight={ 400 }
-              color={{ _light: 'rgba(0, 0, 0, 0.3)', _dark: 'rgba(255, 255, 255, 0.3)' }}
-              fontFamily="system-ui, -apple-system, sans-serif"
-            >
-              { filteredNodes.length > 0 ? `(${ filteredNodes.length })` : '' }
-            </Text>
-          </Flex>
+          </Box>
+
           <Checkbox
             size="sm"
             checked={ resolvedShowDisabled }
             onCheckedChange={ handleToggleShowDisabled }
           >
             <Text
+              fontFamily={ fonts.mono }
               fontSize="11px"
-              fontWeight={ 400 }
-              color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-              fontFamily="system-ui, -apple-system, sans-serif"
+              fontWeight={ 500 }
+              letterSpacing="0.04em"
+              color={ text.secondary }
             >
               Show disabled
             </Text>
           </Checkbox>
         </Flex>
+
         <TEENodesTable
           nodes={ filteredNodes }
           types={ types }
           isLoading={ query.isPlaceholderData }
           onNodeClick={ handleNodeClick }
         />
+
         { !query.isPlaceholderData && filteredNodes.length === 0 && (
           <Flex
             justifyContent="center"
             alignItems="center"
             py={ 12 }
-            color={{ _light: 'rgba(0, 0, 0, 0.3)', _dark: 'rgba(255, 255, 255, 0.3)' }}
+            color={ text.muted }
+            borderTop="1px solid"
+            borderColor={ panel.border }
           >
-            <Text fontSize="sm" fontFamily="system-ui, -apple-system, sans-serif">
-              No TEE nodes registered yet.
+            <Text fontSize="sm" fontFamily={ fonts.sans }>
+              No TEE nodes match the current filter.
             </Text>
           </Flex>
         ) }
       </Box>
 
-      { /* Node Detail Drawer */ }
       { selectedNode && (
         <TEENodeDetailDrawer
           node={ selectedNode }
-          typeName={ types.find((t) => t.typeId === selectedNode.teeType)?.name ?? `Type ${ selectedNode.teeType }` }
+          typeName={ types.find((type) => type.typeId === selectedNode.teeType)?.name ?? `Type ${ selectedNode.teeType }` }
           onClose={ handleCloseDrawer }
         />
       ) }
-    </>
+    </Box>
   );
 };
 

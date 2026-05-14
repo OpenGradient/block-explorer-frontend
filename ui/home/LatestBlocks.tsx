@@ -16,7 +16,10 @@ import { BLOCK } from 'stubs/block';
 import { HOMEPAGE_STATS } from 'stubs/stats';
 import { Link } from 'toolkit/chakra/link';
 
+import { HOME_BRAND } from './brand';
 import LatestBlocksItem from './LatestBlocksItem';
+
+const { colors, fonts, panel, text } = HOME_BRAND;
 
 const LatestBlocks = () => {
   const isMobile = useIsMobile();
@@ -70,8 +73,8 @@ const LatestBlocks = () => {
       <Box px={ 4 } py={ 8 }>
         <Text
           fontSize="sm"
-          color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-          fontFamily="system-ui, -apple-system, sans-serif"
+          color={ text.secondary }
+          fontFamily={ fonts.sans }
         >
           No data. Please reload the page.
         </Text>
@@ -88,6 +91,7 @@ const LatestBlocks = () => {
           align="stretch"
           gap={ 2.5 }
           px={{ base: 3, lg: 4 }}
+          pt={ 3 }
           pb={ 4 }
         >
           { dataToShow.map(((block, index) => (
@@ -111,8 +115,8 @@ const LatestBlocks = () => {
             fontWeight={ 500 }
             letterSpacing="0.08em"
             textTransform="uppercase"
-            color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-            fontFamily="system-ui, -apple-system, sans-serif"
+            color={ text.muted }
+            fontFamily={ fonts.mono }
             width="100%"
             display="block"
             textAlign="center"
@@ -121,7 +125,7 @@ const LatestBlocks = () => {
             _hover={{
               textDecoration: 'none',
               opacity: 0.7,
-              color: { _light: 'rgba(0, 0, 0, 0.6)', _dark: 'rgba(255, 255, 255, 0.6)' },
+              color: text.accent,
             }}
           >
             View all blocks
@@ -133,27 +137,43 @@ const LatestBlocks = () => {
 
   return (
     <Box
-      width={{ base: '100%', lg: '320px' }}
+      width="100%"
       flexShrink={ 0 }
       position="relative"
+      border="1px solid"
+      borderColor={ panel.border }
+      borderRadius="8px"
+      bg={ panel.bg }
+      boxShadow={ panel.shadow }
+      backdropFilter="blur(18px)"
+      overflow="hidden"
     >
-      { /* Premium Header with Status Indicator */ }
       <Flex
         alignItems="center"
         gap={ 2 }
         px={{ base: 3, lg: 4 }}
-        pt={{ base: 4, lg: 6 }}
-        pb={ 5 }
+        pt={{ base: 4, lg: 4 }}
+        pb={ 3 }
+        borderBottom="1px solid"
+        borderColor={ panel.border }
       >
+        <Box
+          w="6px"
+          h="6px"
+          borderRadius="50%"
+          bg={ colors.cyan }
+          boxShadow="0 0 10px rgba(36, 188, 227, 0.65)"
+          flexShrink={ 0 }
+        />
         <Text
-          fontSize="13px"
+          fontSize="11px"
           fontWeight={ 500 }
-          letterSpacing="0.1em"
+          letterSpacing="0.12em"
           textTransform="uppercase"
-          color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-          fontFamily="system-ui, -apple-system, sans-serif"
+          color={ text.accent }
+          fontFamily={ fonts.mono }
         >
-          Latest blocks
+          / Latest blocks
         </Text>
       </Flex>
       { statsQueryResult.data?.celo && (
@@ -161,14 +181,15 @@ const LatestBlocks = () => {
           <Box
             px={ 3 }
             py={ 2 }
-            bg={{ _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(64, 209, 219, 0.05)' }}
+            bg={{ _light: 'rgba(36, 188, 227, 0.06)', _dark: 'rgba(36, 188, 227, 0.08)' }}
+            borderRadius="8px"
           >
             <Text
               fontSize="10px"
               fontWeight={ 500 }
               letterSpacing="0.08em"
-              color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-              fontFamily="system-ui, -apple-system, sans-serif"
+              color={ text.muted }
+              fontFamily={ fonts.mono }
               mb={ 0.5 }
             >
               Current epoch
@@ -176,8 +197,8 @@ const LatestBlocks = () => {
             <Text
               fontSize="14px"
               fontWeight={ 400 }
-              color={{ _light: 'rgba(0, 0, 0, 0.8)', _dark: 'rgba(255, 255, 255, 0.9)' }}
-              fontFamily="system-ui, -apple-system, sans-serif"
+              color={ text.primary }
+              fontFamily={ fonts.mono }
             >
               #{ statsQueryResult.data.celo.epoch_number }
             </Text>
