@@ -16,9 +16,10 @@ import GasTrackerChart from 'ui/gasTracker/GasTrackerChart';
 import GasTrackerFaq from 'ui/gasTracker/GasTrackerFaq';
 import GasTrackerNetworkUtilization from 'ui/gasTracker/GasTrackerNetworkUtilization';
 import GasTrackerPrices from 'ui/gasTracker/GasTrackerPrices';
+import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 import GasInfoUpdateTimer from 'ui/shared/gas/GasInfoUpdateTimer';
 import NativeTokenIcon from 'ui/shared/NativeTokenIcon';
-import PageTitle from 'ui/shared/Page/PageTitle';
+import ExplorerPageTitle from 'ui/shared/Page/ExplorerPageTitle';
 
 const GasTracker = () => {
   const { data, isPlaceholderData, isError, error, dataUpdatedAt } = useApiQuery('stats', {
@@ -83,12 +84,13 @@ const GasTracker = () => {
 
   return (
     <>
-      <PageTitle
+      <ExplorerPageTitle
+        eyebrow="Fees"
         title={ config.meta.seo.enhancedDataEnabled ? `${ config.chain.name } gas tracker` : 'Gas tracker' }
         secondRow={ titleSecondRow }
         withTextAd
       />
-      <Heading level="2" mt={ 8 } mb={ 4 }>{ `Track ${ config.chain.name } gas fees` }</Heading>
+      <Heading level="2" mt={ 8 } mb={ 4 } color={ OPENGRADIENT_BRAND.text.primary }>Current gas fees</Heading>
       { snippets }
       { config.features.stats.isEnabled && (
         <Box mt={ 12 }>

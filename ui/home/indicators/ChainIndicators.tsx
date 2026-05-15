@@ -11,12 +11,14 @@ import { Skeleton } from 'toolkit/chakra/skeleton';
 import Hint from 'ui/shared/Hint';
 import IconSvg from 'ui/shared/IconSvg';
 
+import { HOME_BRAND } from '../brand';
+import isStatsMicroserviceEnabled from '../utils/isStatsMicroserviceEnabled';
 import ChainIndicatorChartContainer from './ChainIndicatorChartContainer';
 import useChartDataQuery from './useChartDataQuery';
 import getIndicatorValues from './utils/getIndicatorValues';
 import INDICATORS from './utils/indicators';
 
-const isStatsFeatureEnabled = config.features.stats.isEnabled;
+const { colors, fonts, panel, text } = HOME_BRAND;
 
 const indicators = INDICATORS
   .filter(({ id }) => config.UI.homepage.charts.includes(id))
@@ -41,7 +43,7 @@ const ChainIndicators = () => {
   const statsMicroserviceQueryResult = useApiQuery('stats_main', {
     queryOptions: {
       refetchOnMount: false,
-      enabled: isStatsFeatureEnabled,
+      enabled: isStatsMicroserviceEnabled,
       placeholderData: HOMEPAGE_STATS_MICROSERVICE,
     },
   });
@@ -64,16 +66,20 @@ const ChainIndicators = () => {
     return null;
   }
 
-  const isPlaceholderData = (isStatsFeatureEnabled && statsMicroserviceQueryResult.isPlaceholderData) || statsApiQueryResult.isPlaceholderData;
-  const hasData = Boolean(statsApiQueryResult?.data || statsMicroserviceQueryResult?.data);
+  const statsMicroserviceData = isStatsMicroserviceEnabled && !statsMicroserviceQueryResult.isPlaceholderData ?
+    statsMicroserviceQueryResult.data :
+    undefined;
+  const statsApiData = !statsApiQueryResult.isPlaceholderData ? statsApiQueryResult.data : undefined;
+  const isLoading = !statsMicroserviceData && !statsApiData && (statsMicroserviceQueryResult.isPending || statsApiQueryResult.isPending);
+  const hasData = Boolean(statsApiData || statsMicroserviceData);
 
   const { value: indicatorValue, valueDiff: indicatorValueDiff } =
-    getIndicatorValues(selectedIndicatorData as TChainIndicator, statsMicroserviceQueryResult?.data, statsApiQueryResult?.data);
+    getIndicatorValues(selectedIndicatorData as TChainIndicator, statsMicroserviceData, statsApiData);
 
   const title = (() => {
     let title: string | undefined;
-    if (isStatsFeatureEnabled && selectedIndicatorData?.titleMicroservice && statsMicroserviceQueryResult?.data) {
-      title = selectedIndicatorData.titleMicroservice(statsMicroserviceQueryResult.data);
+    if (isStatsMicroserviceEnabled && selectedIndicatorData?.titleMicroservice && statsMicroserviceData) {
+      title = selectedIndicatorData.titleMicroservice(statsMicroserviceData);
     }
 
     return title || selectedIndicatorData?.title;
@@ -81,30 +87,30 @@ const ChainIndicators = () => {
 
   const hint = (() => {
     let hint: string | undefined;
-    if (isStatsFeatureEnabled && selectedIndicatorData?.hintMicroservice && statsMicroserviceQueryResult?.data) {
-      hint = selectedIndicatorData.hintMicroservice(statsMicroserviceQueryResult.data);
+    if (isStatsMicroserviceEnabled && selectedIndicatorData?.hintMicroservice && statsMicroserviceData) {
+      hint = selectedIndicatorData.hintMicroservice(statsMicroserviceData);
     }
 
     return hint || selectedIndicatorData?.hint;
   })();
 
   const valueTitle = (() => {
-    if (isPlaceholderData) {
+    if (isLoading) {
       return <Skeleton loading h={{ base: '18px', lg: '24px' }} w="fit-content"/>;
     }
 
     if (!hasData) {
-      return <Text fontSize={{ base: '18px', lg: '24px' }} fontWeight={ 300 }>—</Text>;
+      return <Text fontSize={{ base: '22px', lg: '30px' }} fontWeight={ 500 } fontFamily={ fonts.mono } color={ text.primary }>-</Text>;
     }
 
     return (
       <Text
-        fontSize={{ base: '18px', lg: '24px' }}
-        fontWeight={ 300 }
-        letterSpacing="-0.02em"
-        color={{ _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.95)' }}
+        fontSize={{ base: '22px', lg: '30px' }}
+        fontWeight={ 500 }
+        letterSpacing="0"
+        color={ text.primary }
         lineHeight="1.1"
-        fontFamily="system-ui, -apple-system, sans-serif"
+        fontFamily={ fonts.mono }
       >
         { indicatorValue }
       </Text>
@@ -117,12 +123,12 @@ const ChainIndicators = () => {
     }
 
     const diffColor = indicatorValueDiff >= 0 ?
-      { _light: 'rgba(34, 197, 94, 0.8)', _dark: 'rgba(74, 222, 128, 0.8)' } :
-      { _light: 'rgba(239, 68, 68, 0.8)', _dark: 'rgba(248, 113, 113, 0.8)' };
+      { _light: '#2e9e66', _dark: '#61d199' } :
+      { _light: '#bf0d0d', _dark: '#f66f6f' };
 
     return (
       <Skeleton
-        loading={ statsApiQueryResult.isPlaceholderData }
+        loading={ isLoading }
         display="flex"
         alignItems="center"
         ml={ 2 }
@@ -138,6 +144,7 @@ const ChainIndicators = () => {
           fontSize="xs"
           fontWeight={ 500 }
           color={ diffColor }
+          fontFamily={ fonts.mono }
         >
           { Math.abs(indicatorValueDiff) }%
         </Text>
@@ -145,9 +152,8 @@ const ChainIndicators = () => {
     );
   })();
 
-  // Create a grid layout similar to Stats.tsx
   const gridItems = indicators.map((indicator) => {
-    const { value, valueDiff: diff } = getIndicatorValues(indicator, statsMicroserviceQueryResult?.data, statsApiQueryResult?.data);
+    const { value, valueDiff: diff } = getIndicatorValues(indicator, statsMicroserviceData, statsApiData);
     const isSelected = selectedIndicator === indicator.id;
 
     return {
@@ -161,40 +167,58 @@ const ChainIndicators = () => {
   });
 
   return (
-    <Box w="100%">
-      { /* Main selected indicator display */ }
+    <Box
+      w="100%"
+      border="1px solid"
+      borderColor={ panel.border }
+      borderRadius="8px"
+      bg={ panel.bg }
+      boxShadow={ panel.shadow }
+      backdropFilter="blur(18px)"
+      overflow="hidden"
+    >
       <Box
-        p={{ base: 3, lg: 4 }}
+        p={{ base: 4, lg: 4 }}
         borderBottom="1px solid"
-        borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' }}
+        borderColor={ panel.border }
+        position="relative"
       >
         <Flex
           alignItems="center"
-          gap={ 1.5 }
+          gap={ 2 }
           mb={{ base: 2, lg: 3 }}
+          position="relative"
+          zIndex={ 1 }
         >
+          <Box
+            w="6px"
+            h="6px"
+            borderRadius="50%"
+            bg={ colors.cyan }
+            boxShadow="0 0 10px rgba(36, 188, 227, 0.65)"
+            flexShrink={ 0 }
+          />
           <Text
             fontSize="11px"
             fontWeight={ 500 }
-            letterSpacing="0.1em"
+            letterSpacing="0.12em"
             textTransform="uppercase"
-            color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-            fontFamily="system-ui, -apple-system, sans-serif"
+            color={ text.accent }
+            fontFamily={ fonts.mono }
           >
-            { title }
+            / { title }
           </Text>
           { hint && <Hint label={ hint }/> }
         </Flex>
-        <Flex mb={{ base: 2, lg: 3 }} alignItems="end">
+        <Flex mb={ 3 } alignItems="end" position="relative" zIndex={ 1 }>
           { valueTitle }
           { valueDiff }
         </Flex>
-        <Box h={{ base: '60px', lg: '80px' }} w="100%">
+        <Box h={{ base: '78px', lg: '92px' }} w="100%" position="relative" zIndex={ 1 }>
           <ChainIndicatorChartContainer { ...queryResult }/>
         </Box>
       </Box>
 
-      { /* Indicator selector grid */ }
       { indicators.length > 1 && (
         <Grid
           gridTemplateColumns={{ base: '1fr', md: `repeat(${ Math.min(indicators.length, 2) }, 1fr)` }}
@@ -211,8 +235,9 @@ const ChainIndicators = () => {
                 return (
                   <Text
                     fontSize="sm"
-                    fontWeight={ 300 }
-                    color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+                    fontWeight={ 500 }
+                    color={ text.muted }
+                    fontFamily={ fonts.mono }
                   >
                     no data
                   </Text>
@@ -220,11 +245,12 @@ const ChainIndicators = () => {
               }
 
               return (
-                <Skeleton loading={ isPlaceholderData } w="fit-content">
+                <Skeleton loading={ isLoading } w="fit-content">
                   <Text
                     fontSize="sm"
-                    fontWeight={ 300 }
-                    color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.7)' }}
+                    fontWeight={ 500 }
+                    color={ text.secondary }
+                    fontFamily={ fonts.mono }
                   >
                     { item.value }
                   </Text>
@@ -238,11 +264,11 @@ const ChainIndicators = () => {
               }
 
               const diffColor = item.valueDiff >= 0 ?
-                { _light: 'rgba(34, 197, 94, 0.7)', _dark: 'rgba(74, 222, 128, 0.7)' } :
-                { _light: 'rgba(239, 68, 68, 0.7)', _dark: 'rgba(248, 113, 113, 0.7)' };
+                { _light: '#2e9e66', _dark: '#61d199' } :
+                { _light: '#bf0d0d', _dark: '#f66f6f' };
 
               return (
-                <Skeleton loading={ isPlaceholderData } display="flex" alignItems="center" ml={ 1 }>
+                <Skeleton loading={ isLoading } display="flex" alignItems="center" ml={ 1 }>
                   <IconSvg
                     name="arrows/up-head"
                     boxSize={ 2.5 }
@@ -254,6 +280,7 @@ const ChainIndicators = () => {
                     fontSize="xs"
                     fontWeight={ 500 }
                     color={ diffColor }
+                    fontFamily={ fonts.mono }
                   >
                     { Math.abs(item.valueDiff) }%
                   </Text>
@@ -265,15 +292,15 @@ const ChainIndicators = () => {
               <Box
                 key={ item.id }
                 data-indicator-id={ item.id }
-                p={{ base: 3, lg: 4 }}
+                p={ 3 }
                 borderBottom={{ base: !isLastItem ? '1px solid' : 'none', md: !isLastRow ? '1px solid' : 'none' }}
                 borderRight={{ base: 'none', md: isEvenIndex && !isLastItem ? '1px solid' : 'none' }}
-                borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(255, 255, 255, 0.08)' }}
+                borderColor={ panel.border }
                 cursor="pointer"
-                transition="background-color 0.2s ease"
-                bgColor={ item.isSelected ? { _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(255, 255, 255, 0.03)' } : undefined }
+                transition="background-color 0.2s ease, color 0.2s ease"
+                bgColor={ item.isSelected ? { _light: 'rgba(36, 188, 227, 0.07)', _dark: 'rgba(36, 188, 227, 0.10)' } : undefined }
                 _hover={{
-                  bgColor: { _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(255, 255, 255, 0.03)' },
+                  bgColor: { _light: 'rgba(36, 188, 227, 0.07)', _dark: 'rgba(36, 188, 227, 0.10)' },
                 }}
                 onClick={ handleIndicatorClick }
               >
@@ -284,10 +311,10 @@ const ChainIndicators = () => {
                   <Text
                     fontSize="10px"
                     fontWeight={ 500 }
-                    letterSpacing="0.08em"
+                    letterSpacing="0.10em"
                     textTransform="uppercase"
-                    color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-                    fontFamily="system-ui, -apple-system, sans-serif"
+                    color={ item.isSelected ? text.accent : text.muted }
+                    fontFamily={ fonts.mono }
                   >
                     { item.label }
                   </Text>

@@ -4,6 +4,7 @@ import type { TimeChartData, TimeChartDataItem, TimeChartItemRaw } from 'ui/shar
 import config from 'configs/app';
 import useApiQuery from 'lib/api/useApiQuery';
 
+import isStatsMicroserviceEnabled from '../utils/isStatsMicroserviceEnabled';
 import prepareChartItems from './utils/prepareChartItems';
 
 const CHART_ITEMS: Record<ChainIndicatorId, Pick<TimeChartDataItem, 'name' | 'valueFormatter'>> = {
@@ -33,8 +34,6 @@ const CHART_ITEMS: Record<ChainIndicatorId, Pick<TimeChartDataItem, 'name' | 'va
   },
 };
 
-const isStatsFeatureEnabled = config.features.stats.isEnabled;
-
 type UseFetchChartDataResult = {
   isError: boolean;
   isPending: boolean;
@@ -53,7 +52,7 @@ export default function useChartDataQuery(indicatorId: ChainIndicatorId): UseFet
   const statsDailyTxsQuery = useApiQuery('stats_main', {
     queryOptions: {
       refetchOnMount: false,
-      enabled: isStatsFeatureEnabled && indicatorId === 'daily_txs',
+      enabled: isStatsMicroserviceEnabled && indicatorId === 'daily_txs',
       select: (data) => data.daily_new_transactions?.chart.map((item) => ({ date: new Date(item.date), value: Number(item.value) })) || [],
     },
   });
@@ -61,7 +60,7 @@ export default function useChartDataQuery(indicatorId: ChainIndicatorId): UseFet
   const statsDailyOperationalTxsQuery = useApiQuery('stats_main', {
     queryOptions: {
       refetchOnMount: false,
-      enabled: isStatsFeatureEnabled && indicatorId === 'daily_operational_txs',
+      enabled: isStatsMicroserviceEnabled && indicatorId === 'daily_operational_txs',
       select: (data) => data.daily_new_operational_transactions?.chart.map((item) => ({ date: new Date(item.date), value: Number(item.value) })) || [],
     },
   });
@@ -69,7 +68,7 @@ export default function useChartDataQuery(indicatorId: ChainIndicatorId): UseFet
   const apiDailyTxsQuery = useApiQuery('stats_charts_txs', {
     queryOptions: {
       refetchOnMount: false,
-      enabled: !isStatsFeatureEnabled && indicatorId === 'daily_txs',
+      enabled: indicatorId === 'daily_txs',
       select: (data) => data.chart_data.map((item) => ({ date: new Date(item.date), value: item.transaction_count })),
     },
   });
@@ -126,11 +125,14 @@ export default function useChartDataQuery(indicatorId: ChainIndicatorId): UseFet
 
   switch (indicatorId) {
     case 'daily_txs': {
-      const query = isStatsFeatureEnabled ? statsDailyTxsQuery : apiDailyTxsQuery;
+      const statsMicroserviceData = isStatsMicroserviceEnabled && !statsDailyTxsQuery.isPlaceholderData ?
+        statsDailyTxsQuery.data :
+        undefined;
+      const data = statsMicroserviceData?.length ? statsMicroserviceData : apiDailyTxsQuery.data || [];
       return {
-        data: getChartData(indicatorId, query.data || []),
-        isError: query.isError,
-        isPending: query.isPending,
+        data: getChartData(indicatorId, data),
+        isError: apiDailyTxsQuery.isError && (!isStatsMicroserviceEnabled || statsDailyTxsQuery.isError),
+        isPending: !data.length && (statsDailyTxsQuery.isPending || apiDailyTxsQuery.isPending),
       };
     }
     case 'daily_operational_txs': {

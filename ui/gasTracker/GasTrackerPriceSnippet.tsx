@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, chakra } from '@chakra-ui/react';
 import React from 'react';
 
 import type { GasPriceInfo, GasPrices } from 'types/api/stats';
@@ -6,6 +6,7 @@ import type { GasPriceInfo, GasPrices } from 'types/api/stats';
 import { SECOND } from 'lib/consts';
 import { asymp } from 'lib/html-entities';
 import { Skeleton } from 'toolkit/chakra/skeleton';
+import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 import GasPrice from 'ui/shared/gas/GasPrice';
 import type { IconName } from 'ui/shared/IconSvg';
 import IconSvg from 'ui/shared/IconSvg';
@@ -28,43 +29,114 @@ const ICONS: Record<keyof GasPrices, IconName> = {
 };
 
 const GasTrackerPriceSnippet = ({ data, type, isLoading }: Props) => {
-  const bgColors = {
-    fast: 'transparent',
-    average: { _light: 'gray.50', _dark: 'whiteAlpha.200' },
-    slow: { _light: 'gray.50', _dark: 'whiteAlpha.200' },
+  const accentColors = {
+    fast: OPENGRADIENT_BRAND.text.accent,
+    average: { _light: '#24bce3', _dark: '#24bce3' },
+    slow: { _light: 'rgba(29, 150, 182, 0.52)', _dark: 'rgba(189, 235, 247, 0.34)' },
   };
-  const borderColor = { _light: 'gray.200', _dark: 'whiteAlpha.300' };
+  const iconBgColors = {
+    fast: { _light: 'rgba(36, 188, 227, 0.12)', _dark: 'rgba(36, 188, 227, 0.14)' },
+    average: { _light: 'rgba(36, 188, 227, 0.09)', _dark: 'rgba(36, 188, 227, 0.10)' },
+    slow: { _light: 'rgba(14, 75, 91, 0.06)', _dark: 'rgba(189, 235, 247, 0.07)' },
+  };
 
   return (
     <Box
       as="li"
       listStyleType="none"
-      px={ 9 }
-      py={ 6 }
-      w={{ lg: 'calc(100% / 3)' }}
-      bgColor={ bgColors[type] }
-      _notLast={{
-        borderColor: borderColor,
-        borderRightWidth: { lg: '2px' },
-        borderBottomWidth: { base: '2px', lg: '0' },
+      position="relative"
+      overflow="hidden"
+      px={{ base: 5, lg: 6 }}
+      py={ 5 }
+      bg={ OPENGRADIENT_BRAND.panel.bg }
+      borderColor={ OPENGRADIENT_BRAND.panel.border }
+      borderWidth="1px"
+      borderRadius="8px"
+      boxShadow={ OPENGRADIENT_BRAND.panel.shadow }
+      _before={{
+        content: '""',
+        position: 'absolute',
+        insetInline: 0,
+        top: 0,
+        h: '2px',
+        bg: accentColors[type],
       }}
     >
-      <Skeleton loading={ isLoading } textStyle="heading.lg" w="fit-content">{ TITLES[type] }</Skeleton>
-      <Flex columnGap={ 3 } alignItems="center" mt={ 3 }>
-        <IconSvg name={ ICONS[type] } boxSize={{ base: '30px', xl: 10 }} isLoading={ isLoading } flexShrink={ 0 }/>
+      <Flex alignItems="center" justifyContent="space-between" columnGap={ 4 }>
+        <Skeleton loading={ isLoading } w="fit-content">
+          <chakra.span
+            color={ OPENGRADIENT_BRAND.text.primary }
+            fontFamily="heading"
+            fontSize="lg"
+            fontWeight={ 600 }
+          >
+            { TITLES[type] }
+          </chakra.span>
+        </Skeleton>
+        <Flex
+          boxSize={ 10 }
+          alignItems="center"
+          justifyContent="center"
+          flexShrink={ 0 }
+          borderRadius="8px"
+          bg={ iconBgColors[type] }
+          color={ OPENGRADIENT_BRAND.text.accent }
+        >
+          <IconSvg name={ ICONS[type] } boxSize={ 6 } isLoading={ isLoading }/>
+        </Flex>
+      </Flex>
+
+      <Flex columnGap={ 3 } alignItems="baseline" mt={ 5 }>
         <Skeleton loading={ isLoading }>
-          <GasPrice data={ data } fontSize={{ base: '36px', xl: '48px' }} lineHeight="48px" fontWeight={ 600 } letterSpacing="-1px" fontFamily="heading"/>
+          <GasPrice
+            data={ data }
+            fontSize={{ base: '34px', xl: '42px' }}
+            lineHeight="1.05"
+            fontWeight={ 600 }
+            letterSpacing="0"
+            fontFamily="heading"
+            color={ OPENGRADIENT_BRAND.text.primary }
+          />
         </Skeleton>
       </Flex>
-      <Skeleton loading={ isLoading } fontSize="sm" color="text.secondary" mt={ 3 } w="fit-content">
+
+      <Skeleton loading={ isLoading } fontSize="sm" color={ OPENGRADIENT_BRAND.text.secondary } mt={ 3 } w="fit-content">
         { data.price !== null && data.fiat_price !== null && <GasPrice data={ data } prefix={ `${ asymp } ` } unitMode="secondary"/> }
         <span> per transaction</span>
         { typeof data.time === 'number' && data.time > 0 && <span> / { (data.time / SECOND).toLocaleString(undefined, { maximumFractionDigits: 1 }) }s</span> }
       </Skeleton>
-      <Skeleton loading={ isLoading } fontSize="sm" color="text.secondary" mt={ 2 } w="fit-content" whiteSpace="pre">
-        { typeof data.base_fee === 'number' && <span>Base { data.base_fee.toLocaleString(undefined, { maximumFractionDigits: 0 }) }</span> }
-        { typeof data.base_fee === 'number' && typeof data.priority_fee === 'number' && <span> / </span> }
-        { typeof data.priority_fee === 'number' && <span>Priority { data.priority_fee.toLocaleString(undefined, { maximumFractionDigits: 0 }) }</span> }
+
+      <Skeleton loading={ isLoading } mt={ 5 }>
+        <Flex columnGap={ 2 } rowGap={ 2 } flexWrap="wrap">
+          { typeof data.base_fee === 'number' && (
+            <Box
+              as="span"
+              px={ 3 }
+              py={ 1 }
+              borderRadius="6px"
+              borderWidth="1px"
+              borderColor={ OPENGRADIENT_BRAND.panel.border }
+              color={ OPENGRADIENT_BRAND.text.secondary }
+              fontSize="xs"
+            >
+              Base { data.base_fee.toLocaleString(undefined, { maximumFractionDigits: 0 }) }
+            </Box>
+          ) }
+          { typeof data.priority_fee === 'number' && (
+            <Box
+              as="span"
+              px={ 3 }
+              py={ 1 }
+              borderRadius="6px"
+              borderWidth="1px"
+              borderColor={ OPENGRADIENT_BRAND.panel.border }
+              color={ OPENGRADIENT_BRAND.text.secondary }
+              fontSize="xs"
+            >
+              Priority { data.priority_fee.toLocaleString(undefined, { maximumFractionDigits: 0 }) }
+            </Box>
+          ) }
+        </Flex>
       </Skeleton>
     </Box>
   );

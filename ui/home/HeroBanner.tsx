@@ -1,39 +1,93 @@
-// we use custom heading size for hero banner
-
 import { Box, Flex, VStack, Text, Grid } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
 import { route } from 'nextjs-routes';
 
-import config from 'configs/app';
 import useApiQuery from 'lib/api/useApiQuery';
+import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY } from 'lib/opengradient/contracts/teeRegistry';
 import { HOMEPAGE_STATS, HOMEPAGE_STATS_MICROSERVICE } from 'stubs/stats';
 import { LinkBox, LinkOverlay } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
-import IconSvg from 'ui/shared/IconSvg';
+import { PLACEHOLDER_TEE_REGISTRY_STATS, PLACEHOLDER_TEE_TYPES } from 'ui/opengradient/teeRegistry/placeholders';
+import IconSvg, { type IconName } from 'ui/shared/IconSvg';
 import SearchBar from 'ui/snippets/searchBar/SearchBar';
 
-export const BACKGROUND_DEFAULT = { _light: 'gray.900', _dark: 'gray.800' };
+import { HOME_BRAND } from './brand';
+import isStatsMicroserviceEnabled from './utils/isStatsMicroserviceEnabled';
 
-const isStatsFeatureEnabled = config.features.stats.isEnabled;
+export const BACKGROUND_DEFAULT = { _light: '#e9f8fc', _dark: '#0a0f19' };
+
+const { colors, fonts, panel, text } = HOME_BRAND;
+
+type MetricCardProps = {
+  href: string;
+  external?: boolean;
+  label: string;
+  iconName: IconName;
+  value: React.ReactNode;
+  loading?: boolean;
+};
+
+const MetricCard = ({ href, external, label, iconName, value, loading }: MetricCardProps) => {
+  const valueText = (
+    <Text
+      fontSize={{ base: '22px', lg: '28px' }}
+      fontWeight={ 500 }
+      letterSpacing="0"
+      color={ text.primary }
+      fontFamily={ fonts.mono }
+      lineHeight="1"
+    >
+      { value }
+    </Text>
+  );
+
+  return (
+    <LinkBox
+      p={{ base: 3, lg: 4 }}
+      position="relative"
+      borderRadius="8px"
+      border="1px solid"
+      borderColor={ panel.border }
+      bg={ panel.bg }
+      backdropFilter="blur(12px)"
+      transition="background-color 0.18s ease, border-color 0.18s ease"
+      _hover={{
+        bg: { _light: 'rgba(255, 255, 255, 0.94)', _dark: 'rgba(15, 22, 38, 0.84)' },
+        borderColor: { _light: 'rgba(36, 188, 227, 0.38)', _dark: 'rgba(80, 201, 233, 0.32)' },
+      }}
+    >
+      <LinkOverlay href={ href } external={ external } noIcon/>
+      <Flex alignItems="center" gap={ 1.5 } mb={ 2 }>
+        <Text
+          fontSize="9px"
+          fontWeight={ 500 }
+          letterSpacing="0.08em"
+          textTransform="uppercase"
+          color={ text.accent }
+          fontFamily={ fonts.mono }
+          whiteSpace="nowrap"
+        >
+          { label }
+        </Text>
+        <IconSvg
+          name={ iconName }
+          boxSize={ 3 }
+          color={ text.accent }
+        />
+      </Flex>
+      { loading ? <Skeleton loading w="fit-content">{ valueText }</Skeleton> : valueText }
+    </LinkBox>
+  );
+};
 
 const HeroBanner = () => {
-  const configBackgroundLight = config.UI.homepage.heroBanner?.background?.[0] || config.UI.homepage.plate.background;
-  const configBackgroundDark = config.UI.homepage.heroBanner?.background?.[1] ||
-    config.UI.homepage.heroBanner?.background?.[0] ||
-    config.UI.homepage.plate.background;
-
-  const hasConfigBackground = Boolean(configBackgroundLight);
-  const backgroundValue = hasConfigBackground ?
-    { _light: configBackgroundLight, _dark: configBackgroundDark } :
-    { _light: '#ffffff', _dark: '#0a0a0a' };
-
-  // Fetch stats for hero metrics
   const statsQuery = useApiQuery('stats_main', {
     queryOptions: {
       refetchOnMount: false,
-      placeholderData: isStatsFeatureEnabled ? HOMEPAGE_STATS_MICROSERVICE : undefined,
-      enabled: isStatsFeatureEnabled,
+      placeholderData: isStatsMicroserviceEnabled ? HOMEPAGE_STATS_MICROSERVICE : undefined,
+      enabled: isStatsMicroserviceEnabled,
     },
   });
 
@@ -41,6 +95,16 @@ const HeroBanner = () => {
     queryOptions: {
       refetchOnMount: false,
       placeholderData: HOMEPAGE_STATS,
+    },
+  });
+
+  const teeRegistryQuery = useQuery({
+    queryKey: TEE_REGISTRY_QUERY_KEY,
+    queryFn: getTEERegistryOverview,
+    placeholderData: {
+      types: PLACEHOLDER_TEE_TYPES,
+      stats: PLACEHOLDER_TEE_REGISTRY_STATS,
+      nodesByType: {},
     },
   });
 
@@ -60,8 +124,8 @@ const HeroBanner = () => {
   });
 
   const totalTransactions = React.useMemo(() => {
-    const statsData = statsQuery.data;
-    const apiData = apiQuery.data;
+    const statsData = statsQuery.isPlaceholderData ? undefined : statsQuery.data;
+    const apiData = apiQuery.isPlaceholderData ? undefined : apiQuery.data;
     if (statsData?.total_transactions?.value) {
       return Number(statsData.total_transactions.value);
     }
@@ -69,19 +133,7 @@ const HeroBanner = () => {
       return Number(apiData.total_transactions);
     }
     return null;
-  }, [ statsQuery.data, apiQuery.data ]);
-
-  const totalBlocks = React.useMemo(() => {
-    const statsData = statsQuery.data;
-    const apiData = apiQuery.data;
-    if (statsData?.total_blocks?.value) {
-      return Number(statsData.total_blocks.value);
-    }
-    if (apiData?.total_blocks) {
-      return Number(apiData.total_blocks);
-    }
-    return null;
-  }, [ statsQuery.data, apiQuery.data ]);
+  }, [ statsQuery.data, statsQuery.isPlaceholderData, apiQuery.data, apiQuery.isPlaceholderData ]);
 
   const llmBatchSettlementsCount = React.useMemo(() => {
     const countersData = settlementQuery.data;
@@ -93,9 +145,11 @@ const HeroBanner = () => {
     }
     return v1Count + v2Count;
   }, [ settlementQuery.data, settlementQueryV2.data ]);
+  const isSettlementCountLoading = llmBatchSettlementsCount === null && (settlementQuery.isPending || settlementQueryV2.isPending);
+  const teeStats = teeRegistryQuery.data?.stats ?? PLACEHOLDER_TEE_REGISTRY_STATS;
 
   const formatNumber = (num: number | null, decimals: number = 2): string => {
-    if (num === null) return '—';
+    if (num === null) return '-';
     if (num >= 1_000_000) return `${ (num / 1_000_000).toFixed(decimals) }M`;
     if (num >= 1_000) return `${ (num / 1_000).toFixed(decimals) }K`;
     return num.toLocaleString();
@@ -106,26 +160,29 @@ const HeroBanner = () => {
       position="relative"
       w="100%"
       overflow="hidden"
-      background={ backgroundValue }
-      border="none"
+      background={{ _light: '#e9f8fc', _dark: '#0a0f19' }}
+      borderBottom="1px solid"
+      borderColor={ panel.border }
       borderRadius="0"
-      borderColor={{ _light: 'rgba(0, 0, 0, 0.06)', _dark: 'rgba(64, 209, 219, 0.1)' }}
       minH={{ base: 'auto', lg: 'auto' }}
     >
-      { /* Subtle grid pattern - very minimal */ }
       <Box
         position="absolute"
-        top={ 0 }
-        left={ 0 }
-        right={ 0 }
-        bottom={ 0 }
-        opacity={{ _light: 0.008, _dark: 0.02 }}
-        backgroundImage={{
-          _light: 'repeating-linear-gradient(0deg, transparent, transparent 99px, rgba(0, 0, 0, 0.03) 99px, rgba(0, 0, 0, 0.03) 100px), repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(0, 0, 0, 0.03) 99px, rgba(0, 0, 0, 0.03) 100px)',
-          _dark: 'repeating-linear-gradient(0deg, transparent, transparent 99px, rgba(64, 209, 219, 0.03) 99px, rgba(64, 209, 219, 0.03) 100px), repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(64, 209, 219, 0.03) 99px, rgba(64, 209, 219, 0.03) 100px)',
-        }}
-        backgroundSize="100px 100px"
+        inset={ 0 }
         pointerEvents="none"
+        zIndex={ 0 }
+        backgroundImage={{
+          _light: [
+            'linear-gradient(90deg, rgba(14, 75, 91, 0.06) 1px, transparent 1px)',
+            'linear-gradient(0deg, rgba(14, 75, 91, 0.06) 1px, transparent 1px)',
+          ].join(', '),
+          _dark: [
+            'linear-gradient(90deg, rgba(189, 235, 247, 0.04) 1px, transparent 1px)',
+            'linear-gradient(0deg, rgba(189, 235, 247, 0.04) 1px, transparent 1px)',
+          ].join(', '),
+        }}
+        backgroundSize="72px 72px"
+        opacity={{ _light: 0.44, _dark: 0.52 }}
       />
 
       <Box
@@ -134,73 +191,77 @@ const HeroBanner = () => {
         maxW={{ base: '100%', xl: '1600px' }}
         mx="auto"
         px={{ base: 4, lg: 8, xl: 12 }}
-        pt={{ base: 6, lg: 10, xl: 12 }}
-        pb={{ base: 4, lg: 6, xl: 7 }}
+        pt={{ base: 5, lg: 6, xl: 7 }}
+        pb={{ base: 5, lg: 6 }}
       >
-        { /* Large diffuse radial gradient behind entire top section */ }
-        <Box
-          position="absolute"
-          top={{ base: '20px', lg: '40px' }}
-          left={{ base: '-100px', md: '-150px', lg: '-200px' }}
-          w={{ base: '400px', md: '500px', lg: '600px' }}
-          h={{ base: '400px', md: '500px', lg: '600px' }}
-          borderRadius="50%"
-          background={{
-            _light: 'radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(0, 0, 0, 0) 70%)',
-            _dark: 'radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(0, 0, 0, 0) 70%)',
-          }}
-          filter="blur(60px)"
-          pointerEvents="none"
-          zIndex={ 0 }
-        />
         <Grid
           position="relative"
           zIndex={ 1 }
-          templateColumns={{ base: '1fr', lg: '1.2fr 0.8fr' }}
-          gap={{ base: 8, lg: 16 }}
-          alignItems="center"
+          templateColumns={{ base: '1fr', lg: 'minmax(0, 1fr) minmax(420px, 520px)' }}
+          gap={{ base: 6, lg: 8, xl: 10 }}
+          alignItems="end"
         >
-          { /* Left: Search + Title */ }
           <VStack
             align="stretch"
             gap={{ base: 4, lg: 5 }}
           >
-            { /* Title Section */ }
             <Box>
               <Text
-                fontSize={{ base: '30px', md: '44px', lg: '50px', xl: '56px' }}
-                fontWeight={ 200 }
-                letterSpacing="-0.04em"
-                lineHeight="0.95"
-                color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                fontFamily="system-ui, -apple-system, sans-serif"
+                fontSize="11px"
+                fontWeight={ 500 }
+                letterSpacing="0.12em"
+                textTransform="uppercase"
+                color={ text.accent }
+                fontFamily={ fonts.mono }
+                mb={ 3 }
               >
-                OpenGradient Explorer
+                / AI Execution Network Explorer
+              </Text>
+
+              <Text
+                as="h1"
+                fontSize={{ base: '30px', md: '38px', lg: '44px', xl: '48px' }}
+                fontWeight={ 500 }
+                letterSpacing="0"
+                lineHeight="1.06"
+                fontFamily={ fonts.sans }
+              >
+                <Box
+                  as="span"
+                  color={ text.primary }
+                >
+                  OpenGradient AI
+                </Box>
+                <Box
+                  as="span"
+                  color={ text.accent }
+                >
+                  { ' ' }Explorer
+                </Box>
               </Text>
               <Text
-                fontSize={{ base: '13px', md: '14px' }}
+                fontSize={{ base: '14px', md: '16px' }}
                 fontWeight={ 400 }
-                letterSpacing="0.02em"
-                color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                fontFamily="system-ui, -apple-system, sans-serif"
+                letterSpacing="0"
+                lineHeight="1.6"
+                color={ text.secondary }
+                fontFamily={ fonts.sans }
                 mt={ 3 }
-                maxW="500px"
+                maxW="620px"
               >
-                Find transactions, blocks, addresses, models, and AI workflows on the OpenGradient network.
+                Trace model inference, x402 settlements, TEE attestations, and AI workflow activity across the OpenGradient network.
               </Text>
             </Box>
 
-            { /* Search Bar - Premium, polished */ }
             <Box
               w="100%"
-              maxW={{ base: '100%', lg: '700px' }}
+              maxW={{ base: '100%', lg: '680px' }}
               position="relative"
             >
               <SearchBar isHomepage/>
             </Box>
           </VStack>
 
-          { /* Right: Live Metrics Dashboard */ }
           <Box
             display={{ base: 'none', lg: 'block' }}
             position="relative"
@@ -208,261 +269,72 @@ const HeroBanner = () => {
             <VStack
               align="stretch"
               gap={ 0 }
+              border="1px solid"
+              borderColor={ panel.border }
+              borderRadius="8px"
+              bg={ panel.bg }
+              backdropFilter="blur(18px)"
+              p={ 3 }
             >
-              { /* Section Header */ }
               <Flex
                 alignItems="center"
                 gap={ 2 }
-                mb={ 6 }
+                mb={ 3 }
               >
                 <Box
                   position="relative"
                   w="6px"
                   h="6px"
                   borderRadius="50%"
-                  bg="green.500"
-                  boxShadow="0 0 6px rgba(34, 197, 94, 0.6)"
-                  _dark={{
-                    boxShadow: '0 0 8px rgba(34, 197, 94, 0.8)',
-                  }}
+                  bg={ colors.cyan }
+                  boxShadow="0 0 10px rgba(36, 188, 227, 0.8), 0 0 20px rgba(36, 188, 227, 0.4)"
                   animation="pulseOpacity 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
                 />
                 <Text
                   fontSize="11px"
                   fontWeight={ 500 }
-                  letterSpacing="0.1em"
+                  letterSpacing="0.12em"
                   textTransform="uppercase"
-                  color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
+                  color={ text.accent }
+                  fontFamily={ fonts.mono }
                 >
-                  Network Stats
+                  Live network stats
                 </Text>
               </Flex>
 
-              { /* Metrics Grid */ }
               <Grid
                 templateColumns="1fr 1fr"
-                gap={ 0 }
-                overflow="hidden"
+                gap={ 2.5 }
+                overflow="visible"
               >
-                { /* Models Hosted */ }
-                <LinkBox
-                  p={ 5 }
-                  position="relative"
-                  bgGradient={{
-                    _light: 'linear-gradient(135deg, rgba(88, 28, 135, 0.04) 0%, rgba(109, 40, 217, 0.05) 100%)',
-                    _dark: 'linear-gradient(135deg, rgba(88, 28, 135, 0.08) 0%, rgba(109, 40, 217, 0.1) 100%)',
-                  }}
-                  transition="all 0.2s ease"
-                  _hover={{
-                    bgGradient: {
-                      _light: 'linear-gradient(135deg, rgba(88, 28, 135, 0.06) 0%, rgba(109, 40, 217, 0.08) 100%)',
-                      _dark: 'linear-gradient(135deg, rgba(88, 28, 135, 0.12) 0%, rgba(109, 40, 217, 0.15) 100%)',
-                    },
-                  }}
-                >
-                  <LinkOverlay
-                    href="https://hub.opengradient.ai"
-                    external
-                    noIcon
-                  />
-                  <Flex
-                    alignItems="center"
-                    gap={ 1.5 }
-                    mb={ 2 }
-                  >
-                    <Text
-                      fontSize="10px"
-                      fontWeight={ 600 }
-                      letterSpacing="0.08em"
-                      textTransform="uppercase"
-                      color={{ _light: 'rgba(88, 28, 135, 0.9)', _dark: 'rgba(167, 139, 250, 1)' }}
-                      fontFamily="system-ui, -apple-system, sans-serif"
-                    >
-                      Models Hosted
-                    </Text>
-                    <IconSvg
-                      name="link_external"
-                      boxSize={ 3 }
-                      color={{ _light: 'rgba(88, 28, 135, 0.9)', _dark: 'rgba(167, 139, 250, 1)' }}
-                    />
-                  </Flex>
-                  <Text
-                    fontSize="32px"
-                    fontWeight={ 200 }
-                    letterSpacing="-0.02em"
-                    color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                    fontFamily="system-ui, -apple-system, sans-serif"
-                    lineHeight="1"
-                  >
-                    2000+
-                  </Text>
-                </LinkBox>
-
-                { /* Total Blocks */ }
-                <LinkBox
-                  p={ 5 }
-                  position="relative"
-                  bgGradient={{
-                    _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
-                    _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
-                  }}
-                  transition="all 0.2s ease"
-                  _hover={{
-                    bgGradient: {
-                      _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
-                      _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
-                    },
-                  }}
-                >
-                  <LinkOverlay
-                    href={ route({ pathname: '/blocks' }) }
-                    noIcon
-                  />
-                  <Flex
-                    alignItems="center"
-                    gap={ 1.5 }
-                    mb={ 2 }
-                  >
-                    <Text
-                      fontSize="10px"
-                      fontWeight={ 600 }
-                      letterSpacing="0.08em"
-                      textTransform="uppercase"
-                      color={{ _light: 'rgba(30, 58, 138, 0.9)', _dark: 'rgba(148, 163, 184, 1)' }}
-                      fontFamily="system-ui, -apple-system, sans-serif"
-                    >
-                      Total Blocks
-                    </Text>
-                    <IconSvg
-                      name="block_slim"
-                      boxSize={ 3 }
-                      color={{ _light: 'rgba(30, 58, 138, 0.9)', _dark: 'rgba(148, 163, 184, 1)' }}
-                    />
-                  </Flex>
-                  <Skeleton loading={ statsQuery.isPlaceholderData || apiQuery.isPlaceholderData } w="fit-content">
-                    <Text
-                      fontSize="32px"
-                      fontWeight={ 200 }
-                      letterSpacing="-0.02em"
-                      color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                      fontFamily="system-ui, -apple-system, sans-serif"
-                      lineHeight="1"
-                    >
-                      { formatNumber(totalBlocks, 1) }
-                    </Text>
-                  </Skeleton>
-                </LinkBox>
-
-                { /* LLM Settlement Txns */ }
-                <LinkBox
-                  p={ 5 }
-                  position="relative"
-                  bgGradient={{
-                    _light: 'linear-gradient(135deg, rgba(6, 182, 212, 0.04) 0%, rgba(14, 165, 233, 0.05) 100%)',
-                    _dark: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(14, 165, 233, 0.1) 100%)',
-                  }}
-                  transition="all 0.2s ease"
-                  _hover={{
-                    bgGradient: {
-                      _light: 'linear-gradient(135deg, rgba(6, 182, 212, 0.06) 0%, rgba(14, 165, 233, 0.08) 100%)',
-                      _dark: 'linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(14, 165, 233, 0.15) 100%)',
-                    },
-                  }}
-                >
-                  <LinkOverlay
-                    href={ route({ pathname: '/address/[hash]', query: { hash: settlementContractAddress } }) }
-                    noIcon
-                  />
-                  <Flex
-                    alignItems="center"
-                    gap={ 1.5 }
-                    mb={ 2 }
-                  >
-                    <Text
-                      fontSize="10px"
-                      fontWeight={ 600 }
-                      letterSpacing="0.08em"
-                      textTransform="uppercase"
-                      color={{ _light: 'rgba(6, 182, 212, 0.9)', _dark: 'rgba(125, 211, 252, 1)' }}
-                      fontFamily="system-ui, -apple-system, sans-serif"
-                    >
-                      x402 Txns
-                    </Text>
-                    <IconSvg
-                      name="transactions_slim"
-                      boxSize={ 3 }
-                      color={{ _light: 'rgba(6, 182, 212, 0.9)', _dark: 'rgba(125, 211, 252, 1)' }}
-                    />
-                  </Flex>
-                  <Skeleton loading={ settlementQuery.isPlaceholderData || settlementQueryV2.isPlaceholderData } w="fit-content">
-                    <Text
-                      fontSize="32px"
-                      fontWeight={ 200 }
-                      letterSpacing="-0.02em"
-                      color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                      fontFamily="system-ui, -apple-system, sans-serif"
-                      lineHeight="1"
-                    >
-                      { formatNumber(llmBatchSettlementsCount) }
-                    </Text>
-                  </Skeleton>
-                </LinkBox>
-
-                { /* Transactions */ }
-                <LinkBox
-                  p={ 5 }
-                  position="relative"
-                  bgGradient={{
-                    _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.04) 0%, rgba(51, 65, 85, 0.05) 100%)',
-                    _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(51, 65, 85, 0.1) 100%)',
-                  }}
-                  transition="all 0.2s ease"
-                  _hover={{
-                    bgGradient: {
-                      _light: 'linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(51, 65, 85, 0.08) 100%)',
-                      _dark: 'linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(51, 65, 85, 0.15) 100%)',
-                    },
-                  }}
-                >
-                  <LinkOverlay
-                    href={ route({ pathname: '/txs' }) }
-                    noIcon
-                  />
-                  <Flex
-                    alignItems="center"
-                    gap={ 1.5 }
-                    mb={ 2 }
-                  >
-                    <Text
-                      fontSize="10px"
-                      fontWeight={ 600 }
-                      letterSpacing="0.08em"
-                      textTransform="uppercase"
-                      color={{ _light: 'rgba(30, 58, 138, 0.9)', _dark: 'rgba(148, 163, 184, 1)' }}
-                      fontFamily="system-ui, -apple-system, sans-serif"
-                    >
-                      Transactions
-                    </Text>
-                    <IconSvg
-                      name="transactions_slim"
-                      boxSize={ 3 }
-                      color={{ _light: 'rgba(30, 58, 138, 0.9)', _dark: 'rgba(148, 163, 184, 1)' }}
-                    />
-                  </Flex>
-                  <Skeleton loading={ statsQuery.isPlaceholderData || apiQuery.isPlaceholderData } w="fit-content">
-                    <Text
-                      fontSize="32px"
-                      fontWeight={ 200 }
-                      letterSpacing="-0.02em"
-                      color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
-                      fontFamily="system-ui, -apple-system, sans-serif"
-                      lineHeight="1"
-                    >
-                      { formatNumber(totalTransactions) }
-                    </Text>
-                  </Skeleton>
-                </LinkBox>
+                <MetricCard
+                  href="https://hub.opengradient.ai"
+                  external
+                  label="Models Hosted"
+                  iconName="link_external"
+                  value="4,500+"
+                />
+                <MetricCard
+                  href={ route({ pathname: '/tee-registry' }) }
+                  label="TEE Operators"
+                  iconName="nft_shield"
+                  loading={ teeRegistryQuery.isPlaceholderData }
+                  value={ `${ teeStats.activeNodes }/${ teeStats.enabledNodes }` }
+                />
+                <MetricCard
+                  href={ route({ pathname: '/address/[hash]', query: { hash: settlementContractAddress } }) }
+                  label="AI Settlements"
+                  iconName="transactions_slim"
+                  loading={ isSettlementCountLoading }
+                  value={ formatNumber(llmBatchSettlementsCount) }
+                />
+                <MetricCard
+                  href={ route({ pathname: '/txs' }) }
+                  label="Network Txns"
+                  iconName="transactions_slim"
+                  loading={ totalTransactions === null && (statsQuery.isPending || apiQuery.isPending) }
+                  value={ formatNumber(totalTransactions) }
+                />
               </Grid>
             </VStack>
           </Box>

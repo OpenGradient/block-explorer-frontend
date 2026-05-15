@@ -20,7 +20,7 @@ interface Props extends Omit<HTMLChakraProps<'form'>, 'onChange'> {
   onClear: () => void;
   isHomepage?: boolean;
   isSuggestOpen?: boolean;
-  value: string;
+  value?: string;
 }
 
 const SearchBarInput = (
@@ -141,39 +141,45 @@ const SearchBarInput = (
       return { _light: 'blackAlpha.100', _dark: 'whiteAlpha.200' };
     }
     if (isFocused) {
-      return { _light: 'rgba(64, 209, 219, 0.8)', _dark: 'rgba(64, 209, 219, 0.9)' };
+      return { _light: 'rgba(36, 188, 227, 0.75)', _dark: 'rgba(80, 201, 233, 0.82)' };
     }
-    return { _light: 'rgba(0, 0, 0, 0.1)', _dark: 'rgba(255, 255, 255, 0.15)' };
+    return { _light: 'rgba(36, 188, 227, 0.20)', _dark: 'rgba(189, 235, 247, 0.16)' };
   };
 
   const getInputBoxShadow = () => {
     if (!isHomepage) {
       return undefined;
     }
-    return 'none';
+    return isFocused ?
+      { _light: '0 0 0 3px rgba(36, 188, 227, 0.12)', _dark: '0 0 0 3px rgba(80, 201, 233, 0.14)' } :
+      { _light: '0 10px 26px rgba(14, 75, 91, 0.06)', _dark: '0 12px 30px rgba(0, 0, 0, 0.20)' };
   };
 
   const inputBorderColor = getInputBorderColor();
   const inputBoxShadow = getInputBoxShadow();
+  const safeValue = value ?? '';
 
   const startElement = undefined;
 
   const endElement = (
     <>
-      <ClearButton onClick={ onClear } isVisible={ value.length > 0 } mx={ isHomepage ? { base: 3, md: 4 } : 2 }/>
+      <ClearButton onClick={ onClear } isVisible={ safeValue.length > 0 } mx={ isHomepage ? { base: 3, md: 4 } : 2 }/>
       <IconButton
         aria-label="Search"
         onClick={ handleSearchButtonClick }
         type="submit"
         variant="plain"
-        color={{ _light: 'rgba(64, 209, 219, 1)', _dark: 'rgba(64, 209, 219, 1)' }}
+        borderRadius="8px"
+        color={{ _light: '#0e4b5b', _dark: '#bdebf7' }}
+        bg={ isHomepage ? { _light: 'rgba(36, 188, 227, 0.10)', _dark: 'rgba(36, 188, 227, 0.14)' } : undefined }
         _hover={{
-          color: { _light: 'rgba(64, 209, 219, 0.8)', _dark: 'rgba(64, 209, 219, 0.8)' },
+          color: { _light: '#167188', _dark: '#ffffff' },
+          bg: isHomepage ? { _light: 'rgba(36, 188, 227, 0.18)', _dark: 'rgba(36, 188, 227, 0.22)' } : undefined,
         }}
         mr={ isHomepage ? { base: 3, md: 4 } : 2 }
-        boxSize={ isHomepage ? { base: 6, md: 7 } : 6 }
+        boxSize={ isHomepage ? { base: 8, md: 9 } : 6 }
       >
-        <IconSvg name="search" boxSize={ isHomepage ? { base: 5, md: 6 } : 5 }/>
+        <IconSvg name="search" boxSize={ isHomepage ? { base: 4, md: '18px' } : 5 }/>
       </IconButton>
     </>
   );
@@ -206,57 +212,52 @@ const SearchBarInput = (
       >
         <Input
           size={ isHomepage ? 'md' : 'md' }
-          placeholder={ isMobile ? 'Search by address / ... ' : 'Search by address / txn hash / block / token... ' }
-          value={ value }
+          placeholder={ isMobile ? 'Search by address / ...' : 'Search by address / txn hash / block / token...' }
+          value={ safeValue }
           onChange={ handleChange }
           onFocus={ handleInputFocus }
           onBlur={ handleInputBlur }
           border={ isHomepage ? '1px solid' : '2px solid' }
-          borderColor={ isHomepage ?
-            { _light: 'rgba(0, 0, 0, 0.15)', _dark: 'rgba(255, 255, 255, 0.18)' } :
-            inputBorderColor
-          }
-          color={{ _light: 'black', _dark: 'white' }}
+          borderColor={ inputBorderColor }
+          color={{ _light: '#0e4b5b', _dark: 'rgba(255, 255, 255, 0.94)' }}
           bg={ isHomepage ?
-            { _light: '#ffffff', _dark: '#0a0a0a' } :
+            { _light: 'rgba(255, 255, 255, 0.88)', _dark: 'rgba(10, 15, 25, 0.82)' } :
             undefined
           }
-          backdropFilter="none"
+          backdropFilter={ isHomepage ? 'blur(18px)' : 'none' }
           _focus={{
             outline: 'none',
             bg: isHomepage ? {
-              _light: '#ffffff',
-              _dark: '#0a0a0a',
+              _light: 'rgba(255, 255, 255, 0.94)',
+              _dark: 'rgba(10, 15, 25, 0.90)',
             } : undefined,
-            backdropFilter: 'none',
-            borderColor: isHomepage ? {
-              _light: 'rgba(0, 0, 0, 0.2)',
-              _dark: 'rgba(255, 255, 255, 0.25)',
-            } : undefined,
+            backdropFilter: isHomepage ? 'blur(18px)' : 'none',
+            borderColor: isHomepage ? inputBorderColor : undefined,
           }}
+          fontFamily={ isHomepage ? '"Geist", system-ui, -apple-system, sans-serif' : undefined }
           fontSize={{ base: 'xs', md: 'sm', lg: isHomepage ? 'sm' : 'sm' }}
-          h={ isHomepage ? { base: '50px', md: '56px' } : '50px' }
-          py={ isHomepage ? { base: 4, md: 4.5 } : { base: 3, md: 3.5 } }
+          h={ isHomepage ? { base: '46px', md: '50px' } : '50px' }
+          py={ isHomepage ? { base: 3, md: 3.5 } : { base: 3, md: 3.5 } }
           px={ isHomepage ? { base: 4, md: 5 } : undefined }
-          borderRadius={ isHomepage ? '12px' : undefined }
+          borderRadius={ isHomepage ? '8px' : undefined }
           boxShadow={ inputBoxShadow }
           _hover={ isHomepage && !isFocused ? {
-            borderColor: { _light: 'rgba(0, 0, 0, 0.18)', _dark: 'rgba(255, 255, 255, 0.2)' },
+            borderColor: { _light: 'rgba(36, 188, 227, 0.36)', _dark: 'rgba(80, 201, 233, 0.32)' },
             boxShadow: {
-              _light: '0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1)',
-              _dark: '0 2px 8px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.45)',
+              _light: '0 12px 30px rgba(14, 75, 91, 0.08)',
+              _dark: '0 14px 34px rgba(0, 0, 0, 0.24)',
             },
           } : {} }
           _focusVisible={{
             outline: 'none',
           }}
           _autofill={{
-            borderColor: isHomepage ? { _light: 'rgba(0, 0, 0, 0.18)', _dark: 'rgba(255, 255, 255, 0.2)' } : undefined,
+            borderColor: isHomepage ? { _light: 'rgba(36, 188, 227, 0.28)', _dark: 'rgba(80, 201, 233, 0.26)' } : undefined,
             boxShadow: isHomepage ? 'none' : undefined,
           }}
           transition="all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
           _placeholder={{
-            color: isHomepage ? { _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' } : undefined,
+            color: isHomepage ? { _light: 'rgba(14, 75, 91, 0.48)', _dark: 'rgba(189, 235, 247, 0.46)' } : undefined,
             opacity: isHomepage ? 1 : undefined,
             fontSize: isHomepage ? { base: 'sm', md: 'sm' } : undefined,
             fontWeight: isHomepage ? 400 : undefined,

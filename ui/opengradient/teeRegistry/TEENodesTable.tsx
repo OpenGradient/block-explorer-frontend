@@ -3,9 +3,9 @@ import React from 'react';
 
 import dayjs from 'lib/date/dayjs';
 import type { TEENodeWithStatus, TEETypeSummary } from 'lib/opengradient/contracts/teeRegistry';
-import { IconButton } from 'toolkit/chakra/icon-button';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { TableBody, TableCell, TableColumnHeader, TableHeaderSticky, TableRoot, TableRow } from 'toolkit/chakra/table';
+import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import IconSvg from 'ui/shared/IconSvg';
 
@@ -16,66 +16,70 @@ type Props = {
   onNodeClick: (node: TEENodeWithStatus) => void;
 };
 
-const StatusIndicator = ({ isActive, enabled }: { isActive: boolean; enabled: boolean }) => {
-  if (isActive) {
-    return (
-      <Flex alignItems="center" gap={ 1.5 }>
-        <Box
-          w="6px"
-          h="6px"
-          borderRadius="50%"
-          bg="green.500"
-          boxShadow="0 0 4px rgba(34, 197, 94, 0.5)"
-          animation="pulseOpacity 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"
-        />
-        <Text
-          fontSize="xs"
-          fontWeight={ 500 }
-          color={{ _light: 'rgba(22, 163, 74, 0.9)', _dark: 'rgba(34, 197, 94, 0.95)' }}
-          fontFamily="system-ui, -apple-system, sans-serif"
-        >
-          Active
-        </Text>
-      </Flex>
-    );
-  }
+const { colors, fonts, panel, text } = OPENGRADIENT_BRAND;
 
-  if (enabled) {
-    return (
-      <Flex alignItems="center" gap={ 1.5 }>
-        <Box
-          w="6px"
-          h="6px"
-          borderRadius="50%"
-          bg={{ _light: 'rgba(217, 119, 6, 0.7)', _dark: 'rgba(245, 158, 11, 0.8)' }}
-        />
-        <Text
-          fontSize="xs"
-          fontWeight={ 500 }
-          color={{ _light: 'rgba(217, 119, 6, 0.8)', _dark: 'rgba(245, 158, 11, 0.9)' }}
-          fontFamily="system-ui, -apple-system, sans-serif"
-        >
-          Enabled
-        </Text>
-      </Flex>
-    );
-  }
+const STATUS_STYLE = {
+  active: {
+    label: 'Active',
+    dot: '#61d199',
+    fg: { _light: '#23824f', _dark: '#61d199' },
+    bg: { _light: 'rgba(46, 158, 102, 0.10)', _dark: 'rgba(97, 209, 153, 0.10)' },
+    border: { _light: 'rgba(46, 158, 102, 0.18)', _dark: 'rgba(97, 209, 153, 0.22)' },
+  },
+  enabled: {
+    label: 'Enabled',
+    dot: '#d6a33d',
+    fg: { _light: '#9d6d10', _dark: '#d6a33d' },
+    bg: { _light: 'rgba(214, 163, 61, 0.10)', _dark: 'rgba(214, 163, 61, 0.10)' },
+    border: { _light: 'rgba(214, 163, 61, 0.20)', _dark: 'rgba(214, 163, 61, 0.24)' },
+  },
+  disabled: {
+    label: 'Disabled',
+    dot: '#708195',
+    fg: text.muted,
+    bg: { _light: 'rgba(49, 74, 125, 0.06)', _dark: 'rgba(189, 235, 247, 0.05)' },
+    border: panel.border,
+  },
+};
+
+const getStatus = (node: TEENodeWithStatus) => {
+  if (node.isActive) return STATUS_STYLE.active;
+  if (node.enabled) return STATUS_STYLE.enabled;
+  return STATUS_STYLE.disabled;
+};
+
+const StatusPill = ({ node }: { node: TEENodeWithStatus }) => {
+  const status = getStatus(node);
 
   return (
-    <Flex alignItems="center" gap={ 1.5 }>
+    <Flex
+      alignItems="center"
+      gap={ 1.5 }
+      w="fit-content"
+      px={ 2 }
+      py={ 1 }
+      border="1px solid"
+      borderColor={ status.border }
+      borderRadius="999px"
+      bg={ status.bg }
+    >
       <Box
         w="6px"
         h="6px"
         borderRadius="50%"
-        bg={{ _light: 'rgba(0, 0, 0, 0.15)', _dark: 'rgba(255, 255, 255, 0.15)' }}
+        bg={ status.dot }
+        boxShadow={ node.isActive ? '0 0 8px rgba(97, 209, 153, 0.62)' : 'none' }
+        animation={ node.isActive ? 'pulseOpacity 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' : 'none' }
       />
       <Text
-        fontSize="xs"
+        fontFamily={ fonts.mono }
+        fontSize="10px"
         fontWeight={ 500 }
-        color={{ _light: 'rgba(0, 0, 0, 0.35)', _dark: 'rgba(255, 255, 255, 0.35)' }}
-        fontFamily="system-ui, -apple-system, sans-serif"
+        letterSpacing="0.06em"
+        textTransform="uppercase"
+        color={ status.fg }
       >
-        Disabled
+        { status.label }
       </Text>
     </Flex>
   );
@@ -85,6 +89,30 @@ function formatTimeAgo(timestamp: bigint) {
   if (timestamp === BigInt(0)) return 'Never';
   return dayjs.unix(Number(timestamp)).fromNow();
 }
+
+const formatHash = (hash: string, head = 8, tail = 4) => {
+  if (!hash) return 'N/A';
+  if (hash.length <= head + tail + 3) return hash;
+  return `${ hash.slice(0, head) }...${ hash.slice(-tail) }`;
+};
+
+const HeaderCell = ({ children, w }: { children?: React.ReactNode; w?: string }) => (
+  <TableColumnHeader
+    w={ w }
+    py={ 3 }
+    px={ 4 }
+    bg={{ _light: 'rgba(233, 248, 252, 0.72)', _dark: 'rgba(15, 22, 38, 0.86)' }}
+    color={ text.secondary }
+    fontFamily={ fonts.mono }
+    fontSize="10px"
+    fontWeight={ 500 }
+    letterSpacing="0.08em"
+    textTransform="uppercase"
+    borderColor={ panel.border }
+  >
+    { children }
+  </TableColumnHeader>
+);
 
 const NodeRow = ({ node, typeNameMap, isLoading, onNodeClick }: {
   node: TEENodeWithStatus;
@@ -100,103 +128,117 @@ const NodeRow = ({ node, typeNameMap, isLoading, onNodeClick }: {
     <TableRow
       role="group"
       cursor="pointer"
-      transition="all 0.15s ease"
+      transition="background-color 0.15s ease"
+      borderBottom="1px solid"
+      borderColor={ panel.border }
       _hover={{
-        bg: { _light: 'rgba(124, 58, 237, 0.02)', _dark: 'rgba(139, 92, 246, 0.04)' },
+        bg: { _light: 'rgba(36, 188, 227, 0.04)', _dark: 'rgba(36, 188, 227, 0.06)' },
       }}
       onClick={ handleClick }
     >
-      <TableCell>
-        <Skeleton loading={ isLoading }>
-          <StatusIndicator isActive={ node.isActive } enabled={ node.enabled }/>
+      <TableCell py={ 3 } px={ 4 }>
+        <Skeleton loading={ isLoading } w="fit-content">
+          <StatusPill node={ node }/>
         </Skeleton>
       </TableCell>
-      <TableCell>
+      <TableCell py={ 3 } px={ 4 }>
         <Skeleton loading={ isLoading }>
-          <AddressEntity
-            address={{ hash: node.owner, is_contract: false }}
-            truncation="constant"
-          />
+          <Flex direction="column" gap={ 1 } minW={ 0 }>
+            <AddressEntity
+              address={{ hash: node.owner, is_contract: false }}
+              truncation="constant"
+              noIcon
+              noCopy
+              fontSize="13px"
+              fontWeight={ 500 }
+              color={ text.primary }
+            />
+            <Text
+              fontFamily={ fonts.mono }
+              fontSize="10px"
+              color={ text.muted }
+              truncate
+            >
+              ID { formatHash(node.teeId, 6, 4) }
+            </Text>
+          </Flex>
         </Skeleton>
       </TableCell>
-      <TableCell>
-        <Skeleton loading={ isLoading }>
+      <TableCell py={ 3 } px={ 4 }>
+        <Skeleton loading={ isLoading } w="fit-content">
           <Text
-            fontSize="xs"
+            fontFamily={ fonts.mono }
+            fontSize="11px"
             fontWeight={ 500 }
             px={ 2 }
-            py={ 0.5 }
-            borderRadius="sm"
-            bg={{ _light: 'rgba(124, 58, 237, 0.06)', _dark: 'rgba(139, 92, 246, 0.1)' }}
-            color={{ _light: 'rgba(124, 58, 237, 0.8)', _dark: 'rgba(139, 92, 246, 0.9)' }}
+            py={ 1 }
+            borderRadius="6px"
+            bg={{ _light: 'rgba(36, 188, 227, 0.10)', _dark: 'rgba(36, 188, 227, 0.13)' }}
+            color={ text.accent }
             w="fit-content"
-            fontFamily="system-ui, -apple-system, sans-serif"
           >
             { typeNameMap[node.teeType] ?? `Type ${ node.teeType }` }
           </Text>
         </Skeleton>
       </TableCell>
-      <TableCell>
-        <Skeleton loading={ isLoading }>
+      <TableCell py={ 3 } px={ 4 }>
+        <Skeleton loading={ isLoading } w="fit-content">
           <Text
-            fontSize="xs"
-            fontFamily="mono"
-            color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
+            fontFamily={ fonts.mono }
+            fontSize="12px"
+            color={ text.secondary }
             title={ node.pcrHash }
           >
-            { node.pcrHash ? `${ node.pcrHash.slice(0, 6) }...${ node.pcrHash.slice(-4) }` : 'N/A' }
+            { formatHash(node.pcrHash, 8, 5) }
           </Text>
         </Skeleton>
       </TableCell>
-      <TableCell>
+      <TableCell py={ 3 } px={ 4 }>
         <Skeleton loading={ isLoading }>
           <Text
-            fontSize="xs"
-            fontFamily="mono"
-            color={{ _light: 'rgba(0, 0, 0, 0.6)', _dark: 'rgba(255, 255, 255, 0.6)' }}
-            maxW="200px"
+            fontFamily={ fonts.mono }
+            fontSize="12px"
+            color={ text.secondary }
+            maxW="250px"
             overflow="hidden"
             textOverflow="ellipsis"
             whiteSpace="nowrap"
+            title={ node.endpoint }
           >
             { node.endpoint || 'N/A' }
           </Text>
         </Skeleton>
       </TableCell>
-      <TableCell>
-        <Skeleton loading={ isLoading }>
+      <TableCell py={ 3 } px={ 4 }>
+        <Skeleton loading={ isLoading } w="fit-content">
           <Text
-            fontSize="xs"
-            color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-            fontFamily="system-ui, -apple-system, sans-serif"
+            fontFamily={ fonts.mono }
+            fontSize="12px"
+            color={ node.isActive ? text.primary : text.muted }
           >
             { formatTimeAgo(node.lastHeartbeatAt) }
           </Text>
         </Skeleton>
       </TableCell>
-      <TableCell>
-        <Skeleton loading={ isLoading }>
-          <Text
-            fontSize="xs"
-            color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-            fontFamily="system-ui, -apple-system, sans-serif"
-          >
+      <TableCell py={ 3 } px={ 4 }>
+        <Skeleton loading={ isLoading } w="fit-content">
+          <Text fontFamily={ fonts.mono } fontSize="12px" color={ text.muted }>
             { formatTimeAgo(node.registeredAt) }
           </Text>
         </Skeleton>
       </TableCell>
-      <TableCell>
-        <Skeleton loading={ isLoading }>
-          <IconButton
-            aria-label="Open node details"
-            variant="ghost"
-            size="2xs"
-            borderRadius="full"
-            color={{ _light: 'rgba(0, 0, 0, 0.3)', _dark: 'rgba(255, 255, 255, 0.3)' }}
-            _groupHover={{ color: { _light: 'rgba(124, 58, 237, 0.7)', _dark: 'rgba(139, 92, 246, 0.8)' } }}
-          >
-            <IconSvg name="arrows/east-mini" boxSize={ 5 }/>
-          </IconButton>
+      <TableCell py={ 3 } px={ 4 } textAlign="right">
+        <Skeleton loading={ isLoading } w="fit-content" ml="auto">
+          <IconSvg
+            name="arrows/east"
+            boxSize={ 5 }
+            color={ text.muted }
+            transition="color 0.15s ease, transform 0.15s ease"
+            _groupHover={{
+              color: colors.cyan,
+              transform: 'translateX(2px)',
+            }}
+          />
         </Skeleton>
       </TableCell>
     </TableRow>
@@ -223,31 +265,33 @@ const TEENodesTable = ({ nodes, types, isLoading, onNodeClick }: Props) => {
   [ nodes ]);
 
   return (
-    <TableRoot>
-      <TableHeaderSticky top={ 0 }>
-        <TableRow>
-          <TableColumnHeader w="60px">Status</TableColumnHeader>
-          <TableColumnHeader w="160px">Owner</TableColumnHeader>
-          <TableColumnHeader w="120px">Type</TableColumnHeader>
-          <TableColumnHeader w="120px">PCR Hash</TableColumnHeader>
-          <TableColumnHeader w="200px">Endpoint</TableColumnHeader>
-          <TableColumnHeader w="120px">Last Heartbeat</TableColumnHeader>
-          <TableColumnHeader w="120px">Registered</TableColumnHeader>
-          <TableColumnHeader w="50px"/>
-        </TableRow>
-      </TableHeaderSticky>
-      <TableBody>
-        { sortedNodes.map((node) => (
-          <NodeRow
-            key={ node.teeId }
-            node={ node }
-            typeNameMap={ typeNameMap }
-            isLoading={ isLoading }
-            onNodeClick={ onNodeClick }
-          />
-        )) }
-      </TableBody>
-    </TableRoot>
+    <Box overflowX="auto">
+      <TableRoot minW="1120px" tableLayout="fixed">
+        <TableHeaderSticky top={ 0 }>
+          <TableRow borderBottom="1px solid" borderColor={ panel.border }>
+            <HeaderCell w="132px">Status</HeaderCell>
+            <HeaderCell w="210px">Node / Owner</HeaderCell>
+            <HeaderCell w="150px">Type</HeaderCell>
+            <HeaderCell w="160px">PCR Hash</HeaderCell>
+            <HeaderCell>Endpoint</HeaderCell>
+            <HeaderCell w="140px">Heartbeat</HeaderCell>
+            <HeaderCell w="140px">Registered</HeaderCell>
+            <HeaderCell w="56px"/>
+          </TableRow>
+        </TableHeaderSticky>
+        <TableBody>
+          { sortedNodes.map((node) => (
+            <NodeRow
+              key={ node.teeId }
+              node={ node }
+              typeNameMap={ typeNameMap }
+              isLoading={ isLoading }
+              onNodeClick={ onNodeClick }
+            />
+          )) }
+        </TableBody>
+      </TableRoot>
+    </Box>
   );
 };
 

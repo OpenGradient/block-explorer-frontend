@@ -95,12 +95,21 @@ export const TableHeaderSticky = (props: TableHeaderProps) => {
     };
   }, [ handleScroll ]);
 
+  const stickyTop = (() => {
+    if (!isStuck) {
+      return undefined;
+    }
+
+    return top ? `${ top }px` : 0;
+  })();
+
   return (
     <TableHeader
       ref={ ref }
-      position="sticky"
-      top={ top ? `${ top }px` : 0 }
-      backgroundColor={{ _light: 'white', _dark: 'black' }}
+      position={ isStuck ? 'sticky' : 'static' }
+      top={ stickyTop }
+      backgroundColor={{ _light: 'rgba(244, 252, 254, 0.96)', _dark: 'rgba(10, 15, 25, 0.96)' }}
+      backdropFilter="blur(16px)"
       boxShadow={ isStuck ? 'action_bar' : 'none' }
       zIndex="1"
       { ...rest }

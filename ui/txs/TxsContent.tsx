@@ -8,6 +8,7 @@ import useIsMobile from 'lib/hooks/useIsMobile';
 import AddressCsvExportLink from 'ui/address/AddressCsvExportLink';
 import { ACTION_BAR_HEIGHT_DESKTOP } from 'ui/shared/ActionBar';
 import DataListDisplay from 'ui/shared/DataListDisplay';
+import ExplorerPageSurface from 'ui/shared/Page/ExplorerPageSurface';
 import type { QueryWithPagesResult } from 'ui/shared/pagination/useQueryWithPages';
 import getNextSortValue from 'ui/shared/sort/getNextSortValue';
 
@@ -23,7 +24,6 @@ const SORT_SEQUENCE: Record<TransactionsSortingField, Array<TransactionsSortingV
 };
 
 type Props = {
-  // eslint-disable-next-line max-len
   query: QueryWithPagesResult<'txs_validated' | 'txs_pending'> | QueryWithPagesResult<'txs_watchlist'> | QueryWithPagesResult<'block_txs'> | QueryWithPagesResult<'zkevm_l2_txn_batch_txs'>;
   showBlockInfo?: boolean;
   showSocketInfo?: boolean;
@@ -101,7 +101,6 @@ const TxsContent = ({
 
   const actionBar = isMobile ? (
     <TxsHeaderMobile
-      mt={ -6 }
       sorting={ sort }
       setSorting={ setSorting }
       paginationProps={ query.pagination }
@@ -125,7 +124,11 @@ const TxsContent = ({
       emptyText="There are no transactions."
       actionBar={ actionBar }
     >
-      { content }
+      { content && (
+        <ExplorerPageSurface overflowX="auto">
+          { content }
+        </ExplorerPageSurface>
+      ) }
     </DataListDisplay>
   );
 };

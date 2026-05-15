@@ -4,12 +4,13 @@ import type { ExcludeUndefined } from 'types/utils';
 
 import config from 'configs/app';
 
-export const BODY_TYPEFACE = config.UI.fonts.body?.name ?? 'Inter';
-export const HEADING_TYPEFACE = config.UI.fonts.heading?.name ?? 'Poppins';
+export const BODY_TYPEFACE = config.UI.fonts.body?.name ?? 'Geist';
+export const HEADING_TYPEFACE = config.UI.fonts.heading?.name ?? 'Geist';
 
 export const fonts: ExcludeUndefined<ThemingConfig['tokens']>['fonts'] = {
-  heading: { value: `${ HEADING_TYPEFACE }, sans-serif` },
-  body: { value: `${ BODY_TYPEFACE }, sans-serif` },
+  heading: { value: `${ HEADING_TYPEFACE }, system-ui, -apple-system, sans-serif` },
+  body: { value: `${ BODY_TYPEFACE }, system-ui, -apple-system, sans-serif` },
+  mono: { value: '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace' },
 };
 
 export const textStyles: ThemingConfig['textStyles'] = {
@@ -19,7 +20,7 @@ export const textStyles: ThemingConfig['textStyles'] = {
         fontSize: '32px',
         lineHeight: '40px',
         fontWeight: '500',
-        letterSpacing: '-0.5px',
+        letterSpacing: '0',
         fontFamily: 'heading',
       },
     },

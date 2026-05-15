@@ -10,6 +10,7 @@ import { nbsp } from 'lib/html-entities';
 import { HOMEPAGE_STATS } from 'stubs/stats';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
+import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 import IconSvg from 'ui/shared/IconSvg';
 import Pagination from 'ui/shared/pagination/Pagination';
 
@@ -28,10 +29,10 @@ const BlocksTabSlot = ({ pagination }: Props) => {
     <Flex alignItems="center" columnGap={ 8 } display={{ base: 'none', lg: 'flex' }}>
       { statsQuery.data?.network_utilization_percentage !== undefined && (
         <Box>
-          <Text as="span" fontSize="sm">
+          <Text as="span" color={ OPENGRADIENT_BRAND.text.secondary } fontSize="sm">
             Network utilization (last 50 blocks):{ nbsp }
           </Text>
-          <Skeleton display="inline-block" fontSize="sm" color="blue.400" fontWeight={ 600 } loading={ statsQuery.isPlaceholderData }>
+          <Skeleton display="inline-block" fontSize="sm" color={ OPENGRADIENT_BRAND.text.accent } fontWeight={ 600 } loading={ statsQuery.isPlaceholderData }>
             <span>{ statsQuery.data.network_utilization_percentage.toFixed(2) }%</span>
           </Skeleton>
         </Box>

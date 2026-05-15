@@ -18,7 +18,8 @@ interface Props extends React.SVGProps<SVGPathElement> {
 const ChartArea = ({ id, xScale, yScale, color, data, noAnimation, ...props }: Props) => {
   const ref = React.useRef(null);
 
-  const gradientColorId = `${ id || 'gradient' }-${ color }-color`;
+  const gradientColorKey = color?.replace(/[^\w-]/g, '') || 'custom';
+  const gradientColorId = `${ id || 'gradient' }-${ gradientColorKey }-color`;
   const gradientStopColor = useToken('colors', useColorModeValue('whiteAlpha.200', 'blackAlpha.100'));
   const defaultGradient = {
     startColor: useToken('colors', useColorModeValue('blue.100', 'blue.400')),

@@ -3,6 +3,7 @@ import React from 'react';
 
 import { useScrollDirection } from 'lib/contexts/scrollDirection';
 import useIsSticky from 'lib/hooks/useIsSticky';
+import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 
 type Props = {
   children: React.ReactNode;
@@ -27,7 +28,10 @@ const ActionBar = ({ children, className, showShadow }: Props) => {
   return (
     <Flex
       className={ className }
-      backgroundColor={{ _light: 'white', _dark: '#0a0a0a' }}
+      backgroundColor={{ _light: 'rgba(244, 252, 254, 0.94)', _dark: 'rgba(10, 15, 25, 0.94)' }}
+      backdropFilter="blur(16px)"
+      borderBottomWidth={ isSticky ? '1px' : '0' }
+      borderColor={ OPENGRADIENT_BRAND.panel.border }
       pt={ 6 }
       pb={{ base: 6, lg: 3 }}
       mx={{ base: -3, lg: 0 }}

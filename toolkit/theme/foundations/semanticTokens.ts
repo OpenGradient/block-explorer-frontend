@@ -162,8 +162,8 @@ const semanticTokens: ThemingConfig['semanticTokens'] = {
     },
     popover: {
       DEFAULT: {
-        bg: { value: { _light: '{colors.white}', _dark: '{colors.gray.900}' } },
-        shadow: { value: { _light: '{colors.blackAlpha.200}', _dark: '{colors.whiteAlpha.300}' } },
+        bg: { value: { _light: '#fcfdfe', _dark: '#0f1626' } },
+        shadow: { value: { _light: 'rgba(36, 188, 227, 0.25)', _dark: 'rgba(36, 188, 227, 0.35)' } },
       },
     },
     progressCircle: {
@@ -180,31 +180,31 @@ const semanticTokens: ThemingConfig['semanticTokens'] = {
     tabs: {
       solid: {
         fg: {
-          DEFAULT: { value: { _light: '{colors.blue.700}', _dark: '{colors.blue.100}' } },
-          selected: { value: { _light: '{colors.blue.700}', _dark: '{colors.gray.50}' } },
+          DEFAULT: { value: { _light: '#314a7d', _dark: 'rgba(189, 235, 247, 0.66)' } },
+          selected: { value: { _light: '#0e4b5b', _dark: '#bdebf7' } },
         },
         bg: {
-          selected: { value: { _light: '{colors.blue.50}', _dark: '{colors.whiteAlpha.100}' } },
+          selected: { value: { _light: 'rgba(36, 188, 227, 0.12)', _dark: 'rgba(36, 188, 227, 0.12)' } },
         },
       },
       secondary: {
         fg: {
-          DEFAULT: { value: { _light: '{colors.blackAlpha.800}', _dark: '{colors.whiteAlpha.800}' } },
+          DEFAULT: { value: { _light: '#0e4b5b', _dark: '#bdebf7' } },
         },
         bg: {
-          selected: { value: { _light: '{colors.blue.50}', _dark: '{colors.whiteAlpha.100}' } },
+          selected: { value: { _light: 'rgba(36, 188, 227, 0.12)', _dark: 'rgba(36, 188, 227, 0.12)' } },
         },
         border: {
-          DEFAULT: { value: { _light: '{colors.gray.300}', _dark: '{colors.gray.600}' } },
+          DEFAULT: { value: { _light: 'rgba(36, 188, 227, 0.22)', _dark: 'rgba(189, 235, 247, 0.16)' } },
         },
       },
       segmented: {
         fg: {
-          DEFAULT: { value: { _light: '{colors.blue.600}', _dark: '{colors.blue.300}' } },
-          selected: { value: { _light: '{colors.blue.700}', _dark: '{colors.gray.50}' } },
+          DEFAULT: { value: { _light: '#1d96b6', _dark: '#50c9e9' } },
+          selected: { value: { _light: '#0e4b5b', _dark: '#bdebf7' } },
         },
         border: {
-          DEFAULT: { value: { _light: '{colors.blue.50}', _dark: '{colors.gray.800}' } },
+          DEFAULT: { value: { _light: 'rgba(36, 188, 227, 0.18)', _dark: 'rgba(36, 188, 227, 0.18)' } },
         },
       },
     },
@@ -244,23 +244,23 @@ const semanticTokens: ThemingConfig['semanticTokens'] = {
     },
     input: {
       fg: {
-        DEFAULT: { value: { _light: '{colors.gray.800}', _dark: '{colors.gray.50}' } },
+        DEFAULT: { value: { _light: '#0e4b5b', _dark: '#bdebf7' } },
         error: { value: '{colors.text.error}' },
       },
       bg: {
-        DEFAULT: { value: { _light: '{colors.white}', _dark: '{colors.black}' } },
-        readOnly: { value: { _light: '{colors.gray.200}', _dark: '{colors.gray.800}' } },
+        DEFAULT: { value: { _light: '#ffffff', _dark: 'rgba(15, 22, 38, 0.6)' } },
+        readOnly: { value: { _light: '#e9f8fc', _dark: 'rgba(15, 22, 38, 0.4)' } },
       },
       border: {
-        DEFAULT: { value: { _light: '{colors.gray.100}', _dark: '{colors.gray.700}' } },
-        hover: { value: { _light: '{colors.gray.200}', _dark: '{colors.gray.500}' } },
-        focus: { value: '{colors.blue.400}' },
-        filled: { value: { _light: '{colors.gray.300}', _dark: '{colors.gray.600}' } },
-        readOnly: { value: { _light: '{colors.gray.200}', _dark: '{colors.gray.800}' } },
+        DEFAULT: { value: { _light: 'rgba(36, 188, 227, 0.18)', _dark: 'rgba(36, 188, 227, 0.18)' } },
+        hover: { value: { _light: 'rgba(36, 188, 227, 0.45)', _dark: 'rgba(36, 188, 227, 0.45)' } },
+        focus: { value: '#24bce3' },
+        filled: { value: { _light: 'rgba(36, 188, 227, 0.25)', _dark: 'rgba(36, 188, 227, 0.22)' } },
+        readOnly: { value: { _light: 'rgba(36, 188, 227, 0.10)', _dark: 'rgba(36, 188, 227, 0.12)' } },
         error: { value: '{colors.red.500}' },
       },
       placeholder: {
-        DEFAULT: { value: '{colors.gray.500}' },
+        DEFAULT: { value: { _light: 'rgba(14, 75, 91, 0.4)', _dark: 'rgba(189, 235, 247, 0.35)' } },
         error: { value: '{colors.red.500}' },
       },
     },
@@ -273,26 +273,26 @@ const semanticTokens: ThemingConfig['semanticTokens'] = {
     },
     dialog: {
       bg: {
-        DEFAULT: { value: { _light: '{colors.white}', _dark: '{colors.gray.900}' } },
+        DEFAULT: { value: { _light: '#fcfdfe', _dark: '#0f1626' } },
       },
       fg: {
-        DEFAULT: { value: { _light: '{colors.blackAlpha.800}', _dark: '{colors.whiteAlpha.800}' } },
+        DEFAULT: { value: { _light: '#0e4b5b', _dark: '#bdebf7' } },
       },
     },
     drawer: {
       bg: {
-        DEFAULT: { value: { _light: '{colors.white}', _dark: '{colors.gray.900}' } },
+        DEFAULT: { value: { _light: '#fcfdfe', _dark: '#0f1626' } },
       },
     },
     select: {
       trigger: {
         outline: {
-          fg: { value: { _light: '{colors.blackAlpha.800}', _dark: '{colors.whiteAlpha.800}' } },
+          fg: { value: { _light: '#0e4b5b', _dark: '#bdebf7' } },
         },
       },
       item: {
         bg: {
-          highlighted: { value: { _light: '{colors.blue.50}', _dark: '{colors.whiteAlpha.100}' } },
+          highlighted: { value: { _light: 'rgba(36, 188, 227, 0.10)', _dark: 'rgba(36, 188, 227, 0.10)' } },
         },
       },
       indicator: {
@@ -310,7 +310,7 @@ const semanticTokens: ThemingConfig['semanticTokens'] = {
     menu: {
       item: {
         bg: {
-          highlighted: { value: { _light: '{colors.blue.50}', _dark: '{colors.whiteAlpha.100}' } },
+          highlighted: { value: { _light: 'rgba(36, 188, 227, 0.10)', _dark: 'rgba(36, 188, 227, 0.12)' } },
         },
       },
     },
@@ -333,12 +333,12 @@ const semanticTokens: ThemingConfig['semanticTokens'] = {
         fg: { value: { _light: '{colors.red.500}', _dark: '{colors.red.200}' } },
       },
       purple: {
-        bg: { value: { _light: '{colors.purple.50}', _dark: '{colors.purple.800}' } },
-        fg: { value: { _light: '{colors.purple.500}', _dark: '{colors.purple.100}' } },
+        bg: { value: { _light: 'rgba(36, 188, 227, 0.10)', _dark: 'rgba(36, 188, 227, 0.15)' } },
+        fg: { value: { _light: '#1d96b6', _dark: '#50c9e9' } },
       },
       purple_alt: {
-        bg: { value: { _light: '{colors.purple.100}', _dark: '{colors.purple.800}' } },
-        fg: { value: { _light: '{colors.blackAlpha.800}', _dark: '{colors.whiteAlpha.800}' } },
+        bg: { value: { _light: 'rgba(36, 188, 227, 0.14)', _dark: 'rgba(36, 188, 227, 0.18)' } },
+        fg: { value: { _light: '#0e4b5b', _dark: '#bdebf7' } },
       },
       orange: {
         bg: { value: { _light: '{colors.orange.50}', _dark: '{colors.orange.800}' } },
@@ -389,8 +389,8 @@ const semanticTokens: ThemingConfig['semanticTokens'] = {
     },
     table: {
       header: {
-        bg: { value: { _light: '{colors.blackAlpha.100}', _dark: '{colors.whiteAlpha.200}' } },
-        fg: { value: { _light: '{colors.blackAlpha.700}', _dark: '{colors.whiteAlpha.700}' } },
+        bg: { value: { _light: 'rgba(233, 248, 252, 0.78)', _dark: 'rgba(36, 188, 227, 0.08)' } },
+        fg: { value: { _light: '#314a7d', _dark: 'rgba(189, 235, 247, 0.72)' } },
       },
     },
     checkbox: {
@@ -422,15 +422,15 @@ const semanticTokens: ThemingConfig['semanticTokens'] = {
       highlighted: { value: '{colors.yellow.400}' },
     },
     heading: {
-      DEFAULT: { value: { _light: '{colors.blackAlpha.800}', _dark: '{colors.whiteAlpha.800}' } },
+      DEFAULT: { value: { _light: '#0e4b5b', _dark: '#bdebf7' } },
     },
     text: {
-      primary: { value: { _light: '{colors.blackAlpha.800}', _dark: '{colors.whiteAlpha.800}' } },
-      secondary: { value: { _light: '{colors.gray.500}', _dark: '{colors.gray.400}' } },
+      primary: { value: { _light: '#0e4b5b', _dark: 'rgba(189, 235, 247, 0.92)' } },
+      secondary: { value: { _light: '#314a7d', _dark: 'rgba(189, 235, 247, 0.55)' } },
       error: { value: '{colors.red.500}' },
     },
     border: {
-      divider: { value: { _light: '{colors.blackAlpha.100}', _dark: '{colors.whiteAlpha.100}' } },
+      divider: { value: { _light: 'rgba(36, 188, 227, 0.14)', _dark: 'rgba(189, 235, 247, 0.10)' } },
       error: { value: '{colors.red.500}' },
     },
     icon: {
@@ -446,7 +446,7 @@ const semanticTokens: ThemingConfig['semanticTokens'] = {
     },
     global: {
       body: {
-        bg: { value: { _light: '{colors.white}', _dark: '{colors.black}' } },
+        bg: { value: { _light: '#f4fcfe', _dark: '#0a0f19' } },
         fg: { value: '{colors.text.primary}' },
       },
       mark: {

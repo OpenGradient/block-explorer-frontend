@@ -15,7 +15,8 @@ import { generateListStub } from 'stubs/utils';
 import ActionBar from 'ui/shared/ActionBar';
 import DataListDisplay from 'ui/shared/DataListDisplay';
 import FilterInput from 'ui/shared/filters/FilterInput';
-import PageTitle from 'ui/shared/Page/PageTitle';
+import ExplorerPageSurface from 'ui/shared/Page/ExplorerPageSurface';
+import ExplorerPageTitle from 'ui/shared/Page/ExplorerPageTitle';
 import Pagination from 'ui/shared/pagination/Pagination';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 import getSortParamsFromValue from 'ui/shared/sort/getSortParamsFromValue';
@@ -91,7 +92,9 @@ const VerifiedContracts = () => {
 
   const filterInput = (
     <FilterInput
-      w={{ base: '100%', lg: '350px' }}
+      flex={{ base: 1, lg: 'unset' }}
+      minW={ 0 }
+      w={{ base: 'auto', lg: '350px' }}
       size="sm"
       onChange={ handleSearchTermChange }
       placeholder="Search by contract name or address"
@@ -117,7 +120,7 @@ const VerifiedContracts = () => {
         { filterInput }
       </HStack>
       { (!isMobile || pagination.isVisible) && (
-        <ActionBar mt={ -6 }>
+        <ActionBar>
           <HStack gap={ 3 } display={{ base: 'none', lg: 'flex' }}>
             { typeFilter }
             { filterInput }
@@ -141,8 +144,10 @@ const VerifiedContracts = () => {
 
   return (
     <Box>
-      <PageTitle
+      <ExplorerPageTitle
+        eyebrow="Contracts"
         title={ config.meta.seo.enhancedDataEnabled ? `Verified ${ config.chain.name } contracts` : 'Verified contracts' }
+        description="Verified source code, compiler metadata, balances, and recent contract activity."
         withTextAd
       />
       <VerifiedContractsCounters/>
@@ -156,7 +161,11 @@ const VerifiedContracts = () => {
         }}
         actionBar={ actionBar }
       >
-        { content }
+        { content && (
+          <ExplorerPageSurface overflowX="auto">
+            { content }
+          </ExplorerPageSurface>
+        ) }
       </DataListDisplay>
     </Box>
   );

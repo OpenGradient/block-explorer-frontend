@@ -91,7 +91,8 @@ const AdaptiveTabsList = (props: Props) => {
       flexWrap="nowrap"
       alignItems="center"
       whiteSpace="nowrap"
-      bgColor={{ _light: 'white', _dark: 'black' }}
+      bgColor={{ _light: 'rgba(244, 252, 254, 0.94)', _dark: 'rgba(10, 15, 25, 0.94)' }}
+      backdropFilter="blur(16px)"
       // initially our cut is 0 and we don't want to show the list
       // but we want to keep all items in the tabs row so it won't collapse
       // that's why we only change opacity but not the position itself

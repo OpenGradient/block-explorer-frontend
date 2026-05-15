@@ -26,19 +26,20 @@ const NavLinkGroup = ({ item }: Props) => {
     <Box
       width="260px"
       border="1px solid"
-      borderColor={{ _light: 'rgba(0, 0, 0, 0.12)', _dark: 'rgba(255, 255, 255, 0.18)' }}
+      borderColor={{ _light: 'rgba(36, 188, 227, 0.18)', _dark: 'rgba(189, 235, 247, 0.14)' }}
       bgColor={{
-        _light: 'linear-gradient(180deg, #ffffff 0%, #fafbfc 100%)',
-        _dark: 'linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%)',
+        _light: '#ffffff',
+        _dark: '#0f1626',
       }}
       backgroundImage={{
-        _light: 'linear-gradient(180deg, #ffffff 0%, #fafbfc 100%)',
-        _dark: 'linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%)',
+        _light: 'linear-gradient(180deg, #ffffff 0%, #f4fcfe 100%)',
+        _dark: 'linear-gradient(180deg, #0f1626 0%, #0a0f19 100%)',
       }}
       p={ 2 }
+      borderRadius="8px"
       boxShadow={{
-        _light: '0 4px 16px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08)',
-        _dark: '0 4px 16px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3)',
+        _light: '0 16px 44px rgba(14, 75, 91, 0.12)',
+        _dark: '0 18px 50px rgba(0, 0, 0, 0.42)',
       }}
     >
       <VStack gap={ 0 } alignItems="stretch" as="ul">
@@ -51,7 +52,7 @@ const NavLinkGroup = ({ item }: Props) => {
               mb: 2,
               pb: 2,
               borderBottomWidth: '1px',
-              borderColor: { _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(255, 255, 255, 0.12)' },
+              borderColor: { _light: 'rgba(36, 188, 227, 0.14)', _dark: 'rgba(189, 235, 247, 0.10)' },
             }}
           >
             { subItem.map(subSubItem => <NavLink key={ subSubItem.text } item={ subSubItem } isCollapsed={ false }/>) }
@@ -79,8 +80,8 @@ const NavLinkGroup = ({ item }: Props) => {
         contentProps={{
           p: 0,
           boxShadow: {
-            _light: '0 8px 24px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1)',
-            _dark: '0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4)',
+            _light: '0 18px 50px rgba(14, 75, 91, 0.14)',
+            _dark: '0 18px 52px rgba(0, 0, 0, 0.46)',
           },
         }}
       >
@@ -89,10 +90,14 @@ const NavLinkGroup = ({ item }: Props) => {
           aria-label={ `${ item.text } link group` }
           position="relative"
           cursor="pointer"
-          bgColor="transparent"
+          bgColor={ item.isActive ?
+            { _light: 'rgba(36, 188, 227, 0.09)', _dark: 'rgba(36, 188, 227, 0.12)' } :
+            'transparent'
+          }
+          borderRadius="8px"
           color={ item.isActive ?
-            { _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' } :
-            { _light: 'rgba(0, 0, 0, 0.65)', _dark: 'rgba(255, 255, 255, 0.75)' }
+            { _light: '#0e4b5b', _dark: '#bdebf7' } :
+            { _light: 'rgba(14, 75, 91, 0.65)', _dark: 'rgba(189, 235, 247, 0.55)' }
           }
           transition="all 0.15s ease-out"
           py={ 3 }
@@ -101,8 +106,12 @@ const NavLinkGroup = ({ item }: Props) => {
           { ...(item.isActive ? { 'data-selected': true } : {}) }
           _hover={{
             color: {
-              _light: 'rgba(0, 0, 0, 0.9)',
-              _dark: 'rgba(255, 255, 255, 0.95)',
+              _light: '#1d96b6',
+              _dark: '#50c9e9',
+            },
+            bgColor: {
+              _light: 'rgba(36, 188, 227, 0.07)',
+              _dark: 'rgba(36, 188, 227, 0.10)',
             },
           }}
         >

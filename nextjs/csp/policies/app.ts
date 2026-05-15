@@ -115,6 +115,7 @@ export function app(): CspDev.DirectiveDescriptor {
     ],
 
     'font-src': [
+      KEY_WORDS.SELF,
       KEY_WORDS.DATA,
       ...MAIN_DOMAINS,
       ...(externalFontsDomains || []),

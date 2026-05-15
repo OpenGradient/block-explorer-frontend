@@ -22,14 +22,13 @@ const NavigationDesktop = () => {
       position="relative"
       flexDirection="column"
       alignItems="stretch"
-      bgColor={{
-        _light: 'linear-gradient(180deg, #ffffff 0%, #fafbfc 100%)',
-        _dark: '#0a0a0a',
-      }}
+      bgColor={{ _light: '#fcfdfe', _dark: '#0a0f19' }}
       backgroundImage={{
-        _light: 'linear-gradient(180deg, #ffffff 0%, #fafbfc 100%)',
-        _dark: '#0a0a0a',
+        _light: 'linear-gradient(180deg, #fcfdfe 0%, #f4fcfe 100%)',
+        _dark: 'linear-gradient(180deg, #0a0f19 0%, #0f1626 100%)',
       }}
+      borderRight="1px solid"
+      borderColor={{ _light: 'rgba(36, 188, 227, 0.10)', _dark: 'rgba(36, 188, 227, 0.10)' }}
       px={ 6 }
       py={ 10 }
       width="260px"
@@ -47,7 +46,7 @@ const NavigationDesktop = () => {
         mb={ 10 }
         pb={ 8 }
         borderBottom="1px solid"
-        borderColor={{ _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(255, 255, 255, 0.12)' }}
+        borderColor={{ _light: 'rgba(36, 188, 227, 0.14)', _dark: 'rgba(189, 235, 247, 0.12)' }}
         position="relative"
         _after={{
           content: '""',
@@ -57,8 +56,8 @@ const NavigationDesktop = () => {
           right: 0,
           height: '1px',
           background: {
-            _light: 'linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%)',
-            _dark: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.15) 50%, transparent 100%)',
+            _light: 'linear-gradient(90deg, transparent 0%, rgba(36, 188, 227, 0.28) 50%, transparent 100%)',
+            _dark: 'linear-gradient(90deg, transparent 0%, rgba(80, 201, 233, 0.24) 50%, transparent 100%)',
           },
         }}
       >
@@ -96,7 +95,7 @@ const NavigationDesktop = () => {
         <Box
           as="nav"
           borderTop="1px solid"
-          borderColor={{ _light: 'rgba(0, 0, 0, 0.08)', _dark: 'rgba(255, 255, 255, 0.12)' }}
+          borderColor={{ _light: 'rgba(36, 188, 227, 0.14)', _dark: 'rgba(189, 235, 247, 0.12)' }}
           w="100%"
           mt={ 8 }
           pt={ 8 }
@@ -109,8 +108,8 @@ const NavigationDesktop = () => {
             right: 0,
             height: '1px',
             background: {
-              _light: 'linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.1) 50%, transparent 100%)',
-              _dark: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.15) 50%, transparent 100%)',
+              _light: 'linear-gradient(90deg, transparent 0%, rgba(36, 188, 227, 0.28) 50%, transparent 100%)',
+              _dark: 'linear-gradient(90deg, transparent 0%, rgba(80, 201, 233, 0.24) 50%, transparent 100%)',
             },
           }}
         >

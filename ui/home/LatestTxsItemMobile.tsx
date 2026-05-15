@@ -22,7 +22,10 @@ import TimeAgoWithTooltip from 'ui/shared/TimeAgoWithTooltip';
 import TxWatchListTags from 'ui/shared/tx/TxWatchListTags';
 import TxType from 'ui/txs/TxType';
 
+import { HOME_BRAND } from './brand';
 import useInferenceType from './useInferenceType';
+
+const { fonts, text } = HOME_BRAND;
 
 type Props = {
   tx: Transaction;
@@ -43,14 +46,15 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
       px={ 4 }
       transition="all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
       position="relative"
+      borderRadius="6px"
       _hover={{
-        bg: { _light: 'rgba(0, 0, 0, 0.02)', _dark: 'rgba(64, 209, 219, 0.05)' },
+        bg: { _light: 'rgba(36, 188, 227, 0.05)', _dark: 'rgba(36, 188, 227, 0.06)' },
+        boxShadow: { _light: 'inset 0 0 0 1px rgba(36, 188, 227, 0.18)', _dark: 'inset 0 0 0 1px rgba(36, 188, 227, 0.22)' },
       }}
       display={{ base: 'block', lg: 'none' }}
     >
       <LinkOverlay href={ txUrl } noIcon/>
       <VStack align="stretch" gap={ 3 }>
-        { /* Header: Hash & Time */ }
         <Flex
           alignItems="center"
           width="100%"
@@ -62,8 +66,8 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
             hash={ tx.hash }
             fontWeight={ 500 }
             fontSize="sm"
-            fontFamily="system-ui, -apple-system, sans-serif"
-            color={{ _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' }}
+            fontFamily={ fonts.mono }
+            color={ text.primary }
             truncation="dynamic"
             tailLength={ 8 }
             noIcon
@@ -72,15 +76,14 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
             timestamp={ tx.timestamp }
             enableIncrement
             isLoading={ isLoading }
-            color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
+            color={ text.muted }
             fontSize="11px"
             fontWeight={ 400 }
-            fontFamily="system-ui, -apple-system, sans-serif"
+            fontFamily={ fonts.mono }
             flexShrink={ 0 }
           />
         </Flex>
 
-        { /* Badges Row */ }
         <HStack flexWrap="wrap" gap={ 1.5 }>
           <TxType types={ tx.transaction_types } isLoading={ isLoading }/>
           { tx.status !== 'error' && (
@@ -96,8 +99,8 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
                 px={ 2 }
                 py={ 0.5 }
                 minH="6"
-                fontFamily="system-ui, -apple-system, sans-serif"
-                letterSpacing="0.02em"
+                fontFamily={ fonts.mono }
+                letterSpacing="0.08em"
               >
                 { inferenceInfo?.type || 'AI Inference' }
               </Badge>
@@ -110,8 +113,8 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
                   px={ 2 }
                   py={ 0.5 }
                   minH="6"
-                  fontFamily="system-ui, -apple-system, sans-serif"
-                  letterSpacing="0.02em"
+                  fontFamily={ fonts.mono }
+                  letterSpacing="0.08em"
                 >
                   { inferenceInfo.mode }
                 </Badge>
@@ -121,22 +124,21 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
           <TxWatchListTags tx={ tx } isLoading={ isLoading }/>
         </HStack>
 
-        { /* Addresses Section */ }
         <Box>
           <Text
             fontSize="10px"
             fontWeight={ 500 }
             letterSpacing="0.08em"
             textTransform="uppercase"
-            color={{ _light: 'rgba(0, 0, 0, 0.35)', _dark: 'rgba(255, 255, 255, 0.35)' }}
-            fontFamily="system-ui, -apple-system, sans-serif"
+            color={ text.muted }
+            fontFamily={ fonts.mono }
             mb={ 1.5 }
           >
             Addresses
           </Text>
           <Box
             fontSize="12px"
-            fontFamily="system-ui, -apple-system, sans-serif"
+            fontFamily={ fonts.sans }
           >
             <AddressFromTo
               from={ tx.from }
@@ -148,7 +150,6 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
           </Box>
         </Box>
 
-        { /* Inference Details */ }
         { hasInference && (
           <Box>
             <Text
@@ -156,8 +157,8 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
               fontWeight={ 500 }
               letterSpacing="0.08em"
               textTransform="uppercase"
-              color={{ _light: 'rgba(0, 0, 0, 0.35)', _dark: 'rgba(255, 255, 255, 0.35)' }}
-              fontFamily="system-ui, -apple-system, sans-serif"
+              color={ text.muted }
+              fontFamily={ fonts.mono }
               mb={ 1.5 }
             >
               AI Inference
@@ -165,17 +166,17 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
             { !inferenceInfo && (
               <Text
                 fontSize="11px"
-                color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-                fontFamily="system-ui, -apple-system, sans-serif"
+                color={ text.muted }
+                fontFamily={ fonts.sans }
               >
-                —
+                -
               </Text>
             ) }
             { inferenceInfo && inferenceInfo.isLoading && (
               <Text
                 fontSize="11px"
-                color={{ _light: 'rgba(0, 0, 0, 0.4)', _dark: 'rgba(255, 255, 255, 0.4)' }}
-                fontFamily="system-ui, -apple-system, sans-serif"
+                color={ text.muted }
+                fontFamily={ fonts.sans }
               >
                 Loading...
               </Text>
@@ -184,8 +185,8 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
               <Skeleton loading={ isLoading }>
                 <Flex
                   fontSize="11px"
-                  color={{ _light: 'rgba(0, 0, 0, 0.5)', _dark: 'rgba(255, 255, 255, 0.5)' }}
-                  fontFamily="system-ui, -apple-system, sans-serif"
+                  color={ text.secondary }
+                  fontFamily={ fonts.sans }
                   alignItems="baseline"
                   gap={ 1 }
                 >
@@ -196,10 +197,10 @@ const LatestTxsItemMobile = ({ tx, isLoading }: Props) => {
                     fontSize="11px"
                     fontWeight={ 500 }
                     fontFamily="mono"
-                    color={{ _light: 'rgba(0, 0, 0, 0.7)', _dark: 'rgba(255, 255, 255, 0.7)' }}
+                    color={ text.secondary }
                     _hover={{
                       textDecoration: 'underline',
-                      color: { _light: 'rgba(0, 0, 0, 0.9)', _dark: 'rgba(255, 255, 255, 0.9)' },
+                      color: text.accent,
                     }}
                     lineClamp={ 1 }
                   >

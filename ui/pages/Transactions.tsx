@@ -17,7 +17,7 @@ import { generateListStub } from 'stubs/utils';
 import { Link } from 'toolkit/chakra/link';
 import RoutedTabs from 'toolkit/components/RoutedTabs/RoutedTabs';
 import IconSvg from 'ui/shared/IconSvg';
-import PageTitle from 'ui/shared/Page/PageTitle';
+import ExplorerPageTitle from 'ui/shared/Page/ExplorerPageTitle';
 import Pagination from 'ui/shared/pagination/Pagination';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 import useIsAuth from 'ui/snippets/auth/useIsAuth';
@@ -27,11 +27,11 @@ import TxsWithFrontendSorting from 'ui/txs/TxsWithFrontendSorting';
 
 const TAB_LIST_PROPS = {
   marginBottom: 0,
-  pt: 6,
-  pb: 6,
-  marginTop: -5,
+  pt: 2,
+  pb: 5,
+  marginTop: 0,
 };
-const TABS_HEIGHT = 88;
+const TABS_HEIGHT = 68;
 
 const Transactions = () => {
   const verifiedTitle = capitalize(getNetworkValidationActionText());
@@ -181,8 +181,10 @@ const Transactions = () => {
 
   return (
     <>
-      <PageTitle
+      <ExplorerPageTitle
+        eyebrow="Transactions"
         title={ config.meta.seo.enhancedDataEnabled ? `${ config.chain.name } transactions` : 'Transactions' }
+        description="Validated, pending, blob, and watchlist transactions across the OpenGradient network."
         withTextAd
       />
       <TxsStats/>

@@ -8,7 +8,8 @@ import InternalTxsList from 'ui/internalTxs/InternalTxsList';
 import InternalTxsTable from 'ui/internalTxs/InternalTxsTable';
 import ActionBar from 'ui/shared/ActionBar';
 import DataListDisplay from 'ui/shared/DataListDisplay';
-import PageTitle from 'ui/shared/Page/PageTitle';
+import ExplorerPageSurface from 'ui/shared/Page/ExplorerPageSurface';
+import ExplorerPageTitle from 'ui/shared/Page/ExplorerPageTitle';
 import Pagination from 'ui/shared/pagination/Pagination';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 
@@ -35,7 +36,7 @@ const InternalTxs = () => {
   });
 
   const actionBar = (!isMobile || pagination.isVisible) ? (
-    <ActionBar mt={ -6 }>
+    <ActionBar>
       <Pagination ml="auto" { ...pagination }/>
     </ActionBar>
   ) : null;
@@ -53,8 +54,10 @@ const InternalTxs = () => {
 
   return (
     <>
-      <PageTitle
+      <ExplorerPageTitle
+        eyebrow="Execution traces"
         title="Internal transactions"
+        description="Contract-level calls and value movement generated inside indexed transactions."
         withTextAd
       />
       <DataListDisplay
@@ -63,7 +66,11 @@ const InternalTxs = () => {
         emptyText="There are no internal transactions."
         actionBar={ actionBar }
       >
-        { content }
+        { content && (
+          <ExplorerPageSurface overflowX="auto">
+            { content }
+          </ExplorerPageSurface>
+        ) }
       </DataListDisplay>
     </>
   );

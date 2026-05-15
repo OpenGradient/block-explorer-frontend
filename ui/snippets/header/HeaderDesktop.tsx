@@ -3,6 +3,7 @@ import React from 'react';
 
 import config from 'configs/app';
 import RewardsButton from 'ui/rewards/RewardsButton';
+import ColorModeToggle from 'ui/snippets/colorMode/ColorModeToggle';
 import SearchBar from 'ui/snippets/searchBar/SearchBar';
 import UserProfileDesktop from 'ui/snippets/user/profile/UserProfileDesktop';
 import UserWalletDesktop from 'ui/snippets/user/wallet/UserWalletDesktop';
@@ -21,8 +22,9 @@ const HeaderDesktop = ({ hideSearchBar, renderSearchBar }: Props) => {
       as="header"
       display={{ base: 'none', lg: 'flex' }}
       width="100%"
+      minH="50px"
       alignItems="center"
-      justifyContent="center"
+      justifyContent={ hideSearchBar ? 'flex-end' : 'center' }
       gap={ 6 }
     >
       { !hideSearchBar && (
@@ -30,15 +32,14 @@ const HeaderDesktop = ({ hideSearchBar, renderSearchBar }: Props) => {
           { searchBar }
         </Box>
       ) }
-      { config.UI.navigation.layout === 'vertical' && (
-        <Box display="flex" gap={ 2 } flexShrink={ 0 }>
-          { config.features.rewards.isEnabled && <RewardsButton/> }
-          {
-            (config.features.account.isEnabled && <UserProfileDesktop/>) ||
-            (config.features.blockchainInteraction.isEnabled && <UserWalletDesktop/>)
-          }
-        </Box>
-      ) }
+      <Box display="flex" gap={ 2 } flexShrink={ 0 }>
+        <ColorModeToggle/>
+        { config.features.rewards.isEnabled && <RewardsButton/> }
+        {
+          (config.features.account.isEnabled && <UserProfileDesktop/>) ||
+          (config.features.blockchainInteraction.isEnabled && <UserWalletDesktop/>)
+        }
+      </Box>
     </HStack>
   );
 };

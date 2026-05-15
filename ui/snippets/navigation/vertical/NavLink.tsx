@@ -37,16 +37,24 @@ const NavLink = ({ item, onClick, isDisabled }: Props) => {
         aria-label={ `${ item.text } link` }
         whiteSpace="nowrap"
         onClick={ onClick }
-        bgColor="transparent"
+        bgColor={ isInternalLink && item.isActive ?
+          { _light: 'rgba(36, 188, 227, 0.09)', _dark: 'rgba(36, 188, 227, 0.12)' } :
+          'transparent'
+        }
+        borderRadius="8px"
         color={ isInternalLink && item.isActive ?
-          { _light: 'rgba(0, 0, 0, 0.95)', _dark: 'rgba(255, 255, 255, 0.98)' } :
-          { _light: 'rgba(0, 0, 0, 0.65)', _dark: 'rgba(255, 255, 255, 0.75)' }
+          { _light: '#0e4b5b', _dark: '#bdebf7' } :
+          { _light: 'rgba(14, 75, 91, 0.65)', _dark: 'rgba(189, 235, 247, 0.55)' }
         }
         transition="all 0.15s ease-out"
         _hover={{
           color: isDisabled ? undefined : {
-            _light: 'rgba(0, 0, 0, 0.9)',
-            _dark: 'rgba(255, 255, 255, 0.95)',
+            _light: '#1d96b6',
+            _dark: '#50c9e9',
+          },
+          bgColor: isDisabled ? undefined : {
+            _light: 'rgba(36, 188, 227, 0.07)',
+            _dark: 'rgba(36, 188, 227, 0.10)',
           },
         }}
       >
@@ -75,7 +83,8 @@ const NavLink = ({ item, onClick, isDisabled }: Props) => {
               w="6px"
               h="6px"
               borderRadius="50%"
-              bg={{ _light: 'cyan.600', _dark: 'cyan.300' }}
+              bg="#24bce3"
+              boxShadow="0 0 8px rgba(36, 188, 227, 0.7)"
               ml={ 2 }
               flexShrink={ 0 }
             />

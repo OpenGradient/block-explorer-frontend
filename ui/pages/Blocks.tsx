@@ -10,14 +10,14 @@ import { generateListStub } from 'stubs/utils';
 import RoutedTabs from 'toolkit/components/RoutedTabs/RoutedTabs';
 import BlocksContent from 'ui/blocks/BlocksContent';
 import BlocksTabSlot from 'ui/blocks/BlocksTabSlot';
-import PageTitle from 'ui/shared/Page/PageTitle';
+import ExplorerPageTitle from 'ui/shared/Page/ExplorerPageTitle';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 
 const TAB_LIST_PROPS = {
   marginBottom: 0,
-  pt: 6,
-  pb: 6,
-  marginTop: -5,
+  pt: 2,
+  pb: 5,
+  marginTop: 0,
 };
 
 const BlocksPageContent = () => {
@@ -77,7 +77,12 @@ const BlocksPageContent = () => {
 
   return (
     <>
-      <PageTitle title="Blocks" withTextAd/>
+      <ExplorerPageTitle
+        eyebrow="Blocks"
+        title="Blocks"
+        description="Block production, forks, uncles, gas usage, and validator activity on OpenGradient."
+        withTextAd
+      />
       <RoutedTabs
         tabs={ tabs }
         listProps={ isMobile ? undefined : TAB_LIST_PROPS }
