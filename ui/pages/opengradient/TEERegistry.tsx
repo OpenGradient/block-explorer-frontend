@@ -5,29 +5,16 @@ import React from 'react';
 import { route } from 'nextjs-routes';
 
 import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS } from 'lib/opengradient/contracts/teeRegistry';
-import type { TEERegistryStats, TEETypeSummary, TEENodeWithStatus } from 'lib/opengradient/contracts/teeRegistry';
+import type { TEENodeWithStatus } from 'lib/opengradient/contracts/teeRegistry';
 import { Checkbox } from 'toolkit/chakra/checkbox';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
+import { PLACEHOLDER_TEE_REGISTRY_STATS, PLACEHOLDER_TEE_TYPES } from 'ui/opengradient/teeRegistry/placeholders';
 import TEENodeDetailDrawer from 'ui/opengradient/teeRegistry/TEENodeDetailDrawer';
 import TEENodesTable from 'ui/opengradient/teeRegistry/TEENodesTable';
 import TEETypeCard from 'ui/opengradient/teeRegistry/TEETypeCard';
 import IconSvg, { type IconName } from 'ui/shared/IconSvg';
-
-const PLACEHOLDER_STATS: TEERegistryStats = {
-  totalTypes: 3,
-  totalNodes: 12,
-  activeNodes: 8,
-  enabledNodes: 10,
-  approvedPCRs: 5,
-};
-
-const PLACEHOLDER_TYPES: Array<TEETypeSummary> = [
-  { typeId: 0, name: 'LLM Inference', totalNodes: 5, enabledNodes: 4, activeNodes: 3, approvedPCRs: 2, addedAt: BigInt(0) },
-  { typeId: 1, name: 'Agent Execution', totalNodes: 4, enabledNodes: 3, activeNodes: 3, approvedPCRs: 2, addedAt: BigInt(0) },
-  { typeId: 2, name: 'Model Training', totalNodes: 3, enabledNodes: 3, activeNodes: 2, approvedPCRs: 1, addedAt: BigInt(0) },
-];
 
 const { colors, fonts, panel, text } = OPENGRADIENT_BRAND;
 
@@ -116,14 +103,14 @@ const TEERegistry = () => {
     queryKey: TEE_REGISTRY_QUERY_KEY,
     queryFn: getTEERegistryOverview,
     placeholderData: {
-      types: PLACEHOLDER_TYPES,
-      stats: PLACEHOLDER_STATS,
+      types: PLACEHOLDER_TEE_TYPES,
+      stats: PLACEHOLDER_TEE_REGISTRY_STATS,
       nodesByType: {},
     },
   });
 
-  const stats = query.data?.stats ?? PLACEHOLDER_STATS;
-  const types = query.data?.types ?? PLACEHOLDER_TYPES;
+  const stats = query.data?.stats ?? PLACEHOLDER_TEE_REGISTRY_STATS;
+  const types = query.data?.types ?? PLACEHOLDER_TEE_TYPES;
 
   const allNodes = React.useMemo(() => {
     const nodesByType = query.data?.nodesByType ?? {};

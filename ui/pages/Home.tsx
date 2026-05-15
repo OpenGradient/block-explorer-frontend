@@ -8,6 +8,7 @@ import LatestArbitrumL2Batches from 'ui/home/latestBatches/LatestArbitrumL2Batch
 import LatestZkEvmL2Batches from 'ui/home/latestBatches/LatestZkEvmL2Batches';
 import LatestBlocks from 'ui/home/LatestBlocks';
 import Transactions from 'ui/home/Transactions';
+import TrustedExecution from 'ui/home/TrustedExecution';
 import AdBanner from 'ui/shared/ad/AdBanner';
 
 const rollupFeature = config.features.rollup;
@@ -43,6 +44,8 @@ const Home = () => {
             display={{ base: 'flex', lg: 'none' }}
             justifyContent="center"
           />
+
+          <TrustedExecution/>
 
           <Flex
             mt={{ base: 5, lg: 6 }}

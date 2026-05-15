@@ -1,12 +1,15 @@
 import { Box, Flex, VStack, Text, Grid } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
 import { route } from 'nextjs-routes';
 
 import useApiQuery from 'lib/api/useApiQuery';
+import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY } from 'lib/opengradient/contracts/teeRegistry';
 import { HOMEPAGE_STATS, HOMEPAGE_STATS_MICROSERVICE } from 'stubs/stats';
 import { LinkBox, LinkOverlay } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
+import { PLACEHOLDER_TEE_REGISTRY_STATS, PLACEHOLDER_TEE_TYPES } from 'ui/opengradient/teeRegistry/placeholders';
 import IconSvg, { type IconName } from 'ui/shared/IconSvg';
 import SearchBar from 'ui/snippets/searchBar/SearchBar';
 
@@ -95,6 +98,16 @@ const HeroBanner = () => {
     },
   });
 
+  const teeRegistryQuery = useQuery({
+    queryKey: TEE_REGISTRY_QUERY_KEY,
+    queryFn: getTEERegistryOverview,
+    placeholderData: {
+      types: PLACEHOLDER_TEE_TYPES,
+      stats: PLACEHOLDER_TEE_REGISTRY_STATS,
+      nodesByType: {},
+    },
+  });
+
   const settlementContractAddress = '0xAa3bB22c5Ef24fe3837134A25A4D801308E2516d';
   const settlementContractAddressV2 = '0xf1dc0d5Dcf2A01924faC78185B9227CF3EC839A5';
   const settlementQuery = useApiQuery('address_counters', {
@@ -122,18 +135,6 @@ const HeroBanner = () => {
     return null;
   }, [ statsQuery.data, statsQuery.isPlaceholderData, apiQuery.data, apiQuery.isPlaceholderData ]);
 
-  const totalBlocks = React.useMemo(() => {
-    const statsData = statsQuery.isPlaceholderData ? undefined : statsQuery.data;
-    const apiData = apiQuery.isPlaceholderData ? undefined : apiQuery.data;
-    if (statsData?.total_blocks?.value) {
-      return Number(statsData.total_blocks.value);
-    }
-    if (apiData?.total_blocks) {
-      return Number(apiData.total_blocks);
-    }
-    return null;
-  }, [ statsQuery.data, statsQuery.isPlaceholderData, apiQuery.data, apiQuery.isPlaceholderData ]);
-
   const llmBatchSettlementsCount = React.useMemo(() => {
     const countersData = settlementQuery.data;
     const countersDataV2 = settlementQueryV2.data;
@@ -145,6 +146,7 @@ const HeroBanner = () => {
     return v1Count + v2Count;
   }, [ settlementQuery.data, settlementQueryV2.data ]);
   const isSettlementCountLoading = llmBatchSettlementsCount === null && (settlementQuery.isPending || settlementQueryV2.isPending);
+  const teeStats = teeRegistryQuery.data?.stats ?? PLACEHOLDER_TEE_REGISTRY_STATS;
 
   const formatNumber = (num: number | null, decimals: number = 2): string => {
     if (num === null) return '-';
@@ -213,7 +215,7 @@ const HeroBanner = () => {
                 fontFamily={ fonts.mono }
                 mb={ 3 }
               >
-                / OpenGradient Network Explorer
+                / AI Execution Network Explorer
               </Text>
 
               <Text
@@ -228,7 +230,7 @@ const HeroBanner = () => {
                   as="span"
                   color={ text.primary }
                 >
-                  OpenGradient
+                  OpenGradient AI
                 </Box>
                 <Box
                   as="span"
@@ -247,7 +249,7 @@ const HeroBanner = () => {
                 mt={ 3 }
                 maxW="620px"
               >
-                Trace transactions, settlement batches, addresses, models, and AI workflows across the OpenGradient network.
+                Trace model inference, x402 settlements, TEE attestations, and AI workflow activity across the OpenGradient network.
               </Text>
             </Box>
 
@@ -313,22 +315,22 @@ const HeroBanner = () => {
                   value="4,500+"
                 />
                 <MetricCard
-                  href={ route({ pathname: '/blocks' }) }
-                  label="Total Blocks"
-                  iconName="block_slim"
-                  loading={ totalBlocks === null && (statsQuery.isPending || apiQuery.isPending) }
-                  value={ formatNumber(totalBlocks, 1) }
+                  href={ route({ pathname: '/tee-registry' }) }
+                  label="TEE Operators"
+                  iconName="nft_shield"
+                  loading={ teeRegistryQuery.isPlaceholderData }
+                  value={ `${ teeStats.activeNodes }/${ teeStats.enabledNodes }` }
                 />
                 <MetricCard
                   href={ route({ pathname: '/address/[hash]', query: { hash: settlementContractAddress } }) }
-                  label="x402 Txns"
+                  label="AI Settlements"
                   iconName="transactions_slim"
                   loading={ isSettlementCountLoading }
                   value={ formatNumber(llmBatchSettlementsCount) }
                 />
                 <MetricCard
                   href={ route({ pathname: '/txs' }) }
-                  label="Transactions"
+                  label="Network Txns"
                   iconName="transactions_slim"
                   loading={ totalTransactions === null && (statsQuery.isPending || apiQuery.isPending) }
                   value={ formatNumber(totalTransactions) }
