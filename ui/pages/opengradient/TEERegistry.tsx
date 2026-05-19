@@ -4,8 +4,8 @@ import React from 'react';
 
 import { route } from 'nextjs-routes';
 
-import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS } from 'lib/opengradient/contracts/teeRegistry';
-import type { TEENodeWithStatus } from 'lib/opengradient/contracts/teeRegistry';
+import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS } from 'lib/opengradient/teeRegistry';
+import type { TEENodeWithStatus } from 'lib/opengradient/teeRegistry';
 import { Checkbox } from 'toolkit/chakra/checkbox';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
@@ -120,18 +120,8 @@ const TEERegistry = () => {
     return Object.values(nodesByType).flat();
   }, [ query.data?.nodesByType, selectedType ]);
 
-  const hasNonDisabledNodes = React.useMemo(
-    () => allNodes.some((node) => node.isActive || node.enabled),
-    [ allNodes ],
-  );
-
-  const [ showDisabled, setShowDisabled ] = React.useState<boolean | null>(null);
-
-  React.useEffect(() => {
-    setShowDisabled(null);
-  }, [ selectedType ]);
-
-  const resolvedShowDisabled = showDisabled ?? !hasNonDisabledNodes;
+  const [ showDisabled, setShowDisabled ] = React.useState(false);
+  const resolvedShowDisabled = showDisabled;
 
   const filteredNodes = React.useMemo(
     () => resolvedShowDisabled ? allNodes : allNodes.filter((node) => node.isActive || node.enabled),
@@ -144,7 +134,7 @@ const TEERegistry = () => {
 
   const tableSubtitle = resolvedShowDisabled ?
     'Showing active, enabled, and disabled registry records.' :
-    'Showing active and enabled registry records.';
+    'Showing active and enabled registry records only.';
 
   const activeVisibleCount = React.useMemo(
     () => filteredNodes.filter((node) => node.isActive).length,
@@ -152,11 +142,8 @@ const TEERegistry = () => {
   );
 
   const handleToggleShowDisabled = React.useCallback(() => {
-    setShowDisabled((prev) => {
-      const current = prev ?? !hasNonDisabledNodes;
-      return !current;
-    });
-  }, [ hasNonDisabledNodes ]);
+    setShowDisabled((prev) => !prev);
+  }, []);
 
   const handleTypeClick = React.useCallback((typeId: number) => {
     setSelectedType((prev) => prev === typeId ? null : typeId);
@@ -344,7 +331,7 @@ const TEERegistry = () => {
                 fontSize="11px"
                 color={ text.muted }
               >
-                { filteredNodes.length } shown / { allNodes.length } total
+                { filteredNodes.length.toLocaleString() } { resolvedShowDisabled ? 'registry records' : 'active or enabled' }
               </Text>
             </Flex>
             <Text fontFamily={ fonts.sans } fontSize="12px" color={ text.muted }>
@@ -364,7 +351,7 @@ const TEERegistry = () => {
               letterSpacing="0.04em"
               color={ text.secondary }
             >
-              Show disabled
+              Show disabled records
             </Text>
           </Checkbox>
         </Flex>
@@ -386,7 +373,10 @@ const TEERegistry = () => {
             borderColor={ panel.border }
           >
             <Text fontSize="sm" fontFamily={ fonts.sans }>
-              No TEE nodes match the current filter.
+              { resolvedShowDisabled ?
+                'No TEE nodes match the current filter.' :
+                'No active or enabled TEE nodes are currently registered. Enable disabled records to inspect historical entries.'
+              }
             </Text>
           </Flex>
         ) }

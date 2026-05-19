@@ -5,7 +5,7 @@ import React from 'react';
 import { route } from 'nextjs-routes';
 
 import dayjs from 'lib/date/dayjs';
-import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS, type TEENodeWithStatus } from 'lib/opengradient/contracts/teeRegistry';
+import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS, type TEENodeWithStatus } from 'lib/opengradient/teeRegistry';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { PLACEHOLDER_TEE_REGISTRY_STATS, PLACEHOLDER_TEE_TYPES } from 'ui/opengradient/teeRegistry/placeholders';
@@ -138,10 +138,11 @@ const TrustedExecution = () => {
   const types = query.data?.types ?? PLACEHOLDER_TEE_TYPES;
   const nodes = React.useMemo(() => {
     const nodesByType = query.data?.nodesByType ?? {};
-    return Object.values(nodesByType).flat().sort((a, b) => Number(b.lastHeartbeatAt - a.lastHeartbeatAt));
+    return Object.values(nodesByType).flat()
+      .filter((node) => node.isActive)
+      .sort((a, b) => Number(b.lastHeartbeatAt - a.lastHeartbeatAt));
   }, [ query.data?.nodesByType ]);
-  const primaryType = types[0] ?? PLACEHOLDER_TEE_TYPES[0];
-  const visibleNodes = nodes.slice(0, 3);
+  const primaryType = types[0];
   const isLoading = query.isPlaceholderData;
 
   return (
@@ -239,13 +240,13 @@ const TrustedExecution = () => {
           <Grid templateColumns={{ base: '1fr', md: 'repeat(3, minmax(0, 1fr))' }} gap={ 3 } mb={ 4 }>
             <RegistryMetric
               label="Active TEEs"
-              value={ `${ stats.activeNodes }/${ stats.enabledNodes }` }
+              value={ stats.activeNodes.toLocaleString() }
               helper="Heartbeat-valid operators"
               loading={ isLoading }
             />
             <RegistryMetric
               label="Execution type"
-              value={ primaryType.name }
+              value={ primaryType?.name ?? 'Loading' }
               helper="Registered AI workload class"
               loading={ isLoading }
             />
@@ -270,32 +271,23 @@ const TrustedExecution = () => {
               </Text>
               <Skeleton loading={ isLoading } w="fit-content">
                 <Text mt={ 3 } fontFamily={ fonts.sans } fontSize="18px" fontWeight={ 600 } color={ text.primary }>
-                  { primaryType.name }
+                  { primaryType?.name ?? 'Loading' }
                 </Text>
               </Skeleton>
               <Grid templateColumns="repeat(3, minmax(0, 1fr))" gap={ 3 } mt={ 4 }>
                 <Box>
                   <Text fontFamily={ fonts.mono } fontSize="9px" color={ text.muted } textTransform="uppercase" letterSpacing="0.08em">Active</Text>
-                  <Text mt={ 1 } fontFamily={ fonts.mono } fontSize="14px" color={ text.primary }>{ primaryType.activeNodes }/{ primaryType.totalNodes }</Text>
+                  <Text mt={ 1 } fontFamily={ fonts.mono } fontSize="14px" color={ text.primary }>{ primaryType?.activeNodes.toLocaleString() ?? '0' }</Text>
                 </Box>
                 <Box>
                   <Text fontFamily={ fonts.mono } fontSize="9px" color={ text.muted } textTransform="uppercase" letterSpacing="0.08em">Enabled</Text>
-                  <Text mt={ 1 } fontFamily={ fonts.mono } fontSize="14px" color={ text.primary }>{ primaryType.enabledNodes }</Text>
+                  <Text mt={ 1 } fontFamily={ fonts.mono } fontSize="14px" color={ text.primary }>{ primaryType?.enabledNodes.toLocaleString() ?? '0' }</Text>
                 </Box>
                 <Box>
                   <Text fontFamily={ fonts.mono } fontSize="9px" color={ text.muted } textTransform="uppercase" letterSpacing="0.08em">PCRs</Text>
-                  <Text mt={ 1 } fontFamily={ fonts.mono } fontSize="14px" color={ text.primary }>{ primaryType.approvedPCRs }</Text>
+                  <Text mt={ 1 } fontFamily={ fonts.mono } fontSize="14px" color={ text.primary }>{ primaryType?.approvedPCRs.toLocaleString() ?? '0' }</Text>
                 </Box>
               </Grid>
-              <Box mt={ 4 } h="3px" borderRadius="2px" bg={{ _light: 'rgba(36, 188, 227, 0.12)', _dark: 'rgba(36, 188, 227, 0.12)' }} overflow="hidden">
-                <Box
-                  h="100%"
-                  w={ primaryType.totalNodes > 0 ? `${ Math.round((primaryType.activeNodes / primaryType.totalNodes) * 100) }%` : '0' }
-                  minW={ primaryType.activeNodes > 0 ? '18px' : '0' }
-                  bg={ colors.cyan }
-                  borderRadius="2px"
-                />
-              </Box>
             </Box>
 
             <Box
@@ -316,7 +308,7 @@ const TrustedExecution = () => {
                 </Text>
               </Flex>
               <VStack align="stretch" gap={ 0 }>
-                { visibleNodes.length > 0 ? visibleNodes.map((node) => (
+                { nodes.length > 0 ? nodes.map((node) => (
                   <NodePreview key={ node.teeId } node={ node } loading={ isLoading }/>
                 )) : (
                   <Text py={ 5 } fontSize="13px" color={ text.muted }>

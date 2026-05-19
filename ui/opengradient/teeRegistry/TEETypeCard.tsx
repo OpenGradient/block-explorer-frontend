@@ -1,7 +1,7 @@
 import { Box, Flex, Grid, Text } from '@chakra-ui/react';
 import React from 'react';
 
-import type { TEETypeSummary } from 'lib/opengradient/contracts/teeRegistry';
+import type { TEETypeSummary } from 'lib/opengradient/teeRegistry';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 
@@ -45,8 +45,6 @@ const TEETypeCard = ({ type, isSelected, isLoading, onClick }: Props) => {
   const handleClick = React.useCallback(() => {
     onClick(type.typeId);
   }, [ onClick, type.typeId ]);
-
-  const activePct = type.totalNodes > 0 ? Math.round((type.activeNodes / type.totalNodes) * 100) : 0;
 
   return (
     <Flex
@@ -101,26 +99,10 @@ const TEETypeCard = ({ type, isSelected, isLoading, onClick }: Props) => {
       </Flex>
 
       <Grid templateColumns="repeat(3, minmax(0, 1fr))" gap={ 3 } mb={ 3 }>
-        <Metric label="Active" value={ `${ type.activeNodes }/${ type.totalNodes }` } isLoading={ isLoading }/>
+        <Metric label="Active" value={ type.activeNodes.toLocaleString() } isLoading={ isLoading }/>
         <Metric label="Enabled" value={ type.enabledNodes.toLocaleString() } isLoading={ isLoading }/>
         <Metric label="PCRs" value={ type.approvedPCRs.toLocaleString() } isLoading={ isLoading }/>
       </Grid>
-
-      <Box
-        h="3px"
-        borderRadius="2px"
-        bg={{ _light: 'rgba(36, 188, 227, 0.12)', _dark: 'rgba(36, 188, 227, 0.12)' }}
-        overflow="hidden"
-      >
-        <Box
-          h="100%"
-          w={ `${ activePct }%` }
-          minW={ activePct > 0 ? '18px' : '0' }
-          bg={ colors.cyan }
-          borderRadius="2px"
-          transition="width 0.2s ease"
-        />
-      </Box>
     </Flex>
   );
 };

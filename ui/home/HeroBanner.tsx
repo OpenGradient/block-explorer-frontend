@@ -5,7 +5,7 @@ import React from 'react';
 import { route } from 'nextjs-routes';
 
 import useApiQuery from 'lib/api/useApiQuery';
-import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY } from 'lib/opengradient/contracts/teeRegistry';
+import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY } from 'lib/opengradient/teeRegistry';
 import { HOMEPAGE_STATS, HOMEPAGE_STATS_MICROSERVICE } from 'stubs/stats';
 import { LinkBox, LinkOverlay } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
@@ -319,7 +319,7 @@ const HeroBanner = () => {
                   label="TEE Operators"
                   iconName="nft_shield"
                   loading={ teeRegistryQuery.isPlaceholderData }
-                  value={ `${ teeStats.activeNodes }/${ teeStats.enabledNodes }` }
+                  value={ teeStats.activeNodes.toLocaleString() }
                 />
                 <MetricCard
                   href={ route({ pathname: '/address/[hash]', query: { hash: settlementContractAddress } }) }
