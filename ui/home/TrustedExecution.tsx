@@ -5,7 +5,7 @@ import React from 'react';
 import { route } from 'nextjs-routes';
 
 import dayjs from 'lib/date/dayjs';
-import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS, type TEENodeWithStatus } from 'lib/opengradient/teeRegistry';
+import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS, type TEENodeWithStatus } from 'lib/opengradient/contracts/teeRegistry';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { PLACEHOLDER_TEE_REGISTRY_STATS, PLACEHOLDER_TEE_TYPES } from 'ui/opengradient/teeRegistry/placeholders';
@@ -143,6 +143,7 @@ const TrustedExecution = () => {
       .sort((a, b) => Number(b.lastHeartbeatAt - a.lastHeartbeatAt));
   }, [ query.data?.nodesByType ]);
   const primaryType = types[0];
+  const visibleNodes = nodes.slice(0, 3);
   const isLoading = query.isPlaceholderData;
 
   return (
@@ -308,7 +309,7 @@ const TrustedExecution = () => {
                 </Text>
               </Flex>
               <VStack align="stretch" gap={ 0 }>
-                { nodes.length > 0 ? nodes.map((node) => (
+                { visibleNodes.length > 0 ? visibleNodes.map((node) => (
                   <NodePreview key={ node.teeId } node={ node } loading={ isLoading }/>
                 )) : (
                   <Text py={ 5 } fontSize="13px" color={ text.muted }>

@@ -1,7 +1,7 @@
 import { Box, Flex, Grid, Text } from '@chakra-ui/react';
 import React from 'react';
 
-import type { TEETypeSummary } from 'lib/opengradient/teeRegistry';
+import type { TEETypeSummary } from 'lib/opengradient/contracts/teeRegistry';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 

@@ -2,7 +2,7 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 
 import dayjs from 'lib/date/dayjs';
-import type { TEENodeWithStatus, TEETypeSummary } from 'lib/opengradient/teeRegistry';
+import type { TEENodeWithStatus, TEETypeSummary } from 'lib/opengradient/contracts/teeRegistry';
 import { Skeleton } from 'toolkit/chakra/skeleton';
 import { TableBody, TableCell, TableColumnHeader, TableHeaderSticky, TableRoot, TableRow } from 'toolkit/chakra/table';
 import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';

@@ -1,4 +1,4 @@
-import type { TEERegistryStats, TEETypeSummary } from 'lib/opengradient/teeRegistry';
+import type { TEERegistryStats, TEETypeSummary } from 'lib/opengradient/contracts/teeRegistry';
 
 export const PLACEHOLDER_TEE_REGISTRY_STATS: TEERegistryStats = {
   totalTypes: 0,

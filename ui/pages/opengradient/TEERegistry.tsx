@@ -4,8 +4,8 @@ import React from 'react';
 
 import { route } from 'nextjs-routes';
 
-import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS } from 'lib/opengradient/teeRegistry';
-import type { TEENodeWithStatus } from 'lib/opengradient/teeRegistry';
+import { getTEERegistryOverview, TEE_REGISTRY_QUERY_KEY, TEE_REGISTRY_ADDRESS } from 'lib/opengradient/contracts/teeRegistry';
+import type { TEENodeWithStatus } from 'lib/opengradient/contracts/teeRegistry';
 import { Checkbox } from 'toolkit/chakra/checkbox';
 import { Link } from 'toolkit/chakra/link';
 import { Skeleton } from 'toolkit/chakra/skeleton';

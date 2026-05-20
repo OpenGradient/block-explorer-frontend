@@ -2,7 +2,7 @@ import { Box, Flex, Text, VStack } from '@chakra-ui/react';
 import React from 'react';
 
 import dayjs from 'lib/date/dayjs';
-import type { TEENodeWithStatus } from 'lib/opengradient/teeRegistry';
+import type { TEENodeWithStatus } from 'lib/opengradient/contracts/teeRegistry';
 import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerHeader, DrawerRoot, DrawerTitle } from 'toolkit/chakra/drawer';
 import { OPENGRADIENT_BRAND } from 'ui/opengradient/brand';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';

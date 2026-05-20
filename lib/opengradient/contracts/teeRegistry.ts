@@ -1,13 +1,54 @@
 import { ethers } from 'ethers';
 import type { Address } from 'viem';
 
-import type { TEENodeWithStatus, TEEInfo, TEERegistryOverview, TEETypeInfo, TEETypeSummary } from 'lib/opengradient/teeRegistry';
-import { TEE_REGISTRY_ADDRESS } from 'lib/opengradient/teeRegistry';
-
 import TEERegistryAbi from './abi/TEERegistry.json';
 import { ethDevnetProvider } from './providers';
 
+export const TEE_REGISTRY_ADDRESS = '0x4e72238852f3c918f4E4e57AeC9280dDB0c80248';
+
 const contract = new ethers.Contract(TEE_REGISTRY_ADDRESS, TEERegistryAbi, ethDevnetProvider);
+
+export interface TEETypeInfo {
+  typeId: number;
+  name: string;
+  addedAt: bigint;
+}
+
+export interface TEEInfo {
+  teeId: string;
+  owner: Address;
+  paymentAddress: Address;
+  endpoint: string;
+  publicKey: string;
+  tlsCertificate: string;
+  pcrHash: string;
+  teeType: number;
+  enabled: boolean;
+  registeredAt: bigint;
+  lastHeartbeatAt: bigint;
+}
+
+export interface TEENodeWithStatus extends TEEInfo {
+  isActive: boolean;
+}
+
+export interface TEETypeSummary {
+  typeId: number;
+  name: string;
+  totalNodes: number;
+  enabledNodes: number;
+  activeNodes: number;
+  approvedPCRs: number;
+  addedAt: bigint;
+}
+
+export interface TEERegistryStats {
+  totalTypes: number;
+  totalNodes: number;
+  activeNodes: number;
+  enabledNodes: number;
+  approvedPCRs: number;
+}
 
 export const getTEETypes = async(): Promise<Array<TEETypeInfo>> => {
   const [ typeIds, infos ] = await contract.getTEETypes();
@@ -68,7 +109,11 @@ export const getHeartbeatMaxAge = async(): Promise<bigint> => {
 /**
  * Fetch full registry overview: types, nodes per type with status, and global stats.
  */
-export const getTEERegistryOverviewFromContract = async(): Promise<TEERegistryOverview> => {
+export const getTEERegistryOverview = async(): Promise<{
+  types: Array<TEETypeSummary>;
+  stats: TEERegistryStats;
+  nodesByType: Record<number, Array<TEENodeWithStatus>>;
+}> => {
   // 1. Get all TEE types
   const types = await getTEETypes();
 
@@ -141,3 +186,5 @@ export const getTEERegistryOverviewFromContract = async(): Promise<TEERegistryOv
     nodesByType,
   };
 };
+
+export const TEE_REGISTRY_QUERY_KEY = [ 'opengradient', 'teeRegistry' ];
