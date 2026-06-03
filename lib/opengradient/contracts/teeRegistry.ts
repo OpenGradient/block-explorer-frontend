@@ -4,7 +4,7 @@ import type { Address } from 'viem';
 import TEERegistryAbi from './abi/TEERegistry.json';
 import { ethDevnetProvider } from './providers';
 
-export const TEE_REGISTRY_ADDRESS = '0x4e72238852f3c918f4E4e57AeC9280dDB0c80248';
+export const TEE_REGISTRY_ADDRESS = '0x703cB174AEadB35D611858369B4b1111dC9Abda6';
 
 const contract = new ethers.Contract(TEE_REGISTRY_ADDRESS, TEERegistryAbi, ethDevnetProvider);
 
@@ -50,8 +50,8 @@ export interface TEERegistryStats {
   approvedPCRs: number;
 }
 
-export const getTEETypes = async(): Promise<Array<TEETypeInfo>> => {
-  const [ typeIds, infos ] = await contract.getTEETypes();
+export const getTEETypes = async (): Promise<Array<TEETypeInfo>> => {
+  const [typeIds, infos] = await contract.getTEETypes();
 
   return (typeIds as Array<number>).map((typeId: number, i: number) => ({
     typeId: Number(typeId),
@@ -74,26 +74,26 @@ const parseTEEInfo = (teeId: string, raw: Record<string, unknown>): TEEInfo => (
   lastHeartbeatAt: BigInt(raw.lastHeartbeatAt as ethers.BigNumberish),
 });
 
-export const getTEEsByType = async(teeType: number): Promise<Array<string>> => {
+export const getTEEsByType = async (teeType: number): Promise<Array<string>> => {
   const teeIds = await contract.getTEEsByType(teeType);
   return (teeIds as Array<string>).map(String);
 };
 
-export const getEnabledTEEs = async(teeType: number): Promise<Array<string>> => {
+export const getEnabledTEEs = async (teeType: number): Promise<Array<string>> => {
   const teeIds = await contract.getEnabledTEEs(teeType);
   return (teeIds as Array<string>).map(String);
 };
 
-export const getTEE = async(teeId: string): Promise<TEEInfo> => {
+export const getTEE = async (teeId: string): Promise<TEEInfo> => {
   const raw = await contract.getTEE(teeId);
   return parseTEEInfo(teeId, raw);
 };
 
-export const isTEEActive = async(teeId: string): Promise<boolean> => {
+export const isTEEActive = async (teeId: string): Promise<boolean> => {
   return contract.isTEEActive(teeId);
 };
 
-export const getApprovedPCRs = async(): Promise<Array<{ pcrHash: string; teeType: number }>> => {
+export const getApprovedPCRs = async (): Promise<Array<{ pcrHash: string; teeType: number }>> => {
   const pcrs = await contract.getApprovedPCRs();
   return (pcrs as Array<{ pcrHash: string; teeType: number }>).map((p) => ({
     pcrHash: String(p.pcrHash),
@@ -101,7 +101,7 @@ export const getApprovedPCRs = async(): Promise<Array<{ pcrHash: string; teeType
   }));
 };
 
-export const getHeartbeatMaxAge = async(): Promise<bigint> => {
+export const getHeartbeatMaxAge = async (): Promise<bigint> => {
   const maxAge = await contract.heartbeatMaxAge();
   return BigInt(maxAge);
 };
@@ -109,7 +109,7 @@ export const getHeartbeatMaxAge = async(): Promise<bigint> => {
 /**
  * Fetch full registry overview: types, nodes per type with status, and global stats.
  */
-export const getTEERegistryOverview = async(): Promise<{
+export const getTEERegistryOverview = async (): Promise<{
   types: Array<TEETypeSummary>;
   stats: TEERegistryStats;
   nodesByType: Record<number, Array<TEENodeWithStatus>>;
@@ -135,7 +135,7 @@ export const getTEERegistryOverview = async(): Promise<{
   let totalEnabled = 0;
 
   for (const teeType of types) {
-    const [ allIds, enabledIds ] = await Promise.all([
+    const [allIds, enabledIds] = await Promise.all([
       getTEEsByType(teeType.typeId),
       getEnabledTEEs(teeType.typeId),
     ]);
@@ -144,8 +144,8 @@ export const getTEERegistryOverview = async(): Promise<{
 
     // Fetch details for all TEEs of this type
     const nodes: Array<TEENodeWithStatus> = [];
-    const teeDetailsPromises = allIds.map(async(teeId) => {
-      const [ teeInfo, active ] = await Promise.all([
+    const teeDetailsPromises = allIds.map(async (teeId) => {
+      const [teeInfo, active] = await Promise.all([
         getTEE(teeId),
         isTEEActive(teeId).catch(() => false),
       ]);
@@ -187,4 +187,4 @@ export const getTEERegistryOverview = async(): Promise<{
   };
 };
 
-export const TEE_REGISTRY_QUERY_KEY = [ 'opengradient', 'teeRegistry' ];
+export const TEE_REGISTRY_QUERY_KEY = ['opengradient', 'teeRegistry'];
